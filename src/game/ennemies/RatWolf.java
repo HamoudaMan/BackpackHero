@@ -7,7 +7,7 @@ import game.hero.Hero;
 
 public class RatWolf implements Enemy {
 	private final  String name;
-	private final int health;
+	private int health;
 	private final int maxHealth;
 	private final int protection;
 	
@@ -44,7 +44,21 @@ public class RatWolf implements Enemy {
 	
 	@Override
 	public void attack(Hero hero) {
+		hero.takeDamage(10);
+	}
+	@Override
+	public void takeDamage(int damage) {
+		var effectiveDamage = damage - protection;
 		
+		if(effectiveDamage < 0) {//effective damage  doit etre postive ou 0 pas negatif 
+			effectiveDamage = 0;
+		}	
+		health -= effectiveDamage;
+		
+		if(health < 0) {
+			health = 0;// les pv ne peuvent pas etre negatif
+		}
+		IO.println(name + " subit "+ effectiveDamage + " : pv restant: "+ health + " pv");
 	}
 	
 	@Override 
