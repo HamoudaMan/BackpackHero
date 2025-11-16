@@ -1,8 +1,9 @@
 package game;
 import java.util.Scanner;
-
+import game.ennemies.*;
 import game.ennemies.RatWolf;
 import game.hero.Hero;
+
 public class Main {
 
 	public static void main(String[] args) {

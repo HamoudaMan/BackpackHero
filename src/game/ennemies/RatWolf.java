@@ -9,13 +9,16 @@ public class RatWolf implements Enemy {
 	private final  String name;
 	private int health;
 	private final int maxHealth;
-	private final int protection;
+	private int protection;
+	private static Random RANDOM = new Random();
+	private String nextAction;
 	
 	public RatWolf() {
 		this.name = "Rat-loup";
-		this.health = 30;
-		this.maxHealth = 30;
+		this.health = 20;
+		this.maxHealth = 20;
 		this.protection = 0;
+		this.nextAction = "attack";
 	}
 	@Override
 	public String name() {
@@ -41,11 +44,43 @@ public class RatWolf implements Enemy {
 	public boolean isAlive() {
 		return health > 0;	
 	}
+	@Override 
+	public String nextAction() {
+		return nextAction;
+	}
+	
 	
 	@Override
 	public void attack(Hero hero) {
 		hero.takeDamage(10);
 	}
+
+	
+	@Override 
+	public void buffProtection() {
+		protection += 2 + RANDOM.nextInt(4);
+	}
+	
+	@Override 
+	public void announceAction() {
+		if( RANDOM.nextBoolean()) {
+			nextAction = "attack";
+		}else {
+			nextAction = "block";
+		}
+		
+		IO.println("Next action " + nextAction);
+	}
+	
+	public void doAction(Hero hero) {
+		if( nextAction.equals("attack")) {
+			attack(hero);
+		}else if( nextAction.equals("block") ){
+			buffProtection();
+		}
+	}
+
+	
 	@Override
 	public void takeDamage(int damage) {
 		var effectiveDamage = damage - protection;
@@ -58,23 +93,17 @@ public class RatWolf implements Enemy {
 		if(health < 0) {
 			health = 0;// les pv ne peuvent pas etre negatif
 		}
+		protection = 0;//on remet la protection a 0 
 		IO.println(name + " subit "+ effectiveDamage + " : pv restant: "+ health + " pv");
 	}
-	
-	@Override 
-	public void buffProtection() {
-		
-	}
-	
-	@Override 
-	public void announceAction() {
-		
-	}
-	
-	public void chooseAction() {
-		
-	}
 
+	public Boolean ratWolfDead() {
+		if( health <= 0) {
+			IO.println("FIN Du combat, le rat loup vient de clamser" );
+			return true;
+		}
+		return false;
+	}
 
 	
 	

@@ -2,6 +2,7 @@ package game.hero;
 
 import game.ennemies.Enemy;
 import game.items.Item;
+import game.items.MagicBackPack;
 import game.items.Weapon;
 import java.util.ArrayList;
 
@@ -15,7 +16,8 @@ public class Hero {
 	private int protection;
 	private int gold;
 	private Weapon weaponEquipped;
-	private ArrayList<Item> inventory; //à la phase 1 : 15 cases 3*5
+	private int exp;
+	private MagicBackPack stuff; //à la phase 1 : 15 cases 3*5
 	
 	public Hero(String name) {
 		this.name = name;
@@ -25,7 +27,8 @@ public class Hero {
 		this.energy = 3;
 		this.protection = 0;
 		this.gold = 0;
-		this.inventory = new ArrayList<>(15);
+		this.exp = 0;
+		this.stuff = new MagicBackPack();
 	}
 	public String name() {
 		return name;
@@ -50,14 +53,17 @@ public class Hero {
 	public Boolean canAttack(Enemy enemy) {
 		return enemy.health() > 0;
 	}
+	
 	public void attack(Enemy enemy) {
 		var damage = 5;
 		enemy.takeDamage(damage);
-		//a implementer 
+		
 	}
-	public void defend() {
-		//a implementer 
+	
+	public void block() {
+		protection += 5;
 	}
+	
 	public void takeDamage(int damage) {//hero prend des degats 
 		var effectiveDamage = damage - protection;
 		
@@ -70,5 +76,13 @@ public class Hero {
 			health = 0;// les pv ne peuvent pas etre negatif
 		}
 		IO.println(name + " subit "+ effectiveDamage + " : pv restant: "+ health + " pv");
+	}
+	
+	public Boolean heroDead() {
+		if( health <= 0) {
+			IO.println("FIN DE PARTIE : "+name + " vient de clamser" );
+			return true;
+		}
+		return false;
 	}
 }
