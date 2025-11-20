@@ -1,5 +1,5 @@
 package game.items;
 
-public class Item {
+public class Item implements Stuff{
 
 }
