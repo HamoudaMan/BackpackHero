@@ -9,8 +9,8 @@ public interface Enemy {
 	int health();
 	int maxHealth();
 	int protection();
-	boolean isAlive();
-	String nextAction();
+	boolean isDead();
+	Action nextAction();
 	
 	
 	void attack(Hero hero);//attaque le hero

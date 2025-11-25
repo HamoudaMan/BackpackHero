@@ -41,7 +41,7 @@ public class Main {
                 hero.block();
             }
 
-            if (ennemi.smallRatWolfDead()) {
+            if (ennemi.isDead()) {
                 System.out.println("\n Victoire ! L’ennemi est vaincu !");
                 break;
             }

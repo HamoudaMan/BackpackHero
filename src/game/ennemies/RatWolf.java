@@ -11,14 +11,14 @@ public class RatWolf implements Enemy {
 	private final int maxHealth;
 	private int protection;
 	private static Random RANDOM = new Random();
-	private String nextAction;
+	private Action nextAction;
 	
 	public RatWolf() {
 		this.name = "Rat-loup";
 		this.health = 20;
 		this.maxHealth = 20;
 		this.protection = 0;
-		this.nextAction = "attack";
+		this.nextAction = Action.ATTACK;
 	}
 	@Override
 	public String name() {
@@ -41,11 +41,15 @@ public class RatWolf implements Enemy {
 	}
 	
 	@Override
-	public boolean isAlive() {
-		return health > 0;	
+	public boolean isDead() {
+		if( health <= 0) {
+			//IO.println("FIN Du combat, le rat loup vient de clamser" );
+			return true;
+		}
+		return false;	
 	}
 	@Override 
-	public String nextAction() {
+	public Action nextAction() {
 		return nextAction;
 	}
 	
@@ -64,18 +68,18 @@ public class RatWolf implements Enemy {
 	@Override 
 	public void announceAction() {
 		if( RANDOM.nextBoolean()) {
-			nextAction = "attack";
+			nextAction = Action.ATTACK;
 		}else {
-			nextAction = "block";
+			nextAction = Action.BLOCK;
 		}
 		
 		IO.println("Next action " + nextAction);
 	}
 	
 	public void doAction(Hero hero) {
-		if( nextAction.equals("attack")) {
+		if( nextAction == Action.ATTACK) {
 			attack(hero);
-		}else if( nextAction.equals("block") ){
+		}else if( nextAction == Action.BLOCK ){
 			buffProtection();
 		}
 	}
@@ -97,13 +101,7 @@ public class RatWolf implements Enemy {
 		IO.println(name + " subit "+ effectiveDamage + " : pv restant: "+ health + " pv");
 	}
 
-	public Boolean ratWolfDead() {
-		if( health <= 0) {
-			IO.println("FIN Du combat, le rat loup vient de clamser" );
-			return true;
-		}
-		return false;
-	}
+
 
 	
 	
