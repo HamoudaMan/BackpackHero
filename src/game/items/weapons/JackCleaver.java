@@ -1,14 +1,16 @@
-package game.items;
+package game.items.weapons;
 
-public class WoodenSword implements Weapon{
-	
-	private final String name = "Wooden Sword";
+import game.items.Item;
+
+public class JackCleaver implements Item, Weapon{
+	private final String name = "Jack Cleaver";
 	private final int damage = 7;
 	private int turnUsable = 100;//une grande valeur pour dire illimié
 	private boolean usable = true;
 	private int width = 1;
-	private int height = 3;
-	private final int manaPrice = 1;	
+	private int height = 1;
+	private final int manaPrice = 2;	
+	private final boolean hitAllTarget = true;
 	
 	@Override
 	public int damage() {
@@ -16,6 +18,9 @@ public class WoodenSword implements Weapon{
 	}
 	public int manaPrice() {
 		return manaPrice;
+	}
+	public Boolean hitAllTarget() {
+		return hitAllTarget;
 	}
 
 	@Override
@@ -52,5 +57,11 @@ public class WoodenSword implements Weapon{
 		
 		
 	}
+	
+	@Override
+	public Weapon use() {
+		
+	}
+
 
 }

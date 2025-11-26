@@ -1,14 +1,16 @@
-package game.items;
+package game.items.weapons;
 
-public class JackCleaver implements Weapon{
-	private final String name = "Jack Cleaver";
+import game.items.Item;
+
+public class Dart implements Item, Weapon{
+	
+	private final String name = "Dart";
 	private final int damage = 7;
 	private int turnUsable = 100;//une grande valeur pour dire illimié
 	private boolean usable = true;
 	private int width = 1;
-	private int height = 1;
-	private final int manaPrice = 2;	
-	private final boolean hitAllTarget = true;
+	private int height = 3;
+	private final int manaPrice = 1;	
 	
 	@Override
 	public int damage() {
@@ -16,9 +18,6 @@ public class JackCleaver implements Weapon{
 	}
 	public int manaPrice() {
 		return manaPrice;
-	}
-	public Boolean hitAllTarget() {
-		return hitAllTarget;
 	}
 
 	@Override
@@ -53,6 +52,9 @@ public class JackCleaver implements Weapon{
 		height = width;
 		width = tmp;
 		
+	}
+	@Override
+	public Weapon use() {
 		
 	}
 
