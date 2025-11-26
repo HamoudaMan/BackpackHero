@@ -60,6 +60,7 @@ public class JackCleaver implements Item, Weapon{
 	
 	@Override
 	public Weapon use() {
+		return null;
 		
 	}
 

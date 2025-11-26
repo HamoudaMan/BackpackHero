@@ -55,6 +55,7 @@ public class Dart implements Item, Weapon{
 	}
 	@Override
 	public Weapon use() {
+		return null;
 		
 	}
 
