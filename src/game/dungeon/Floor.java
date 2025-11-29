@@ -176,7 +176,7 @@ public class Floor {
 		if(!canReach(positionHero ,dest)){
 			return false;
 		}
-		if(floorRooms[dest.row()][dest.col()].type() == RoomType.ENEMY ) {
+		if(floorRooms[dest.row()][dest.col()].type() == RoomType.ENEMY ) {//si la room contient un ennemi
 			//logique de combat 
 		}else {
 			positionHero = dest; 
