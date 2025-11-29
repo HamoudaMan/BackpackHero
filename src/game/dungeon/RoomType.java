@@ -4,7 +4,7 @@ public enum RoomType {
 	ENEMY,
 	CORRIDOR,
 	TREASURE,
-	HEAL,
+	HEALER,
 	MERCHANT,
 	EXIT
 }
