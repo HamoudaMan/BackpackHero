@@ -3,7 +3,7 @@ package game.hero;
 import java.util.Objects;
 
 import game.ennemies.Enemy;
-import game.items.Item;
+//import game.items.Item;
 import game.items.MagicBackPack;
 import game.items.weapons.Weapon;
 
@@ -20,7 +20,7 @@ public class Hero {
 	private int gold;
 	private Weapon weaponEquiped;
 	private int exp;
-	private MagicBackPack stuff; //à la phase 1 : 15 cases 3*5
+	private MagicBackPack backPack; //à la phase 1 : 15 cases 3*5
 	
 	public Hero(String name) {
 		this.name = name;
@@ -31,7 +31,7 @@ public class Hero {
 		this.protection = 0;
 		this.gold = 0;
 		this.exp = 0;
-		this.stuff = new MagicBackPack();
+		this.backPack = new MagicBackPack();
 	}
 	public String name() {
 		return name;
@@ -57,6 +57,9 @@ public class Hero {
 	public int protection() {
 		return protection;
 	}
+	public MagicBackPack backPack() {
+		return backPack;
+	}
 	
 	
 	//----Methode pour les duels----
@@ -72,13 +75,13 @@ public class Hero {
 			enemy.takeDamage(damage);
 			energy--;//chaque attaque coute de l'energie
 		}
-		var damage = 5;
-		enemy.takeDamage(damage);
+
 		
 	}
 	
 	public void block() {
 		protection += 5;
+		energy--;
 	}
 	
 	public void takeDamage(int damage) {//hero prend des degats 
