@@ -1,5 +1,6 @@
 package game.interaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import game.ennemies.Enemy;
@@ -7,14 +8,18 @@ import game.hero.Hero;
 
 public class Combat {
 	
-	public CombatResult startCombat(Hero hero, List<Enemy> enemiesList) {
+	public static CombatResult startCombat(Hero hero, List<Enemy> enemiesList) {
+		List<Enemy> enemies = new ArrayList<>(enemiesList);
 		while(!enemiesList.isEmpty()) {//tant qu'il ya des ennemies 
-			hero.attack(enemiesList.getFirst());
-			if(enemiesList.getFirst().isDead()) {
+			var enemy = enemies.get(0);
+			
+			hero.attack(enemy);//hero attack en premier 
+			if(enemy.isDead()) {
 				enemiesList.remove(0);
-			}else if(!hero.heroDead()) {
-				enemiesList.getFirst().attack(hero);
-			}else if(hero.heroDead()) {
+				continue;
+			}
+			enemy.attack(hero);//tour de l'ennemie
+			if(hero.heroDead()) {
 				return CombatResult.LOSE;
 			}
 		}

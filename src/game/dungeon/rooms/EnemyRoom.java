@@ -9,10 +9,10 @@ import game.ennemies.*;
 import game.hero.Hero;
 
 public class EnemyRoom implements Room{
-	private List<Enemy> enemiesList;
+	private final List<Enemy> enemiesList;
 	
-	public EnemyRoom(){
-		this.enemiesList = new ArrayList<>();
+	public EnemyRoom(List<Enemy> enemiesList){
+		this.enemiesList = new ArrayList<>(enemiesList);
 	}
 	
 	public List<Enemy> enemiesList() {

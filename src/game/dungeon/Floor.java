@@ -1,11 +1,15 @@
 package game.dungeon;
 
 import java.util.ArrayDeque;
+
 import java.util.List;
 import java.util.Queue;
 
 import game.dungeon.rooms.*;
+import game.ennemies.*;
 import game.hero.Hero;
+import game.interaction.Combat;
+import game.interaction.CombatResult;
 
 
 public class Floor {
@@ -51,9 +55,9 @@ public class Floor {
 	public void initFloor1() {
 		//ajout de salle ennemies
 		positionHero = new Coord(0, 0);
-		floorRooms[2][2] = new EnemyRoom();
-		floorRooms[2][8] = new EnemyRoom();
-    floorRooms[3][5] = new EnemyRoom();
+		floorRooms[2][2] = new EnemyRoom(List.of(new SmallRatWolf()));
+		floorRooms[2][8] = new EnemyRoom(List.of(new SmallRatWolf()));
+    floorRooms[3][5] = new EnemyRoom(List.of(new SmallRatWolf()));
 		//ajout salle du marchand 
 		floorRooms[1][7] = new MerchantRoom();
 		//ajout salle healer
@@ -69,9 +73,9 @@ public class Floor {
 	public void initFloor2() {
 		//ajout de salle ennemies
 		positionHero = new Coord(1, 0);
-		floorRooms[2][2] = new EnemyRoom();
-		floorRooms[2][7] = new EnemyRoom();
-		floorRooms[3][5] = new EnemyRoom();
+		floorRooms[2][2] = new EnemyRoom(List.of(new SmallRatWolf()));
+		floorRooms[2][7] = new EnemyRoom(List.of(new SmallRatWolf()));
+		floorRooms[3][5] = new EnemyRoom(List.of(new SmallRatWolf()));
 		//ajout salle du marchand 
 		floorRooms[1][8] = new MerchantRoom();
 		//ajout salle healer
@@ -86,9 +90,9 @@ public class Floor {
 	public void initFloor3() {
 		//ajout de salle ennemies
 		positionHero = new Coord(2, 0);
-		floorRooms[2][1] = new EnemyRoom();
-		floorRooms[3][7] = new EnemyRoom();
-		floorRooms[4][5] = new EnemyRoom();
+		floorRooms[2][1] = new EnemyRoom(List.of(new SmallRatWolf()));
+		floorRooms[3][7] = new EnemyRoom(List.of(new SmallRatWolf(), new SmallRatWolf()));
+		floorRooms[4][5] = new EnemyRoom(List.of(new SmallRatWolf()));
 		//ajout salle du marchand 
 		floorRooms[1][7] = new MerchantRoom();
 		//ajout salle healer
@@ -174,12 +178,17 @@ public class Floor {
 		if(!canReach(positionHero ,dest)){
 			return false;
 		}
-		if(floorRooms[dest.row()][dest.col()].type() == RoomType.ENEMY ) {//si la room contient un ennemi
+		Room currentRoom = floorRooms[dest.row()][dest.col()];
+		
+		if(currentRoom instanceof EnemyRoom enemyRoom ) {//si la room contient un ennemi
 			//logique de combat 
-		}else {
-			positionHero = dest; 
+			if( Combat.startCombat(hero,enemyRoom.enemiesList()) == CombatResult.LOSE) {
+				return false;
+			}
 		}
-		floorRooms[dest.row()][dest.col()].enter(hero);//si la room n'est ennemi on y bouge notre hero
+		positionHero = dest; 
+		
+		currentRoom.enter(hero);//si la room n'est ennemi on y bouge notre hero
 		return true;
 	}
 }
