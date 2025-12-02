@@ -79,6 +79,12 @@ public class Hero {
 		
 	}
 	
+	public void consumeMana(int manaCost) {
+		if(mana - manaCost >= 0) {
+			mana -=manaCost;
+		}
+	}
+	
 	public void block() {
 		protection += 5;
 		energy--;
