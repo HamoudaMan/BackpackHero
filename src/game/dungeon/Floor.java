@@ -21,7 +21,7 @@ public class Floor {
 	
 	
 	public Floor(int level) {
-		floorRooms = new Room[ROWS][COLS];
+		this.floorRooms = new Room[ROWS][COLS];
 		//au debut je rempli la map qu'avec des coduloir 
 		for(var i = 0; i < ROWS; i++) {
 			for(var j = 0; j < COLS; j++) {
