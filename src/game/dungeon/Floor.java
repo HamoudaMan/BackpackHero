@@ -37,6 +37,14 @@ public class Floor {
 		}
 	}
 	
+	public int getRows() {
+	  return ROWS;
+	}
+	
+	public int getCols() {
+	  return COLS;
+	}
+	
 	public Room[][] floor() {
 		return floorRooms;
 	}
