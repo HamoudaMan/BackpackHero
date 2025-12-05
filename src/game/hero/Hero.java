@@ -3,6 +3,7 @@ package game.hero;
 import java.util.Objects;
 
 import game.ennemies.Enemy;
+import game.items.Item;
 //import game.items.Item;
 import game.items.MagicBackPack;
 import game.items.weapons.Weapon;
@@ -70,7 +71,7 @@ public class Hero {
 	
 	public void attack(Enemy enemy) {
 		Objects.requireNonNull(enemy);
-		if(!canAttack()) {
+		if(canAttack()) {
 			var damage = weaponEquiped.damage();
 			enemy.takeDamage(damage);
 			energy--;//chaque attaque coute de l'energie
@@ -78,7 +79,13 @@ public class Hero {
 
 		
 	}
-	
+	public void spendGold(int amount) {
+		gold -= amount;
+	}
+	public void heal(int healAmount) {//utilisable pour healerRoom
+		Objects.requireNonNull(healAmount);
+		health = Math.min(maxHealth, health +healAmount);
+	}
 	public void consumeMana(int manaCost) {
 		if(mana - manaCost >= 0) {
 			mana -=manaCost;
@@ -110,5 +117,16 @@ public class Hero {
 			return true;
 		}
 		return false;
+	}
+	
+	//methode pour le sacados 
+	public void equipWeapon(Weapon weapon) {
+		this.weaponEquiped = weapon;
+	}
+	public boolean addToBackPack(Item item) {
+		return backPack.add(item);
+	}
+	public void removeFromBackPack(Item item) {
+		backPack.remove(item);
 	}
 }

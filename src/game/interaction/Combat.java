@@ -28,4 +28,5 @@ public class Combat {
 		}
 		return CombatResult.WIN;
 	}
+	
 }

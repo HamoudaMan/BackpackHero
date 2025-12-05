@@ -1,6 +1,7 @@
 package game.dungeon.rooms;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import game.dungeon.Room;
@@ -21,35 +22,57 @@ public class TreasureRoom implements Room{
 		this.treasure = List.of(new RoughBuckler(), new MagicWand(), new WoodenSword());
 	}
 
-	public void interactWithRoom(Hero hero) {
-		IO.println("Choose items wisely from this treasure ");
-		IO.println("Choose between ? (1, 2, 3, or press 0 to leave)");
-		Scanner scanner = new Scanner(System.in);
-		var choice = scanner.nextInt();
-		if( choice < 1 || choice > treasure.size()) {
-			throw new IllegalArgumentException("nop, choose only a valid item");
+	@Override
+	public void enter(Hero hero) {
+		Objects.requireNonNull(hero);
+		IO.println(description());
+		IO.println("Here's the items availble in the treasure :");
+		for(var i = 0; i<treasure.size(); i++) {//affichage des items 
+			IO.println(i + " - "+treasure.get(i).name());
 		}
-		if(choice == 0) {
-			IO.println("you're leaving everything behind aight");
+		//IO.println("Press O to quit without taking any item");
+		
+	}
+	public void interact(Hero hero, Scanner input) {
+		Objects.requireNonNull(hero);
+		Objects.requireNonNull(input);
+		
+		var choice = -1;
+//var choice = scanner.nextInt();
+		while (true) {//on boucle tant que le user ne rentre pas de input valide 
+			IO.println("Choose items wisely ");
+			IO.println("Choose between ? (1, 2, 3, or press 0 to leave)");
+			//Scanner scanner = new Scanner(System.in);
+			if (!input.hasNextInt()) {//cas ou input n'ets pas un entier 
+				IO.println("Invalid entry, please enter a number ");
+				input.nextLine();
+				continue;
+			}
+			choice = input.nextInt();
+			input.nextLine();
+			
+			if (choice == 0) {
+				IO.println("you're leaving everything behind aight");
+				return;
+			}
+			
+			if (choice < 1 || choice > treasure.size()) {
+				IO.println("Invalid choice ");
+				continue;
+			} 
+			break;// e-input valide donc on sort de la vboucle
 		}
+		
 		Item chosen = treasure.get(choice - 1);
 	
 		if(!hero.backPack().add(chosen)) {
-			IO.println("BackPack full");
+			IO.println("BackPack full, impossible to add "+ chosen.name());
 		}else {
-			IO.println("You chose " +chosen.name());
+			IO.println(chosen.name() + "have been added to your Back Pack");
 		}
 	}
 
-	
-	@Override
-	public void enter(Hero hero) {
-		IO.println(description());
-		for(Item obj :treasure){
-			IO.println(obj.name());
-		}
-		
-	}
+
 	public List<Item> treasure(){
 		return treasure;
 	}

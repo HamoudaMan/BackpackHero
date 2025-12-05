@@ -66,6 +66,16 @@ public class MagicBackPack {
 		return false;//impossible de le fit dans le sac 
 	}
 	
+	public void remove(Item item) {//enleve l'item du sac a dos (peut etre refere une versio nqui renvoi un bool 
+		for(var r = 0; r<ROWS; r++) {
+			for(var c = 0; c< COLS; c++) {
+				if( (stuff[r][c]).equals(item)) {
+					stuff[r][c] = null;
+				}
+			}
+		}
+	}
+	
 	public Item[][] stuff(){
 		return stuff;
 	}
