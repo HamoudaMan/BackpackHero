@@ -28,8 +28,9 @@ public class DrawFloor {
   }
   
   public void drawAllCaseDungeon(Graphics2D graphics, Room[][] floorRoom, Coord positionHero, int col, int row) {
-    var backRectangleGray = Color.LIGHT_GRAY;
-    
+    Objects.requireNonNull(graphics);
+    Objects.requireNonNull(floorRoom);
+    Objects.requireNonNull(positionHero);    
     
     var roomCol = screenHeight / (col+2);
     var roomRow = screenWidth / (row+2); 
@@ -38,18 +39,14 @@ public class DrawFloor {
     
     for (int i = 1; i < col+1; i++) {
       for (int j = 1 ; j < row+1; j++) {
+        graphics.setColor(Color.BLACK);
+        graphics.drawRect(roomRow*j + RoomSeparator/2, roomCol*i + RoomSeparator/2, roomRow - RoomSeparator, roomCol - RoomSeparator);
         switch (floorRoom[i-1][j-1].type()) {
         case null -> {
-          graphics.setColor(backRectangleGray);
-          graphics.setColor(Color.BLACK);
-          graphics.drawRect(roomRow*j + RoomSeparator/2, roomCol*i + RoomSeparator/2, roomRow - RoomSeparator, roomCol - RoomSeparator);
           graphics.drawRect(roomRow*j + RoomSeparator, roomCol*i + RoomSeparator, roomRow - RoomSeparator*2, roomCol - RoomSeparator*2);  
         }
      
         case TREASURE -> {
-          graphics.setColor(backRectangleGray);
-          graphics.setColor(Color.BLACK);
-          graphics.drawRect(roomRow*j + RoomSeparator/2, roomCol*i + RoomSeparator/2, roomRow - RoomSeparator, roomCol - RoomSeparator);
           graphics.setColor(Color.YELLOW);
           graphics.fillRect(roomRow*j + RoomSeparator, roomCol*i + RoomSeparator, roomRow - RoomSeparator*2, roomCol - RoomSeparator*2);
           graphics.setColor(Color.BLACK);
@@ -57,9 +54,6 @@ public class DrawFloor {
         }
         
         case ENEMY -> {
-          graphics.setColor(backRectangleGray);
-          graphics.setColor(Color.BLACK);
-          graphics.drawRect(roomRow*j + RoomSeparator/2, roomCol*i + RoomSeparator/2, roomRow - RoomSeparator, roomCol - RoomSeparator);
           graphics.setColor(Color.RED);
           graphics.fillRect(roomRow*j + RoomSeparator, roomCol*i + RoomSeparator, roomRow - RoomSeparator*2, roomCol - RoomSeparator*2);
           graphics.setColor(Color.BLACK);
@@ -69,5 +63,13 @@ public class DrawFloor {
         }
       }
     }
+    // draw where the hero is;
+    
+    var colHero = positionHero.col()+1;
+    var rowHero = positionHero.row()+1;
+    graphics.setColor(Color.CYAN);
+    graphics.fillRect(roomRow*rowHero + RoomSeparator, roomCol*colHero + RoomSeparator, roomRow - RoomSeparator*2, roomCol - RoomSeparator*2);
+    graphics.setColor(Color.BLACK);
+    graphics.drawRect(roomRow*rowHero + RoomSeparator, roomCol*colHero + RoomSeparator, roomRow - RoomSeparator*2, roomCol - RoomSeparator*2);
   }
 }
