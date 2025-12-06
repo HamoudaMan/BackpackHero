@@ -15,6 +15,7 @@ import game.interaction.CombatResult;
 public class Floor {
 	private static final int ROWS = 5;
 	private static final int COLS = 11;
+	private int level = 1;
 	
 	private Room[][] floorRooms;
 	private Coord positionHero;
@@ -35,10 +36,15 @@ public class Floor {
 			case 3 -> initFloor3();
 			default -> throw new IllegalArgumentException("floor exceded");
 		}
+		this.level = level;
+		
 	}
 	
 	public Room[][] floor() {
 		return floorRooms;
+	}
+	public int level() {
+		return level;
 	}
 	public Coord postionHero() {
 		return positionHero;
@@ -54,6 +60,7 @@ public class Floor {
 	//----floor1---
 	public void initFloor1() {
 		//ajout de salle ennemies
+		level = 1;
 		positionHero = new Coord(0, 0);
 		floorRooms[2][2] = new EnemyRoom(List.of(new SmallRatWolf()));
 		floorRooms[2][8] = new EnemyRoom(List.of(new SmallRatWolf()));
@@ -72,6 +79,7 @@ public class Floor {
 	//----floor2---
 	public void initFloor2() {
 		//ajout de salle ennemies
+		level = 2;
 		positionHero = new Coord(1, 0);
 		floorRooms[2][2] = new EnemyRoom(List.of(new SmallRatWolf()));
 		floorRooms[2][7] = new EnemyRoom(List.of(new SmallRatWolf()));
@@ -89,6 +97,7 @@ public class Floor {
 	//----floor3---
 	public void initFloor3() {
 		//ajout de salle ennemies
+		level = 3;
 		positionHero = new Coord(2, 0);
 		floorRooms[2][1] = new EnemyRoom(List.of(new SmallRatWolf()));
 		floorRooms[3][7] = new EnemyRoom(List.of(new SmallRatWolf(), new SmallRatWolf()));
