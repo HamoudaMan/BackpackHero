@@ -1,5 +1,8 @@
 package game.dungeon.rooms;
 
+import java.util.Objects;
+import java.util.Scanner;
+
 import game.dungeon.Room;
 import game.dungeon.RoomType;
 import game.hero.Hero;
@@ -8,20 +11,26 @@ public class CorridorRoom implements Room{
 
 	@Override
 	public void enter(Hero hero) {
-		// TODO Auto-generated method stub
+		Objects.requireNonNull(hero);
+		IO.println(description());
+		
+	}
+
+	@Override
+	public void interact(Hero hero, Scanner input) {
+		IO.println("don't stop here, there's nothing to see");
 		
 	}
 
 	@Override
 	public RoomType type() {
-		// TODO Auto-generated method stub
-		return null;
+		return RoomType.CORRIDOR;
 	}
 
 	@Override
 	public String description() {
-		// TODO Auto-generated method stub
-		return null;
+		return "a quiet empty room, this is just a corridor";
 	}
+
 
 }
