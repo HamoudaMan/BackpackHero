@@ -45,7 +45,7 @@ public class Floor {
 	}
 	
 	public Room getRoomInfo(int row, int col) {
-		if(row < 0 || col >= COLS || row >= ROWS || col < 0) {
+		if(row < 0 || row >= ROWS || col < 0 ||col >= COLS ) {
 			throw new IllegalArgumentException();
 		}
 		return floorRooms[row][col];
@@ -98,7 +98,7 @@ public class Floor {
 		//ajout salle healer
 		floorRooms[1][9] = new HealerRoom();
 		//ajout salle aux tresors 
-		floorRooms[2][1] = new TreasureRoom();
+		floorRooms[2][3] = new TreasureRoom();
 		floorRooms[3][10] = new TreasureRoom();
 		//ajout salle exit
 		floorRooms[0][10] = new ExitRoom();
@@ -127,6 +127,7 @@ public class Floor {
 	public boolean safeToAccess(Room room) {
 		return switch(room.type()) {
 		case CORRIDOR -> true;
+		case ENEMY ->true;
 		case MERCHANT -> true;
 		case TREASURE -> true;
 		case HEALER -> true;
@@ -182,7 +183,7 @@ public class Floor {
 		
 		if(currentRoom instanceof EnemyRoom enemyRoom ) {//si la room contient un ennemi
 			//logique de combat 
-			if( Combat.startCombat(hero,enemyRoom.enemiesList()) == CombatResult.LOSE) {
+			if( Combat.startCombat(hero,enemyRoom.enemiesList()) ==   CombatResult.LOSE) {
 				return false;
 			}
 		}
