@@ -13,7 +13,7 @@ public class ExitRoom implements Room{
 	public void enter(Hero hero) {
 		Objects.requireNonNull(hero);
 		IO.println(description());
-		IO.println("You found the exit o this floor ");
+		IO.println("You found the exit of this floor ");
 		
 	}
 	@Override
