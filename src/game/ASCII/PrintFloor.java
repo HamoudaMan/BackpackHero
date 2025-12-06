@@ -6,20 +6,27 @@ import game.dungeon.Room;
 
 public class PrintFloor {
 	public static void printF(Floor floor, Coord heroPos) {
-		IO.println("======== Floor " + floor.level() + " =========");
+		IO.println("\t============ Floor " + floor.level() + " =============");
+		
 		Room[][] listeRoom = floor.floor();// recuperer toute les room de l'etage level
+		IO.println("+------------------------------------------------------+");
+		
 		for(var r = 0; r < listeRoom.length; r++) {//5
-			IO.println("+---------------------------------+");
+			StringBuilder sbRow = new StringBuilder();
+			
 			for(var c = 0; c < listeRoom[r].length; c++) {//11
 				if(r == heroPos.row()  && c == heroPos.col()) {
-					IO.print("| * ");// on place le hero sur la map 
+					sbRow.append("| * ");// on place le hero sur la map 
 				}else {
-					IO.println("| " +symbol(listeRoom[r][c]) +" ");//appel a symbol pour afficher la premiere lettre de la room 
+					sbRow.append("| " +symbol(listeRoom[r][c]) +" ");//appel a symbol pour afficher la premiere lettre de la room 
 				}
-			IO.print("|");	
+				sbRow.append("|");	
 			}
-			IO.println("+---------------------------------+\n");	
+			IO.println(sbRow.toString());
+			
 		}
+		IO.println("+------------------------------------------------------+\n");	
+		IO.println();
 	}
 	
 	private static char symbol(Room room) {

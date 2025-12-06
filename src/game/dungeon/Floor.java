@@ -16,7 +16,7 @@ public class Floor {
 	private static final int ROWS = 5;
 	private static final int COLS = 11;
 	private int level = 1;
-	
+	private boolean completed = false;
 	private Room[][] floorRooms;
 	private Coord positionHero;
 	
@@ -113,6 +113,12 @@ public class Floor {
 		floorRooms[0][10] = new ExitRoom();
 	}
 	
+	public boolean isCompleted() {
+		return completed;
+	}
+	public void setCompleted() {
+		this.completed = true;//utilisation de this juste par securité et evité ambiguité
+	}
 	//---methode de deplacement
 	//plus tard elles seront implementé dans une classe seul 
 	public boolean validPosition(Coord c) {

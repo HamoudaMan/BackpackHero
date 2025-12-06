@@ -12,15 +12,17 @@ public class PrintBackPack {
 		IO.println("==========Magic Back Pack=========");
 		IO.println();
 		for( var r = 0; r< listeItem.length ; r++) {
+			StringBuilder sbRow = new StringBuilder();
+			
 			for(var c = 0; c< listeItem[r].length; c++) {
 				Item it = listeItem[r][c];
 				if(it == null) {
-					IO.print("[ ]");//cas ou case vide 
+					sbRow.append("[  ]");//cas ou case vide 
 				}else {
-					IO.print("[" +abbreviation(it.name()) + "]");
+					sbRow.append("[" +abbreviation(it.name()) + "]");
 				}
-				IO.println();//pour le retour a la ligne 
 			}
+			IO.println(sbRow.toString());
 		}
 		IO.println();
 	}
