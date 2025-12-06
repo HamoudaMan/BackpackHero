@@ -1,10 +1,14 @@
 package game.state;
 
+import java.util.List;
+
 import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
 
-import game.dungeon.Floor;
-import game.window.DrawFloor;
+import game.ennemies.Enemy;
+import game.ennemies.SmallRatWolf;
+import game.hero.Hero;
+import game.window.DrawRoom;
 import game.window.Window;
 
 public class GameState {
@@ -14,24 +18,38 @@ public class GameState {
      var context = window.GetContext();
      var screenWigth = context.getScreenInfo().width();
      var screenHeight = context.getScreenInfo().height();
-     var drawFloor = new DrawFloor(screenWigth, screenHeight);
      
-     var floor = new Floor(1);
+//####### POUR DESSINER LE FLOOR ###########
+//     var drawFloor = new DrawFloor(screenWigth, screenHeight);
+//     var floor = new Floor(1);
+//     var row = floor.getRows();
+//     var col = floor.getCols();
+//     var floorRoom = floor.floor();
+//     var coordHero = floor.postionHero();
      
-     var row = floor.getRows();
-     var col = floor.getCols();
-     var floorRoom = floor.floor();
-     var coordHero = floor.postionHero();
+//     context.renderFrame(f -> drawFloor.drawAllCaseDungeon(f, floorRoom, coordHero, row, col));
      
+//##########################################
      
-     context.renderFrame(f -> drawFloor.drawAllCaseDungeon(f, floorRoom, coordHero, row, col));
+//###### POUR DESSINER LA ROOM #############
+     var drawRoom = new DrawRoom(screenWigth, screenHeight);
+     var hero = new Hero("Hero");
+     List<Enemy> ennemies = List.of(new SmallRatWolf(), new SmallRatWolf(), new SmallRatWolf());
+     context.renderFrame(f -> drawRoom.DrawRoomEnemy(f, ennemies, hero));
+     
+//##########################################
      
      while(true) {
        var pointerEvent = context.pollEvent();
        switch (pointerEvent) {
          case PointerEvent _ -> {context.dispose(); System.exit(0);}
          case KeyboardEvent _ -> {context.dispose(); System.exit(0);}
-         case null -> {context.renderFrame(f -> drawFloor.drawAllCaseDungeon(f, floorRoom, coordHero, row, col));;}
+         case null -> {
+//           ####### POUR DESSINER LE FLOOR ###########
+//           context.renderFrame(f -> drawFloor.drawAllCaseDungeon(f, floorRoom, coordHero, row, col));
+           
+           
+         }
        }
      }
    }
