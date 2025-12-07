@@ -102,6 +102,11 @@ public class SmallRatWolf implements Enemy {
 			buffProtection();
 		}
 	}
+	@Override
+	public void resetProtection() {
+		this.protection = 0;
+		
+	}
 
 
 

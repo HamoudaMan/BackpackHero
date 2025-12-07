@@ -11,25 +11,32 @@ import game.ennemies.*;
 import game.hero.Hero;
 import game.interaction.Combat;
 import game.interaction.CombatResult;
+import game.interaction.EnemyController;
+import game.interaction.ItemManager;
+import game.interaction.UICombat;
 //import game.items.Item;
 
 public class EnemyRoom implements Room{
 	private final List<Enemy> enemiesList;
 	
-	public EnemyRoom(List<Enemy> enemiesList){
-		Objects.requireNonNull(enemiesList);
-		this.enemiesList = new ArrayList<>(enemiesList);
+	public EnemyRoom(List<Enemy> enemies){
+		Objects.requireNonNull(enemies);
+		this.enemiesList = new ArrayList<>(enemies);
 	}
 	
 	public List<Enemy> enemiesList() {
 		return List.copyOf(enemiesList);
-	}
+	}/*
 	@Override
 	public void enter(Hero hero) {
 		Objects.requireNonNull(hero);
 		IO.println(description());
 		IO.println("enemies in the room :");
 		IO.println(this);
+		if(enemiesList.isEmpty()){
+			IO.print("you already did this room, all ennemies have been defeated");
+			return;
+		}
 		CombatResult result = Combat.startCombat(hero, enemiesList);
 		
 		if(result == CombatResult.LOSE) {
@@ -39,7 +46,22 @@ public class EnemyRoom implements Room{
 			IO.println("All the enemies have been defeated");
 			enemiesList.clear();//on vide la liste des ennemies en cas de victoire 
 		}
-	}
+	}*/
+	public void enter(Hero hero) {
+
+    Combat engine = new Combat(
+        hero,
+        enemiesList,
+        new UICombat(new Scanner(System.in)),
+        new ItemManager(new UICombat(new Scanner(System.in)), new Scanner(System.in)),
+        new EnemyController()
+    );
+
+    CombatResult result = engine.startCombat();
+
+    if (result == CombatResult.WIN) enemiesList.clear();
+}
+
 	
 	public void interact(Hero hero, Scanner input) {
 		Objects.requireNonNull(hero);

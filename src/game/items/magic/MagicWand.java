@@ -1,5 +1,7 @@
 package game.items.magic;
 
+import java.util.Objects;
+
 import game.ennemies.Enemy;
 import game.hero.Hero;
 import game.items.Item;
@@ -8,8 +10,26 @@ public class MagicWand implements Item{
 	
 	private final String name = "Magic Wand";
 	private final int manaCost = 2;
-	private final int damage = 7;
+	private final int damage = 10;
+	private int height = 3;
+	private int width = 1;
+	@Override
+	public boolean canUse(Hero hero) {
+		// TODO Auto-generated method stub
+		Objects.requireNonNull(hero);
+		return hero.mana() >= manaCost;
+	}
 	
+	public void use(Hero hero, Enemy enemy) {
+		if(hero.mana() < manaCost()) {
+			IO.println("Not enough mana !");
+			return;
+		}
+		hero.consumeMana(manaCost());
+		enemy.takeDamage(damage);
+		IO.println(name + " caused : "+ damage+" damage to "+ enemy.name());
+	}
+
 	@Override
 	public String name() {
 		// TODO Auto-generated method stub
@@ -26,28 +46,28 @@ public class MagicWand implements Item{
 	@Override
 	public int width() {
 		// TODO Auto-generated method stub
-		return 0;
+		return width;
 	}
 
 	@Override
 	public int height() {
 		// TODO Auto-generated method stub
-		return 0;
+		return height;
 	}
 
 	@Override
 	public void rotate() {
-		// TODO Auto-generated method stub
+		var tmp = height;
+		height = width;
+		width = tmp;
 		
 	}
-	public void use(Hero hero, Enemy enemy) {
-		if(hero.mana() < manaCost()) {
-			IO.println("Not enough mana !");
-			return;
-		}
-		hero.consumeMana(manaCost());
-		enemy.takeDamage(damage);
-		IO.println(name + " caused : "+ damage+" damage to "+ enemy.name());
+
+	
+	@Override
+	public int energyCost() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }

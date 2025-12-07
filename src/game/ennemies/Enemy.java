@@ -12,7 +12,7 @@ public interface Enemy {
 	boolean isDead();
 	Action nextAction();
 	
-	
+	void resetProtection();
 	void attack(Hero hero);//attaque le hero
 	void takeDamage(int damage);
 	void buffProtection();//augmente sa protection 

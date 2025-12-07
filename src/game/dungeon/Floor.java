@@ -196,15 +196,23 @@ public class Floor {
 		}
 		Room currentRoom = floorRooms[dest.row()][dest.col()];
 		
+		/*
 		if(currentRoom instanceof EnemyRoom enemyRoom ) {//si la room contient un ennemi
 			//logique de combat 
 			if( Combat.startCombat(hero,enemyRoom.enemiesList()) ==   CombatResult.LOSE) {
 				return false;
 			}
+		}*/
+	
+		
+		switch(currentRoom.type()) {//bizarre ca marchait pas avec -> peut etre bug de mon eclipse 
+			case ENEMY : { };
+			case MERCHANT, TREASURE, HEALER, EXIT : currentRoom.enter(hero);
+			
+			default :{ };
 		}
 		positionHero = dest; 
-		
-		currentRoom.enter(hero);//si la room n'est ennemi on y bouge notre hero
+		//currentRoom.enter(hero);//si la room n'est ennemi on y bouge notre hero
 		return true;
 	}
 }

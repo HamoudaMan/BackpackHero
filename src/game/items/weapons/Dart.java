@@ -1,5 +1,9 @@
 package game.items.weapons;
 
+import java.util.Objects;
+
+import game.ennemies.Enemy;
+import game.hero.Hero;
 import game.items.Item;
 
 public class Dart implements Item, Weapon{
@@ -7,17 +11,35 @@ public class Dart implements Item, Weapon{
 	private final String name = "Dart";
 	private final int damage = 7;
 	private int turnUsable = 100;//une grande valeur pour dire illimié
-	private boolean usable = true;
+	//private boolean usable = true;
 	private int width = 1;
-	private int height = 3;
-	private final int manaPrice = 1;	
+	private int height = 2;
+	private final int energyCost = 1;	
 	
+	@Override
+	public boolean canUse(Hero hero) {
+		Objects.requireNonNull(hero);
+		return hero.energy()>0;
+	}
+	
+	@Override
+	public void use(Hero hero, Enemy enemy) {
+		Objects.requireNonNull(hero);
+		Objects.requireNonNull(enemy);
+		if(!canUse(hero)) {
+			IO.println("Not enough enerfy to use "+ name());
+			return;
+		}
+		hero.consumeEnergy(energyCost);
+		enemy.takeDamage(damage);
+		
+	}
 	@Override
 	public int damage() {
 		return damage;
 	}
-	public int manaPrice() {
-		return manaPrice;
+	public int energyCost() {
+		return energyCost;
 	}
 
 	@Override
@@ -25,10 +47,7 @@ public class Dart implements Item, Weapon{
 		return turnUsable;
 	}
 
-	@Override
-	public Boolean usable() {
-		return usable;
-	}
+
 
 	@Override
 	public String name() {
@@ -53,10 +72,6 @@ public class Dart implements Item, Weapon{
 		width = tmp;
 		
 	}
-	@Override
-	public Weapon use() {
-		return null;
-		
-	}
+
 
 }

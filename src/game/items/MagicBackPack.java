@@ -22,6 +22,8 @@ public class MagicBackPack {
 		//on check si il n'y pas un item au dessu de l'autre 
 		for( var r = row; r< row+h; r++) {
 			for(var c = col; c < col+w; c++ ) {
+				//System.out.println("Testing cell " + r + "," + c + " => " + stuff[r][c]);
+
 				if(stuff[r][c] != null) {
 					return false;
 				}
@@ -46,6 +48,8 @@ public class MagicBackPack {
 		//cas ou y a pas besoin de faire une rota sur l'item 
 		for(var row = 0; row < ROWS; row ++) {
 			for(var col = 0; col <COLS; col++) {
+				//System.out.println("TEST fit " + item.name() + " at " + row + "," + col);
+
 				if(fitsInBackPack(item, row, col)) {
 					placeInBackPack(item, row, col);
 					return true;
@@ -69,7 +73,7 @@ public class MagicBackPack {
 	public void remove(Item item) {//enleve l'item du sac a dos (peut etre refere une versio nqui renvoi un bool 
 		for(var r = 0; r<ROWS; r++) {
 			for(var c = 0; c< COLS; c++) {
-				if( (stuff[r][c]).equals(item)) {
+				if( (stuff[r][c]).equals(item) && stuff[r][c].equals(item)) {
 					stuff[r][c] = null;
 				}
 			}
@@ -78,5 +82,15 @@ public class MagicBackPack {
 	
 	public Item[][] stuff(){
 		return stuff;
+	}
+	@Override
+	public String toString() {
+		var sb = new StringBuilder();
+		var i = 1;
+		for(var obj :stuff) {
+			sb.append(i + " : ").append(obj);
+			i++;
+		}
+		return sb.toString();
 	}
 }

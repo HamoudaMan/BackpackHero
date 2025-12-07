@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import game.ASCII.PrintBackPack;
 import game.dungeon.Room;
 import game.dungeon.RoomType;
 import game.hero.Hero;
@@ -28,7 +29,7 @@ public class TreasureRoom implements Room{
 		IO.println(description());
 		IO.println("Here's the items availble in the treasure :");
 		for(var i = 0; i<treasure.size(); i++) {//affichage des items 
-			IO.println(i + " - "+treasure.get(i).name());
+			IO.println(i +1 + " - "+treasure.get(i).name());
 		}
 		//IO.println("Press O to quit without taking any item");
 		
@@ -59,17 +60,30 @@ public class TreasureRoom implements Room{
 			if (choice < 1 || choice > treasure.size()) {
 				IO.println("Invalid choice ");
 				continue;
+				
 			} 
 			break;// e-input valide donc on sort de la vboucle
 		}
 		
 		Item chosen = treasure.get(choice - 1);
+		/*pour debug
+		System.out.println("Before add:");
+		PrintBackPack.PrintMagicBackPack(hero.backPack().stuff());
+		boolean added = hero.backPack().add(chosen);
+		*/
+		
+		
 	
 		if(!hero.backPack().add(chosen)) {
 			IO.println("BackPack full, impossible to add "+ chosen.name());
 		}else {
 			IO.println(chosen.name() + "have been added to your Back Pack");
+			/*pur debug
+			System.out.println("After add:");
+			PrintBackPack.PrintMagicBackPack(hero.backPack().stuff());
+*/
 		}
+		IO.println(hero.backPack());
 	}
 
 

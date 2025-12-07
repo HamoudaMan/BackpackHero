@@ -9,6 +9,7 @@ public class PrintHero {
 		IO.println("Name : " +hero.name());
 		IO.println("HP   : " + hero.health() +" / "+ hero.maxHealth());
 		IO.println("Mana : " + hero.mana());
+		IO.println("Energy : " + hero.energy());
 		IO.println("Gold : "+ hero.gold()+"\n");
 	}
 }

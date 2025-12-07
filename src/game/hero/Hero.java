@@ -61,10 +61,54 @@ public class Hero {
 	public MagicBackPack backPack() {
 		return backPack;
 	}
+	public void addGold(int amount) {
+		Objects.requireNonNull(amount);
+		this.gold += amount;
+	}
+	public void spendGold(int amount) {
+		gold -= amount;
+	}
+	public void heal(int healAmount) {//utilisable pour healerRoom
+		Objects.requireNonNull(healAmount);
+		health = Math.min(maxHealth, health +healAmount);
+	}
+	public void addProtection(int block) {
+		this.protection += block;
+	}
+	public void resetProtection() {
+		this.protection = 0;
+	}
+	public void consumeMana(int manaCost) {
+		Objects.requireNonNull(manaCost);
+		if(mana - manaCost >= 0) {
+			mana -=manaCost;
+		}
+	}
+	public void consumeEnergy(int energyCost) {
+		Objects.requireNonNull(energyCost);
+		if(energy - energyCost >= 0) {
+			this.energy --;
+		}
+	}
+	public void restoreEnergy(int e) {
+		//if(energy < 3)
+		this.energy += e;
+	}
 	
-	
+	public void resetEnergy() {
+		this.energy = 3;
+	}
 	//----Methode pour les duels----
-	
+	//methode pour le sacados 
+	public void equipWeapon(Weapon weapon) {
+		this.weaponEquiped = weapon;
+	}
+	public boolean addToBackPack(Item item) {
+		return backPack.add(item);
+	}
+	public void removeFromBackPack(Item item) {
+		backPack.remove(item);
+	}
 	public Boolean canAttack() {
 		return energy > 0 && weaponEquiped != null;
 	}
@@ -74,23 +118,11 @@ public class Hero {
 		if(canAttack()) {
 			var damage = weaponEquiped.damage();
 			enemy.takeDamage(damage);
-			energy--;//chaque attaque coute de l'energie
+			consumeEnergy(weaponEquiped.energyCost());//chaque attaque coute de l'energie
 		}
 
-		
 	}
-	public void spendGold(int amount) {
-		gold -= amount;
-	}
-	public void heal(int healAmount) {//utilisable pour healerRoom
-		Objects.requireNonNull(healAmount);
-		health = Math.min(maxHealth, health +healAmount);
-	}
-	public void consumeMana(int manaCost) {
-		if(mana - manaCost >= 0) {
-			mana -=manaCost;
-		}
-	}
+
 	
 	public void block() {
 		protection += 5;
@@ -108,6 +140,7 @@ public class Hero {
 		if(health < 0) {
 			health = 0;// les pv ne peuvent pas etre negatif
 		}
+		this.protection = 0;
 		IO.println(name + " subit "+ effectiveDamage + " : pv restant: "+ health + " pv");
 	}
 	
@@ -119,14 +152,5 @@ public class Hero {
 		return false;
 	}
 	
-	//methode pour le sacados 
-	public void equipWeapon(Weapon weapon) {
-		this.weaponEquiped = weapon;
-	}
-	public boolean addToBackPack(Item item) {
-		return backPack.add(item);
-	}
-	public void removeFromBackPack(Item item) {
-		backPack.remove(item);
-	}
+
 }

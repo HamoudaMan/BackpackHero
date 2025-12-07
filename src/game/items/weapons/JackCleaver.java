@@ -1,23 +1,49 @@
 package game.items.weapons;
 
+import java.util.Objects;
+
+import game.ennemies.Enemy;
+import game.hero.Hero;
 import game.items.Item;
 
 public class JackCleaver implements Item, Weapon{
 	private final String name = "Jack Cleaver";
 	private final int damage = 7;
 	private int turnUsable = 100;//une grande valeur pour dire illimié
-	private boolean usable = true;
+	//private boolean usable = true;
 	private int width = 1;
 	private int height = 1;
-	private final int manaPrice = 2;	
+	private final int energyCost = 1;	
 	private final boolean hitAllTarget = true;
+	
+	
+	@Override
+	public boolean canUse(Hero hero) {
+		// TODO Auto-generated method stub
+		Objects.requireNonNull(hero);
+		return hero.energy() >= energyCost;
+	}
+	@Override
+	public void use(Hero hero, Enemy enemy) {
+		Objects.requireNonNull(hero);
+		Objects.requireNonNull(enemy);
+		if(!canUse(hero)) {
+			IO.println("Not enough enerfy to use "+ name());
+			return;
+		}
+		hero.consumeEnergy(energyCost);
+		enemy.takeDamage(damage);
+
+	}
+
+
 	
 	@Override
 	public int damage() {
 		return damage;
 	}
-	public int manaPrice() {
-		return manaPrice;
+	public int energyCost() {
+		return energyCost;
 	}
 	public Boolean hitAllTarget() {
 		return hitAllTarget;
@@ -28,10 +54,6 @@ public class JackCleaver implements Item, Weapon{
 		return turnUsable;
 	}
 
-	@Override
-	public Boolean usable() {
-		return usable;
-	}
 
 	@Override
 	public String name() {
@@ -58,11 +80,8 @@ public class JackCleaver implements Item, Weapon{
 		
 	}
 	
-	@Override
-	public Weapon use() {
-		return null;
-		
-	}
+
+
 
 
 }

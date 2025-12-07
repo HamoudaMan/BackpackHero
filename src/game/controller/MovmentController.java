@@ -1,9 +1,12 @@
 package game.controller;
 
+import java.util.Scanner;
+
 import game.dungeon.Coord;
 import game.dungeon.Dungeon;
 import game.dungeon.Floor;
 import game.dungeon.Room;
+import game.dungeon.RoomType;
 import game.hero.Hero;
 
 public class MovmentController {
@@ -38,10 +41,21 @@ public class MovmentController {
 			IO.println("Movment fail");
 			return;
 		}
-		Room room = floor.getRoomInfo(dest.row(), dest.col());
+		Room room = floor.getRoomInfo(dest.row(), dest.col());/*
 		switch(room.type()){
-			case EXIT ->{ floor.setCompleted();dungeon.gotNextFloor();}
+			case EXIT ->{ floor.moveHero(dest, hero); floor.setCompleted();dungeon.gotNextFloor();}
+			case ENEMY ->{ floor.moveHero(dest, hero); return;}
+			case TREASURE, MERCHANT, HEALER ->{ if(floor.moveHero(dest, hero)) {
+																						room.interact(hero, new Scanner(System.in));
+																						}
+																					return;
+			}
+			case CORRIDOR ->floor.moveHero(dest, hero);
 			default -> {} //ne rien faire
+		}*/
+		if(room.type() == RoomType.EXIT) {
+			floor.setCompleted();
+			dungeon.gotNextFloor();
 		}
 		
 		IO.println("HERO BEFORE MOVE : " + floor.postionHero());

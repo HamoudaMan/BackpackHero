@@ -101,6 +101,11 @@ public class Slime implements Enemy {
 		IO.println(name + " subit "+ effectiveDamage + " : pv restant: "+ health + " pv");
 	}
 
+	@Override
+	public void resetProtection() {
+		this.protection = 0;
+		
+	}
 
 
 	
