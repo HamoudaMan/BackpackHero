@@ -5,9 +5,11 @@ import java.util.List;
 import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
 
+import game.dungeon.Floor;
 import game.ennemies.Enemy;
 import game.ennemies.SmallRatWolf;
 import game.hero.Hero;
+import game.window.DrawFloor;
 import game.window.DrawRoom;
 import game.window.Window;
 
@@ -26,7 +28,7 @@ public class GameState {
 //     var col = floor.getCols();
 //     var floorRoom = floor.floor();
 //     var coordHero = floor.postionHero();
-     
+//     
 //     context.renderFrame(f -> drawFloor.drawAllCaseDungeon(f, floorRoom, coordHero, row, col));
      
 //##########################################
@@ -34,7 +36,7 @@ public class GameState {
 //###### POUR DESSINER LA ROOM #############
      var drawRoom = new DrawRoom(screenWigth, screenHeight);
      var hero = new Hero("Hero");
-     
+//     
      
 //   POUR DESSINER LA ROOM AVEC DES ENNEMIES
      List<Enemy> ennemies = List.of(new SmallRatWolf(), new SmallRatWolf(), new SmallRatWolf());

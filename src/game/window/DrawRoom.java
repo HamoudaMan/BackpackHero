@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.Objects;
 
 import game.ennemies.Action;
 import game.ennemies.Enemy;
@@ -22,6 +23,9 @@ public class DrawRoom {
   }
   
   public void DrawRoomEnemy(Graphics2D graphics,  List<Enemy> enemy, Hero hero) {
+    Objects.requireNonNull(graphics);
+    Objects.requireNonNull(enemy);
+    Objects.requireNonNull(hero);
     for(var i = 0; i<enemy.size(); i++) {
       DrawEnemy(graphics, enemy.get(i), i);
     }
@@ -29,11 +33,15 @@ public class DrawRoom {
   }
   
   public void DrawRoomCorridor(Graphics2D graphics, Hero hero) {
+    Objects.requireNonNull(graphics);
+    Objects.requireNonNull(hero);
     DrawHero(graphics, hero);
     DrawEndCorridor(graphics);
   }
   
   public void DrawRoomTreasure(Graphics2D graphics, Hero hero) {
+    Objects.requireNonNull(graphics);
+    Objects.requireNonNull(hero);
     DrawHero(graphics, hero);
     DrawChest(graphics);
   }
