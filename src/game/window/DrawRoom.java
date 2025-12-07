@@ -57,20 +57,43 @@ public class DrawRoom {
     graphics.setColor(Color.CYAN);
     graphics.fillRect(x, y, xWidth, yHeight);
   }
+  private void DrawHeroLevel(Graphics2D graphics, int level, int x, int y, int xWidth, int yHeight) {
+    // Energy rectangle
+    var levelX = x - xWidth/4/2;
+    var levelY = y - screenHeight * 2/50/2;
+    var levelWidth = xWidth/4;
+    var levelHeight = screenHeight * 2/50;
+    graphics.setColor(Color.GREEN);
+    graphics.fillRect(levelX , levelY, levelWidth, levelHeight);
+    graphics.setColor(Color.BLACK);
+    graphics.drawRect(levelX , levelY, levelWidth, levelHeight);
+    
+    // Energy numeric
+    var font = new Font("Arial", Font.BOLD, screenWidth * 2/200);
+    var colorString = Color.BLACK;  
+    graphics.setColor(colorString);
+    graphics.setFont(font);
+    var fm = graphics.getFontMetrics();
+    var stringLevel = level + "" ;
+    var stringLevelX = levelX + (levelWidth - fm.stringWidth(stringLevel))/2;
+    var stringLevelY = levelY + (fm.getAscent() + levelHeight)/2 ;
+    graphics.drawString(stringLevel, stringLevelX,  stringLevelY); 
+  }
+  
   private void DrawHeroEnergy(Graphics2D graphics, int energy, int x, int y, int xWidth, int yHeight) {
     // Energy rectangle
-    var energyX = x - xWidth/4/2;
+    var energyX = x + xWidth - xWidth/4/2;
     var energyY = y - screenHeight * 2/50/2;
     var energyWidth = xWidth/4;
     var energyHeight = screenHeight * 2/50;
-    graphics.setColor(Color.GREEN);
+    graphics.setColor(Color.BLUE);
     graphics.fillRect(energyX , energyY, energyWidth, energyHeight);
     graphics.setColor(Color.BLACK);
     graphics.drawRect(energyX , energyY, energyWidth, energyHeight);
     
     // Energy numeric
     var font = new Font("Arial", Font.BOLD, screenWidth * 2/200);
-    var colorString = Color.BLACK;  
+    var colorString = Color.WHITE;  
     graphics.setColor(colorString);
     graphics.setFont(font);
     var fm = graphics.getFontMetrics();
@@ -103,14 +126,14 @@ public class DrawRoom {
     graphics.drawString(stringProtection, stringProtectionX,  stringProtectionY); 
   }
   
-  private void DrawEntityHpRectangle(Graphics2D graphics, int health, int maxHealtth, int x, int y, int xWidth, int yHeight) {
+  private void DrawEntityHpRectangle(Graphics2D graphics, int health, int maxHealth, int x, int y, int xWidth, int yHeight) {
     // Health bar
     var entityHpX = x - screenWidth * 1/70;
     var entityHpY = y + yHeight + yHeight * 9/70;
     var entityHpWidth = xWidth + screenWidth * 2/70;
     var entityHpHeight = screenWidth * 1/70;
     graphics.setColor(Color.RED);
-    graphics.fillRect(entityHpX, entityHpY, entityHpWidth * health/maxHealtth, entityHpHeight);
+    graphics.fillRect(entityHpX, entityHpY, entityHpWidth * health/maxHealth, entityHpHeight);
     graphics.setColor(Color.BLACK);
     graphics.drawRect(entityHpX, entityHpY, entityHpWidth, entityHpHeight);
     
@@ -120,7 +143,7 @@ public class DrawRoom {
     graphics.setColor(colorString);
     graphics.setFont(font);
     var fm = graphics.getFontMetrics();
-    var stringHp = health +"/"+maxHealtth ;
+    var stringHp = health +"/"+maxHealth ;
     var stringHpX = entityHpX + (entityHpWidth - fm.stringWidth(stringHp))/2;
     var stringHpY = entityHpY + (fm.getAscent() + entityHpHeight)/2;
     graphics.drawString(stringHp, stringHpX,  stringHpY);    
@@ -136,6 +159,29 @@ public class DrawRoom {
    var stringNameX = x + (xWidth - fm.stringWidth(stringName))/2;
    var stringNameY = y - screenHeight/40;
    graphics.drawString(stringName, stringNameX,  stringNameY);
+  }
+  
+  private void DrawHeroExpRectangle(Graphics2D graphics, int exp, int maxExp, int x, int y, int xWidth, int yHeight) {
+    // Health bar
+    var expX = x - screenWidth * 1/70;
+    var expY = y + yHeight + yHeight * 15/70;
+    var expWidth = xWidth + screenWidth * 2/70;
+    var expHeight = screenWidth * 1/70;
+    graphics.setColor(Color.GREEN);
+    graphics.fillRect(expX, expY, expWidth * exp/maxExp, expHeight);
+    graphics.setColor(Color.BLACK);
+    graphics.drawRect(expX, expY, expWidth, expHeight);
+    
+    // Health numeric
+    var font = new Font("Arial", Font.BOLD, screenWidth * 2/200);
+    var colorString = Color.BLACK;  
+    graphics.setColor(colorString);
+    graphics.setFont(font);
+    var fm = graphics.getFontMetrics();
+    var stringExp = exp +"/"+maxExp ;
+    var stringExpX = expX + (expWidth - fm.stringWidth(stringExp))/2;
+    var stringExpY = expY + (fm.getAscent() + expHeight)/2;
+    graphics.drawString(stringExp, stringExpX,  stringExpY);    
   }
   
   private void DrawEnemy(Graphics2D graphics, Enemy enemy, int position) {
@@ -171,9 +217,13 @@ public class DrawRoom {
     DrawEntityName(graphics, hero.name(), heroX, heroY, heroWidth);
     // Hero Health
     DrawEntityHpRectangle(graphics, hero.health(), hero.maxHealth(), heroX, heroY, heroWidth, heroHeight);
+    // Hero experience
+    DrawHeroExpRectangle(graphics, hero.exp()+5, hero.exp()+10, heroX, heroY, heroWidth, heroHeight);
+    // Hero level
+    DrawHeroLevel(graphics, hero.energy(), heroX, heroY, heroWidth, heroHeight);
     // Hero energy
     DrawHeroEnergy(graphics, hero.energy(), heroX, heroY, heroWidth, heroHeight);
-    //
+    // Hero protection
     DrawHeroProtection(graphics, hero.protection(), heroX, heroY, heroWidth, heroHeight);
   }
   
@@ -208,8 +258,6 @@ public class DrawRoom {
     var chestWidth = screenWidth * 2/10;
     var chestHeight = screenHeight * 1/10;
     DrawEntityChest(graphics, chestX, chestY, chestWidth, chestHeight);
-    DrawEntityName(graphics, "Click to open chest", chestX, chestY, chestWidth);
+    DrawEntityName(graphics, "Click me !!", chestX, chestY, chestWidth);
   }
-  
-  
 }
