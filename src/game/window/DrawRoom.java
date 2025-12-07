@@ -28,6 +28,16 @@ public class DrawRoom {
     DrawHero(graphics, hero);
   }
   
+  public void DrawRoomCorridor(Graphics2D graphics, Hero hero) {
+    DrawHero(graphics, hero);
+    DrawEndCorridor(graphics);
+  }
+  
+  public void DrawRoomTreasure(Graphics2D graphics, Hero hero) {
+    DrawHero(graphics, hero);
+    DrawChest(graphics);
+  }
+  
   private void DrawEnemyNextActionAttack(Graphics2D graphics, int x, int y, int xWidth, int yHeight) {
     graphics.setColor(Color.RED);
     graphics.fillRect(x + xWidth* 2/4 - (xWidth/4)/2, y - screenHeight*5/50, xWidth/4, screenHeight*2/50);
@@ -166,4 +176,40 @@ public class DrawRoom {
     //
     DrawHeroProtection(graphics, hero.protection(), heroX, heroY, heroWidth, heroHeight);
   }
+  
+  private void DrawEntityEndCorridor(Graphics2D graphics,  int x, int y, int xWidth, int yHeight) {
+    graphics.setColor(Color.GRAY);
+    graphics.fillRect(x-(x/100), y-(y/20), xWidth+(x/100)*2, yHeight+(y/20));
+    graphics.setColor(Color.BLACK);
+    graphics.fillRect(x, y, xWidth, yHeight);
+  }
+  
+  private void DrawEndCorridor(Graphics2D graphics) {
+    var endX = screenWidth * 15/20;
+    var endY = screenHeight * 2/7;
+    var endWidth = screenWidth * 2/10;
+    var endHeight = screenHeight * 3/5;
+    // End of corridor rectangle
+    DrawEntityEndCorridor(graphics, endX, endY, endWidth, endHeight);
+    // Draw next room at the top 
+    DrawEntityName(graphics, "Next Room", endX, endY, endWidth);
+  }
+  
+  private void DrawEntityChest(Graphics2D graphics,  int x, int y, int xWidth, int yHeight) {
+    graphics.setColor(Color.ORANGE);
+    graphics.fillRect(x-(x/100), y-(y/50), xWidth+(x/100)*2, yHeight+(y/50));
+    graphics.setColor(Color.YELLOW);
+    graphics.fillRect(x, y, xWidth, yHeight);
+  }
+  
+  private void DrawChest(Graphics2D graphics) {
+    var chestX = screenWidth * 13/20;
+    var chestY = screenHeight * 5/7;
+    var chestWidth = screenWidth * 2/10;
+    var chestHeight = screenHeight * 1/10;
+    DrawEntityChest(graphics, chestX, chestY, chestWidth, chestHeight);
+    DrawEntityName(graphics, "Click to open chest", chestX, chestY, chestWidth);
+  }
+  
+  
 }

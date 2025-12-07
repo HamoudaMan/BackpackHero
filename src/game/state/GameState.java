@@ -34,9 +34,17 @@ public class GameState {
 //###### POUR DESSINER LA ROOM #############
      var drawRoom = new DrawRoom(screenWigth, screenHeight);
      var hero = new Hero("Hero");
-     List<Enemy> ennemies = List.of(new SmallRatWolf(), new SmallRatWolf(), new SmallRatWolf());
-     context.renderFrame(f -> drawRoom.DrawRoomEnemy(f, ennemies, hero));
      
+     
+//   POUR DESSINER LA ROOM AVEC DES ENNEMIES
+//     List<Enemy> ennemies = List.of(new SmallRatWolf(), new SmallRatWolf(), new SmallRatWolf());
+//     context.renderFrame(f -> drawRoom.DrawRoomEnemy(f, ennemies, hero));
+//   ---------------------------------------
+//   POUR DESSINER LA ROOM CORRIDOR
+//     context.renderFrame(f -> drawRoom.DrawRoomCorridor(f, hero));
+//   ---------------------------------------  
+//   POUR DESSINER LA ROOM TREASURE
+     context.renderFrame(f -> drawRoom.DrawRoomTreasure(f, hero));
 //##########################################
      
      while(true) {
