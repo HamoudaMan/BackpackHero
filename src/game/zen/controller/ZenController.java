@@ -12,9 +12,10 @@ import game.hero.Hero;
 import game.items.MagicBackPack;
 import game.items.weapons.WoodenSword;
 import game.zen.view.DrawFloor;
+import game.zen.view.DrawMiniMap;
 import game.zen.view.DrawRoom;
 import game.zen.view.Window;
-import game.zen.view.BackGroundRender;
+import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
 
 public class ZenController {
@@ -24,10 +25,14 @@ public class ZenController {
 			var screenWidth = context.getScreenInfo().width();
 			var screenHeight = context.getScreenInfo().height();
 			
-			var bg = new BackGroundRender();
-			var backpack = new DrawBackPack();
-			Hero hero = new Hero("joestar");
+			Hero hero = new Hero("JOTARO KUJO");
 			hero.addToBackPack(new WoodenSword());
+			var floor = new Floor(1);
+			var posHero = floor.postionHero();//pos initiae du hero
+			
+			var bg = new DrawBackGround();
+			var backpack = new DrawBackPack();
+			var miniMap = new DrawMiniMap(); 
 			
 			
 			//boucle de jeu 
@@ -37,8 +42,11 @@ public class ZenController {
 					context.dispose();
 					System.exit(0);
 				}
-				context.renderFrame(g->bg.render(g, screenWidth, screenHeight));
-				context.renderFrame(g->backpack.render(g, hero.backPack(), screenWidth, screenHeight) );
+				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
+								backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
+								miniMap.render(g, floor, posHero, screenWidth, screenHeight);
+				});
+				
 			}
 		});
 	}
