@@ -20,12 +20,7 @@ public class Floor {
 	private Room[][] floorRooms;
 	private Coord positionHero;
 	
-	public int rows() {
-		return ROWS;
-	}
-	public int cols() {
-		return COLS;
-	}
+	
 	public Floor(int level) {
 		this.floorRooms = new Room[ROWS][COLS];
 		//au debut je rempli la map qu'avec des coduloir 
@@ -201,23 +196,15 @@ public class Floor {
 		}
 		Room currentRoom = floorRooms[dest.row()][dest.col()];
 		
-		/*
 		if(currentRoom instanceof EnemyRoom enemyRoom ) {//si la room contient un ennemi
 			//logique de combat 
 			if( Combat.startCombat(hero,enemyRoom.enemiesList()) ==   CombatResult.LOSE) {
 				return false;
 			}
-		}*/
-	
-		
-		switch(currentRoom.type()) {//bizarre ca marchait pas avec -> peut etre bug de mon eclipse 
-			case ENEMY : { };
-			case MERCHANT, TREASURE, HEALER, EXIT : currentRoom.enter(hero);
-			
-			default :{ };
 		}
 		positionHero = dest; 
-		//currentRoom.enter(hero);//si la room n'est ennemi on y bouge notre hero
+		
+		currentRoom.enter(hero);//si la room n'est ennemi on y bouge notre hero
 		return true;
 	}
 }
