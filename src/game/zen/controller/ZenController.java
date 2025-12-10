@@ -13,8 +13,10 @@ import game.hero.Hero;
 import game.items.MagicBackPack;
 import game.items.weapons.WoodenSword;
 import game.zen.view.DrawFloor;
+import game.zen.view.DrawHero;
 import game.zen.view.DrawMiniMap;
 import game.zen.view.DrawRoom;
+import game.zen.view.DrawTreasureRoom;
 import game.zen.view.Window;
 import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
@@ -38,6 +40,9 @@ public class ZenController {
 			var backpack = new DrawBackPack();
 			var miniMap = new DrawMiniMap(); 
 			var miniMapController = new MiniMapController(miniMap);
+			var heroInDungeon = new DrawHero();
+			var treasure = new DrawTreasureRoom();
+			
 			
 			
 			//boucle de jeu 
@@ -65,6 +70,8 @@ public class ZenController {
 				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
 								backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
 								miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
+								heroInDungeon.render(g, screenWidth, screenHeight);
+								treasure.render(g,  screenWidth, screenHeight);
 				});
 				
 			}
