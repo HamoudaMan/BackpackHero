@@ -20,7 +20,7 @@ public class DrawMiniMap {
 	
 	public void render(Graphics2D g, Floor floor, Coord positionHero, int screenWidth, int screenHeight) {
 		//zone d'affichage de la minimap
-		var zoneW = screenWidth/4; //largeur de la map
+		var zoneW = screenWidth/3; //largeur de la map
 		var zoneH = screenHeight/4; //longuer de la map
 		var zoneX = screenWidth - zoneW - 40;//valeur arbitraire pour la marge a gauche 
 		var zoneY = 40;//marge en haut 
@@ -41,19 +41,23 @@ public class DrawMiniMap {
 				//une couleur pour chaque type de room (par la suite on met une image a a la place de la couleur ?)
 				RoomType type = rooms[r][c].type();
 				switch(type) {
-				case ENEMY -> g.setColor(Color.RED);
-				case TREASURE -> g.setColor(Color.YELLOW);
+				case ENEMY -> g.setColor(new Color(255, 0, 0, 120));
+				case TREASURE -> g.setColor(new Color(255, 255, 0, 120));
 				case MERCHANT -> g.setColor(Color.LIGHT_GRAY);
 				case HEALER ->g.setColor(Color.GREEN);
 				case EXIT -> g.setColor(Color.MAGENTA);
-				default ->g.setColor(null);
+				default ->g.setColor(new Color(255, 255, 255, 40));//obligé de mettre les valeur rgba (a pour l'opacité) pour plus de flexibilité sur les couleur 
 				}
+				g.fillRect(x, y, cellWidth, cellHeight);
+				//pour le contour des salles sinn j'ai desbandes continue (comme a l'ancien commit )
+				g.setColor(Color.BLACK);
+				g.drawRect(x, y, cellWidth, cellHeight);
 				/*
 				//on applique la couleur 
 				if(g.getColor() !=null) {
 					g.fillRect(x, y, cellWidth, cellHeight);
 				}
-				*/
+			*/
 				
 			}
 			
