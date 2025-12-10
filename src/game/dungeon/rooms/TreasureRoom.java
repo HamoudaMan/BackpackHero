@@ -7,6 +7,7 @@ import java.util.Scanner;
 import game.ASCII.PrintBackPack;
 import game.dungeon.Room;
 import game.dungeon.RoomType;
+import game.ennemies.Enemy;
 import game.hero.Hero;
 import game.items.*;
 import game.items.armor.RoughBuckler;
@@ -100,6 +101,11 @@ public class TreasureRoom implements Room{
 	public String description() {
 		// TODO Auto-generated method stub
 		return "Welcome to the treasure room, don't be shy stuff yourself !";
+	}
+	
+	//methode juste pour le ZenCOntroller ne pas y faire attention 
+	public List<Enemy> enemiesList() {
+		return List.of();
 	}
 
 }

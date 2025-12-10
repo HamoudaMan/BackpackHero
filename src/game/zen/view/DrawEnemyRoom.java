@@ -11,10 +11,13 @@ import game.ennemies.Enemy;
  * 						si y'en a 3  -> en forme de triangle 
  */
 public class DrawEnemyRoom {
-	private final BufferedImage enemy;
+	private final BufferedImage ratWolf;
+	private final BufferedImage smallRatWolf;
+	
 	
 	public DrawEnemyRoom() {
-		this.enemy = ImageLoader.load("/sprites/ui/dunjon/enemies/ratwolf.png");
+		this.ratWolf = ImageLoader.load("/sprites/ui/dunjon/enemies/ratwolf.png");
+		this.smallRatWolf = ImageLoader.load("/sprites/ui/dunjon/enemies/smallRatWolf.png");
 	}
 	
 	public void render(Graphics2D g, List<Enemy> enemies, int screenWidth, int screenHeight) {
@@ -35,8 +38,12 @@ public class DrawEnemyRoom {
 			var x = zoneX + i *space;
 			//var y = zoneY;
 			Enemy e = enemies.get(i);
-			//
-			g.drawImage(enemy, x, zoneY, enemyW, enemyH, null);
+			/*
+			switch(e.name()) {
+			case "RatWolf" -> g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
+			case "SmallRatWolf" -> g.drawImage(smallRatWolf, x, zoneY, enemyW, enemyH, null);
+			}*/
+			g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
 			
 			DrawHealthBar.render(g,x, zoneY - 15, (int)(enemyW*0.80), e.health(), e.maxHealth());
 

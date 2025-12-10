@@ -7,6 +7,7 @@ import com.github.forax.zen.PointerEvent;
 
 import game.dungeon.Coord;
 import game.dungeon.Floor;
+import game.dungeon.RoomType;
 import game.ennemies.Enemy;
 import game.ennemies.RatWolf;
 import game.ennemies.SmallRatWolf;
@@ -19,12 +20,14 @@ import game.zen.view.DrawMiniMap;
 import game.zen.view.DrawRoom;
 import game.zen.view.DrawTreasureRoom;
 import game.zen.view.Window;
+import game.zen.state.ZenGameState;
 import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
 import game.zen.view.DrawEnemyRoom;
 
 public class ZenController {
 	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
+	private ZenGameState state = ZenGameState.FLOOR;// cas de base on commence dans le couloir 
 	
 	public void start() {
 		var window = new Window();
@@ -43,9 +46,9 @@ public class ZenController {
 			var miniMap = new DrawMiniMap(); 
 			var miniMapController = new MiniMapController(miniMap);
 			var heroInDungeon = new DrawHero();
-			var treasure = new DrawTreasureRoom();
-			var enemies = new DrawEnemyRoom();
-		  List<Enemy> enn = List.of(new RatWolf(), new RatWolf(), new RatWolf());
+			var treasureRoom = new DrawTreasureRoom();
+			var enemiesRoom = new DrawEnemyRoom();
+		  List<Enemy> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
 			
 			
@@ -54,29 +57,50 @@ public class ZenController {
 				var event = context.pollEvent();
 				switch(event) {//soint pointerEvent(souris) ou keyboardEvent(clavier) ou null rien 
 				case PointerEvent p ->{
-					if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+					if(p.action() == PointerEvent.Action.POINTER_DOWN) {//un click
 						var mouseX = p.location().x();
 						var mouseY = p.location().y();
+						//si on est dans un combat 
+						if( state == ZenGameState.ENEMYROOM) {
+							break;//on sort on = one bouge pas le hero et on va au prochain renderFrame 
+						}
+						//sinnon on bouge le hero
 						target = miniMapController.convertClick(mouseX, mouseY);
-						this.posHero = miniMapController.tryMove(floor, posHero,target);
+						this.posHero = miniMapController.tryMove(floor, posHero,target);//le hero bouge , il change de salle 
+						
+						//on check le type de la salle Pour savoir quoi render par la suite 
+						RoomType type = floor.getRoomInfo(posHero.row(),	posHero.col() ).type();
+						switch(type) {//un switch pour le render qui suit 
+							case ENEMY -> state = ZenGameState.ENEMYROOM;
+							case TREASURE -> state = ZenGameState.TREASUREROOM;
+							case MERCHANT -> state = ZenGameState.MERCHANTROOM;
+							case HEALER -> state = ZenGameState.HEALERROOM;
+							case EXIT -> state = ZenGameState.EXITROOM;
+							default -> state = ZenGameState.FLOOR;//on se balade dans la map
+						}
 					}
-					break;
-					
 				}
 				case KeyboardEvent k ->{}
 				case null ->{}
 				}
-				/*
-				if(event != null) {
-					context.dispose();
-					System.exit(0);
-				}*/
+			
+				//Ce qui sera render a chaque fois : 
 				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
 								backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
 								miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
 								heroInDungeon.render(g, screenWidth, screenHeight);
-								treasure.render(g,  screenWidth, screenHeight);
-								enemies.render(g,enn, screenWidth, screenHeight );
+								switch(state) {
+									case FLOOR ->{}
+									case ENEMYROOM -> { var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
+										enemiesRoom.render(g, enemies, screenWidth, screenHeight);
+									}
+									case TREASUREROOM -> {/*ajouter le render ici */}
+									case MERCHANTROOM -> {/*ajouter le render ici */}
+									case HEALERROOM -> {/*ajouter le render ici */}
+									case EXITROOM -> {/*ajouter le render ici */}
+									
+									
+									}
 				});
 				
 			}

@@ -1,11 +1,13 @@
 package game.dungeon.rooms;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
 import game.dungeon.Room;
 import game.dungeon.RoomType;
+import game.ennemies.Enemy;
 import game.hero.Hero;
 import game.items.Item;
 import game.items.armor.RoughBuckler;
@@ -91,6 +93,11 @@ public class MerchantRoom implements Room {
 		return "Welcome to the merchant Room ";
 	}
 
+	
+	//methode juste pour le ZenCOntroller ne pas y faire attention 
+	public List<Enemy> enemiesList() {
+		return List.of();
+	}
 
 
 }

@@ -1,10 +1,12 @@
 package game.dungeon.rooms;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
 import game.dungeon.Room;
 import game.dungeon.RoomType;
+import game.ennemies.Enemy;
 import game.hero.Hero;
 
 public class CorridorRoom implements Room{
@@ -32,5 +34,10 @@ public class CorridorRoom implements Room{
 		return "a quiet empty room, this is just a corridor";
 	}
 
+	
+	//methode juste pour le ZenCOntroller ne pas y faire attention 
+	public List<Enemy> enemiesList() {
+		return List.of();
+	}
 
 }
