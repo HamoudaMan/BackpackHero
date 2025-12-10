@@ -9,7 +9,7 @@ public class DrawHero {
 	private final BufferedImage hero;
 	
 	public DrawHero() {
-		this.hero = ImageLoader.load("/sprites/ui/dunjon/jojo.png");
+		this.hero = ImageLoader.load("/sprites/ui/dunjon/heroUI/jojo.png");
 	}
 	
 	public void render(Graphics2D g,  int screenWidth, int screenHeight) {

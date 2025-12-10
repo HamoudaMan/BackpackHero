@@ -8,6 +8,7 @@ import com.github.forax.zen.PointerEvent;
 import game.dungeon.Coord;
 import game.dungeon.Floor;
 import game.ennemies.Enemy;
+import game.ennemies.RatWolf;
 import game.ennemies.SmallRatWolf;
 import game.hero.Hero;
 import game.items.MagicBackPack;
@@ -20,6 +21,7 @@ import game.zen.view.DrawTreasureRoom;
 import game.zen.view.Window;
 import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
+import game.zen.view.DrawEnemyRoom;
 
 public class ZenController {
 	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
@@ -42,6 +44,8 @@ public class ZenController {
 			var miniMapController = new MiniMapController(miniMap);
 			var heroInDungeon = new DrawHero();
 			var treasure = new DrawTreasureRoom();
+			var enemies = new DrawEnemyRoom();
+		  List<Enemy> enn = List.of(new RatWolf(), new RatWolf(), new RatWolf());
 			
 			
 			
@@ -72,6 +76,7 @@ public class ZenController {
 								miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
 								heroInDungeon.render(g, screenWidth, screenHeight);
 								treasure.render(g,  screenWidth, screenHeight);
+								enemies.render(g,enn, screenWidth, screenHeight );
 				});
 				
 			}

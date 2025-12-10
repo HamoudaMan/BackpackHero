@@ -16,7 +16,7 @@ public class DrawMiniMap {
 	
 	public DrawMiniMap() {
 		this.tile = ImageLoader.load("/sprites/ui/dunjon/tile.png");
-		this.hero = ImageLoader.load("/sprites/ui/dunjon/jojo.png");
+		this.hero = ImageLoader.load("/sprites/ui/dunjon/heroUI/jojo.png");
 	}
 	
 	public void render(Graphics2D g, Floor floor, Coord positionHero, int screenWidth, int screenHeight) {
