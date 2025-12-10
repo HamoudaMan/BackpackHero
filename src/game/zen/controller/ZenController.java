@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
 
+import game.dungeon.Coord;
 import game.dungeon.Floor;
 import game.ennemies.Enemy;
 import game.ennemies.SmallRatWolf;
@@ -19,6 +20,8 @@ import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
 
 public class ZenController {
+	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
+	
 	public void start() {
 		var window = new Window();
 		window.open(context -> {
@@ -28,23 +31,40 @@ public class ZenController {
 			Hero hero = new Hero("JOTARO KUJO");
 			hero.addToBackPack(new WoodenSword());
 			var floor = new Floor(1);
-			var posHero = floor.postionHero();//pos initiae du hero
+			this.posHero = floor.postionHero();//pos initiae du hero 
+			Coord target = null;
 			
 			var bg = new DrawBackGround();
 			var backpack = new DrawBackPack();
 			var miniMap = new DrawMiniMap(); 
+			var miniMapController = new MiniMapController(miniMap);
 			
 			
 			//boucle de jeu 
 			while(true) {
 				var event = context.pollEvent();
+				switch(event) {//soint pointerEvent(souris) ou keyboardEvent(clavier) ou null rien 
+				case PointerEvent p ->{
+					if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+						var mouseX = p.location().x();
+						var mouseY = p.location().y();
+						target = miniMapController.convertClick(mouseX, mouseY);
+						this.posHero = miniMapController.tryMove(floor, posHero,target);
+					}
+					break;
+					
+				}
+				case KeyboardEvent k ->{}
+				case null ->{}
+				}
+				/*
 				if(event != null) {
 					context.dispose();
 					System.exit(0);
-				}
+				}*/
 				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
 								backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
-								miniMap.render(g, floor, posHero, screenWidth, screenHeight);
+								miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
 				});
 				
 			}

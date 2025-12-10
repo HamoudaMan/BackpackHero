@@ -124,7 +124,9 @@ public class Floor {
 	public void setCompleted() {
 		this.completed = true;//utilisation de this juste par securité et evité ambiguité
 	}
+	
 	//---methode de deplacement
+	
 	//plus tard elles seront implementé dans une classe seul 
 	public boolean validPosition(Coord c) {
 		if(c.row() < 0 || c.row() >= 5 || c.col() < 0 || c.col() >= 11) {

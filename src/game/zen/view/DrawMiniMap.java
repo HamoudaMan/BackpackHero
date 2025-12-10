@@ -12,24 +12,25 @@ import game.dungeon.RoomType;
 public class DrawMiniMap {
 	private final BufferedImage tile;
 	private final BufferedImage hero;
+	public int zoneX, zoneY,zoneW, zoneH, cellWidth, cellHeight;//seront utilisé dans MiniMapController
 	
 	public DrawMiniMap() {
 		this.tile = ImageLoader.load("/sprites/ui/dunjon/tile.png");
-		this.hero = ImageLoader.load("/sprites/ui/dunjon/hero.png");
+		this.hero = ImageLoader.load("/sprites/ui/dunjon/jojo.png");
 	}
 	
 	public void render(Graphics2D g, Floor floor, Coord positionHero, int screenWidth, int screenHeight) {
 		//zone d'affichage de la minimap
-		var zoneW = screenWidth/3; //largeur de la map
-		var zoneH = screenHeight/4; //longuer de la map
-		var zoneX = screenWidth - zoneW - 40;//valeur arbitraire pour la marge a gauche 
-		var zoneY = 40;//marge en haut 
+		zoneW = screenWidth/3; //largeur de la map
+		zoneH = screenHeight/4; //longuer de la map
+		zoneX = screenWidth - zoneW - 40;//40 : valeur arbitraire pour la marge a gauche 
+		zoneY = 40;//marge en haut 
 		
 		Room[][] rooms = floor.floor();
 		var rows = rooms.length;
 		var cols = rooms[0].length;
-		var cellWidth = zoneW/cols;
-		var cellHeight = zoneH/rows;
+		 cellWidth = zoneW/cols;
+		cellHeight = zoneH/rows;
 		
 		//dessin de la grille de la minimap
 		for(var r = 0; r<rows; r++) {
@@ -44,7 +45,7 @@ public class DrawMiniMap {
 				case ENEMY -> g.setColor(new Color(255, 0, 0, 120));
 				case TREASURE -> g.setColor(new Color(255, 255, 0, 120));
 				case MERCHANT -> g.setColor(Color.LIGHT_GRAY);
-				case HEALER ->g.setColor(Color.GREEN);
+				case HEALER ->g.setColor(new Color(0, 255,0, 100));
 				case EXIT -> g.setColor(Color.MAGENTA);
 				default ->g.setColor(new Color(255, 255, 255, 40));//obligé de mettre les valeur rgba (a pour l'opacité) pour plus de flexibilité sur les couleur 
 				}
