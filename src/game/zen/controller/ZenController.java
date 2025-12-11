@@ -82,7 +82,7 @@ public class ZenController {
 						}
 					}
 				}
-				case KeyboardEvent _ ->{context.dispose(); System.exit(0);}
+				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
 				case null ->{}
 				}
 			
@@ -93,11 +93,11 @@ public class ZenController {
 								heroInDungeon.render(g, screenWidth, screenHeight);
 								switch(state) {
 									case FLOOR ->{}
-									case MERCHANTROOM -> { var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
-										enemiesRoom.render(g, enemies, screenWidth, screenHeight);
+									case MERCHANTROOM -> {  merchanRoom.render(g, screenWidth, screenHeight);;
 									}
 									case TREASUREROOM -> {/*ajouter le render ici */}
-									case ENEMYROOM -> { merchanRoom.render(g, screenWidth, screenHeight); }
+									case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
+									enemiesRoom.render(g, enemies, screenWidth, screenHeight);   }
 									case HEALERROOM -> {/*ajouter le render ici */}
 									case EXITROOM -> {/*ajouter le render ici */}
 									}
