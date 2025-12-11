@@ -2,6 +2,7 @@ package game.zen.controller;
 
 import game.dungeon.Coord;
 import game.dungeon.Floor;
+import game.hero.Hero;
 import game.zen.view.DrawMiniMap;
 
 /** savoir si le clic est dans la zone de la minimap
@@ -49,10 +50,22 @@ public class MiniMapController {
 		return deltaR + deltaC == 1;//autorise que deplacement sur une case voisine donc la difference doit etre ==  1 
 	}
 	
-	public Coord tryMove(Floor floor, Coord heroPos, Coord target) {
+	public Coord tryMove(Floor floor,Coord heroPos, Coord target) {
+		
 		if(canMove(floor, heroPos, target)) {
 			return target;
 		}
 		return heroPos;
+		// en utilisant moveHero de floor
+		/*
+		if (target == null) {
+			return heroPos;
+		}
+		if(floor.moveHero(target, hero)) {
+			return target;
+		}
+		return heroPos;
+		*/
 	}
+	
 }

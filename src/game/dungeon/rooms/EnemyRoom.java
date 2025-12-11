@@ -25,7 +25,7 @@ public class EnemyRoom implements Room{
 	}
 	
 	public List<Enemy> enemiesList() {
-		return List.copyOf(enemiesList);
+		return enemiesList;
 	}/*
 	@Override
 	public void enter(Hero hero) {

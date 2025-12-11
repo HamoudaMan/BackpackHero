@@ -24,6 +24,7 @@ import game.zen.view.Window;
 import game.zen.state.ZenGameState;
 import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
+import game.zen.view.DrawCombatBoutons;
 import game.zen.view.DrawEnemyRoom;
 
 public class ZenController {
@@ -50,7 +51,10 @@ public class ZenController {
 			var treasureRoom = new DrawTreasureRoom();
 			var enemiesRoom = new DrawEnemyRoom();
 			var merchanRoom = new DrawMerchantRoom();
-		  List<Enemy> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
+			var combatBoutons = new DrawCombatBoutons();
+			var combatController = new CombatController(combatBoutons);
+
+		  //List<Enemy> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
 			
 			
@@ -64,9 +68,11 @@ public class ZenController {
 						var mouseY = p.location().y();
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
-							break;//on sort on = one bouge pas le hero et on va au prochain renderFrame 
+							state = combatController.manageClick(mouseX, mouseY, floor, posHero, hero, state);
+							break;//on  bouge pas le hero et on va au prochain renderFrame 
 						}
-						//sinnon on bouge le hero
+						
+						//sinnon on bouge le hero sur la minimap
 						target = miniMapController.convertClick(mouseX, mouseY);
 						this.posHero = miniMapController.tryMove(floor, posHero,target);//le hero bouge , il change de salle 
 						
@@ -97,7 +103,8 @@ public class ZenController {
 									}
 									case TREASUREROOM -> {/*ajouter le render ici */}
 									case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
-									enemiesRoom.render(g, enemies, screenWidth, screenHeight);   }
+																			enemiesRoom.render(g, enemies, screenWidth, screenHeight); 
+																			combatBoutons.render(g, screenWidth, screenHeight, 7, 5);}
 									case HEALERROOM -> {/*ajouter le render ici */}
 									case EXITROOM -> {/*ajouter le render ici */}
 									}

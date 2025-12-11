@@ -182,10 +182,10 @@ public class Floor {
 					continue;
 				}
 				Room room = floorRooms[next.row()][next.col()];
-				if(!safeToAccess(room)) {//comme ca on ne passe pas par la case ennemie
+				if(!safeToAccess(room)) {//comme ca on ne passe pas par la case ennemie(pour l'instant toute les case sont acessible 
 					continue;
 				}
-				visited[next.row()][next.col()] = true;
+				visited[next.row()][next.col()] = true;//on met la case en true pour direqu'on l'a visité
 				queue.add(next);
 			}
 			
@@ -213,13 +213,13 @@ public class Floor {
 	
 		
 		switch(currentRoom.type()) {//bizarre ca marchait pas avec -> peut etre bug de mon eclipse 
-			case ENEMY : { };
+			case ENEMY : { };//pour l'instant a changer dans la suite 
 			case MERCHANT, TREASURE, HEALER, EXIT : currentRoom.enter(hero);
 			
 			default :{ };
 		}
 		positionHero = dest; 
-		//currentRoom.enter(hero);//si la room n'est ennemi on y bouge notre hero
+		//currentRoom.enter(hero);//si la room n'est pas ennemi on y bouge notre hero
 		return true;
 	}
 }
