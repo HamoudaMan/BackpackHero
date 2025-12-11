@@ -69,7 +69,7 @@ public class Floor {
 		positionHero = new Coord(0, 0);
 		floorRooms[2][2] = new EnemyRoom(List.of(new SmallRatWolf()));
 		floorRooms[2][8] = new EnemyRoom(List.of(new SmallRatWolf()));
-    floorRooms[3][5] = new EnemyRoom(List.of(new SmallRatWolf()));
+    floorRooms[3][5] = new EnemyRoom(List.of(new SmallRatWolf(), new SmallRatWolf()));
 		//ajout salle du marchand 
 		floorRooms[1][7] = new MerchantRoom();
 		//ajout salle healer
