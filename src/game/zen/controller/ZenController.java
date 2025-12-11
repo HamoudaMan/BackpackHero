@@ -97,6 +97,7 @@ public class ZenController {
 								backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
 								miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
 								heroInDungeon.render(g, screenWidth, screenHeight);
+								heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
 								switch(state) {
 									case FLOOR ->{}
 									case MERCHANTROOM -> {  merchanRoom.render(g, screenWidth, screenHeight);;

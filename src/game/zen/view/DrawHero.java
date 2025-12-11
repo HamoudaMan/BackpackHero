@@ -20,6 +20,14 @@ public class DrawHero {
 
 		
 		g.drawImage(hero, zoneX, zoneY, zoneW, zoneH, null);
+		
+	}
+	
+	public void renderHeroStats(Graphics2D g, Hero hero, int screenWidth, int screenHeight) {
+		var zoneX = 140;
+		var zoneY = screenHeight-40;
+		var zoneW = screenWidth/6;
+		DrawHealthBar.render(g, zoneX,zoneY , zoneW, hero.health(), hero.maxHealth());
 	}
 }
 

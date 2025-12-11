@@ -1,5 +1,6 @@
 package game.zen.view;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -46,6 +47,8 @@ public class DrawEnemyRoom {
 			g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
 			
 			DrawHealthBar.render(g,x, zoneY - 15, (int)(enemyW*0.80), e.health(), e.maxHealth());
+			g.setColor(Color.WHITE);
+			g.drawString("next Action : " + enemies.get(i).nextAction().toString(), x, zoneY-30);
 
 		}
 		
