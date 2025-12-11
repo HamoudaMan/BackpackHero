@@ -79,7 +79,7 @@ public class ZenController {
 						//on check le type de la salle Pour savoir quoi render par la suite 
 						RoomType type = floor.getRoomInfo(posHero.row(),	posHero.col() ).type();
 						switch(type) {//un switch pour le render qui suit 
-							case ENEMY -> state = ZenGameState.ENEMYROOM;
+							case ENEMY -> {state = ZenGameState.ENEMYROOM;combatController.reset();}
 							case TREASURE -> state = ZenGameState.TREASUREROOM;
 							case MERCHANT -> state = ZenGameState.MERCHANTROOM;
 							case HEALER -> state = ZenGameState.HEALERROOM;
@@ -104,6 +104,9 @@ public class ZenController {
 									}
 									case TREASUREROOM -> {/*ajouter le render ici */}
 									case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
+																			if(enemies.isEmpty()) {// pour ne pas reactiver le combat sur une salle ennemi deja traversée
+																				state = ZenGameState.FLOOR;
+																			}
 																			enemiesRoom.render(g, enemies, screenWidth, screenHeight); 
 																			combatBoutons.render(g, screenWidth, screenHeight, 7, 5);}
 									case HEALERROOM -> {/*ajouter le render ici */}

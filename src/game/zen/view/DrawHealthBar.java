@@ -12,7 +12,7 @@ public class DrawHealthBar {
 		g.setColor(bgColor);
 		g.fillRect(x, y, width, barHeight);
 		//hp sont full
-		var fill = (int)((currHP/maxHP)*width);
+		var fill = (int)(((double)currHP/maxHP)*width);
 		g.setColor(Color.GREEN);
 		g.fillRect(x, y, fill, barHeight);
 		//la bordure
