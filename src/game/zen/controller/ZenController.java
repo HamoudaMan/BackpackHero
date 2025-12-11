@@ -16,6 +16,7 @@ import game.items.MagicBackPack;
 import game.items.weapons.WoodenSword;
 import game.zen.view.DrawFloor;
 import game.zen.view.DrawHero;
+import game.zen.view.DrawMerchantRoom;
 import game.zen.view.DrawMiniMap;
 import game.zen.view.DrawRoom;
 import game.zen.view.DrawTreasureRoom;
@@ -48,6 +49,7 @@ public class ZenController {
 			var heroInDungeon = new DrawHero();
 			var treasureRoom = new DrawTreasureRoom();
 			var enemiesRoom = new DrawEnemyRoom();
+			var merchanRoom = new DrawMerchantRoom();
 		  List<Enemy> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
 			
@@ -80,7 +82,7 @@ public class ZenController {
 						}
 					}
 				}
-				case KeyboardEvent k ->{}
+				case KeyboardEvent _ ->{context.dispose(); System.exit(0);}
 				case null ->{}
 				}
 			
@@ -91,15 +93,13 @@ public class ZenController {
 								heroInDungeon.render(g, screenWidth, screenHeight);
 								switch(state) {
 									case FLOOR ->{}
-									case ENEMYROOM -> { var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
+									case MERCHANTROOM -> { var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
 										enemiesRoom.render(g, enemies, screenWidth, screenHeight);
 									}
 									case TREASUREROOM -> {/*ajouter le render ici */}
-									case MERCHANTROOM -> {/*ajouter le render ici */}
+									case ENEMYROOM -> { merchanRoom.render(g, screenWidth, screenHeight); }
 									case HEALERROOM -> {/*ajouter le render ici */}
 									case EXITROOM -> {/*ajouter le render ici */}
-									
-									
 									}
 				});
 				
