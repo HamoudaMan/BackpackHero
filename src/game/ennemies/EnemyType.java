@@ -1,7 +1,9 @@
 package game.ennemies;
-
-public enum EnemyType {//a ajouter au fur et a mesure qu'on integre de nouveaux ennemis 
-	SMALL_RATWOLF,
+/**
+ * enum for storing the type of enemies 
+ */
+public enum EnemyType {
+	SMALLRATWOLF,
 	RATWOLF,
 	SLIME
 }

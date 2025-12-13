@@ -8,8 +8,7 @@ import java.util.Queue;
 import game.dungeon.rooms.*;
 import game.ennemies.*;
 import game.hero.Hero;
-import game.interaction.Combat;
-import game.interaction.CombatResult;
+
 
 
 public class Floor {
@@ -67,9 +66,9 @@ public class Floor {
 		//ajout de salle ennemies
 		level = 1;
 		positionHero = new Coord(0, 0);
-		floorRooms[2][2] = new EnemyRoom(List.of(new SmallRatWolf()));
-		floorRooms[2][8] = new EnemyRoom(List.of(new SmallRatWolf()));
-    floorRooms[3][5] = new EnemyRoom(List.of(new SmallRatWolf(), new SmallRatWolf()));
+		floorRooms[2][2] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
+		floorRooms[2][8] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
+    floorRooms[3][5] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
 		//ajout salle du marchand 
 		floorRooms[1][7] = new MerchantRoom();
 		//ajout salle healer
@@ -86,9 +85,9 @@ public class Floor {
 		//ajout de salle ennemies
 		level = 2;
 		positionHero = new Coord(1, 0);
-		floorRooms[2][2] = new EnemyRoom(List.of(new SmallRatWolf()));
-		floorRooms[2][7] = new EnemyRoom(List.of(new SmallRatWolf()));
-		floorRooms[3][5] = new EnemyRoom(List.of(new SmallRatWolf()));
+		floorRooms[2][2] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
+		floorRooms[2][7] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
+		floorRooms[3][5] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
 		//ajout salle du marchand 
 		floorRooms[1][8] = new MerchantRoom();
 		//ajout salle healer
@@ -104,9 +103,9 @@ public class Floor {
 		//ajout de salle ennemies
 		level = 3;
 		positionHero = new Coord(2, 0);
-		floorRooms[2][1] = new EnemyRoom(List.of(new SmallRatWolf()));
-		floorRooms[3][7] = new EnemyRoom(List.of(new SmallRatWolf(), new SmallRatWolf()));
-		floorRooms[4][5] = new EnemyRoom(List.of(new SmallRatWolf()));
+		floorRooms[2][1] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
+		floorRooms[3][7] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
+		floorRooms[4][5] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
 		//ajout salle du marchand 
 		floorRooms[1][7] = new MerchantRoom();
 		//ajout salle healer
@@ -214,7 +213,7 @@ public class Floor {
 		
 		switch(currentRoom.type()) {//bizarre ca marchait pas avec -> peut etre bug de mon eclipse 
 			case ENEMY : { };//pour l'instant a changer dans la suite 
-			case MERCHANT, TREASURE, HEALER, EXIT : currentRoom.enter(hero);
+			case MERCHANT, TREASURE, HEALER, EXIT : {};
 			
 			default :{ };
 		}

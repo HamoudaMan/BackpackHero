@@ -2,7 +2,7 @@ package game.items.weapons;
 
 import java.util.Objects;
 
-import game.ennemies.EnemyI;
+import game.ennemies.Enemy;
 import game.hero.Hero;
 import game.items.Item;
 
@@ -24,7 +24,7 @@ public class JackCleaver implements Item, Weapon{
 		return hero.energy() >= energyCost;
 	}
 	@Override
-	public void use(Hero hero, EnemyI enemy) {
+	public void use(Hero hero, Enemy enemy) {
 		Objects.requireNonNull(hero);
 		Objects.requireNonNull(enemy);
 		if(!canUse(hero)) {

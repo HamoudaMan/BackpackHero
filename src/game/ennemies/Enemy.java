@@ -1,6 +1,7 @@
 package game.ennemies;
 
 import java.util.Objects;
+import java.util.Random;
 
 import game.hero.Hero;
 /**
@@ -8,58 +9,80 @@ import game.hero.Hero;
  * all enemy stats must be passed as parameters 
  */
 public class Enemy {
-	private final String name;
-	private final int maxHealth;
-	private int health;
-	private final int damage;
-	private final int block;
-	/**
-	 * 
-	 * @param name 
-	 * @param maxHealth
-	 * @param health
-	 * @param damage
-	 * @param block
-	 */
-	public Enemy( String name, int maxHealth, int health, int damage, int block) {
-		Objects.requireNonNull(name);
-		Objects.requireNonNull(damage);
-		Objects.requireNonNull(block);
-		Objects.requireNonNull(maxHealth);
-		Objects.requireNonNull(health);
+
+	private final EnemyType type;
+	private final EnemyStats stats;
+	private int currentHealth;
+	private int protection;
+	private Action nextAction;
+	private static final Random RANDOM = new Random();
+	
+	public Enemy( EnemyType type, EnemyStats stats) {
+		Objects.requireNonNull(type);
+		Objects.requireNonNull(stats);
 		
-		if(damage <= 0 || health<=0 || maxHealth<= 0|| block <=0) {
-			throw new IllegalArgumentException("the enemy stats must be greater than 0 ");
-		}
-		if(maxHealth != health) {
-			throw new IllegalArgumentException("the maxHealth must be equal to health when creating the enemy ");
-		}
-		this.name = name;
-		this.damage = damage;
-		this.block = block;
-		this.maxHealth = maxHealth;
-		this.health = health;
+		this.type = type;
+		this.stats = stats;
+		this.currentHealth = stats.maxHealth();
+		this.protection = 0;
+		
+		//the next action is decided as soon as the enemy is created 
+		decideNextAction();
+
 	}
 
-	public boolean isDead() {
-		if( health <= 0) {
-			//IO.println("FIN Du combat, le rat loup vient de clamser" );
-			return true;
-		}
-		return false;	
-	}
-
-	public Action nextAction() {
-		return nextAction;
-		
-	}
-	
-	
 
 	public void attack(Hero hero) {
-		hero.takeDamage(10);
+		hero.takeDamage(stats.damage());
 	}
-
 	
+	public void takeDamage(int damage) {
+		if(damage < 0) {
+			throw new IllegalArgumentException("damage must be positive");
+		}
+		var effectiveDamage = Math.max(0, damage - protection);
+		currentHealth = Math.max(0, currentHealth-effectiveDamage);
+		protection = 0;
+	}
+	
+	public void decideNextAction() {
+		if(RANDOM.nextBoolean()) {
+			nextAction = Action.ATTACK;
+		}else {
+			nextAction = Action.BLOCK;
+		}
+		
+	}
+	/**
+	 * do the action that was anounced 
+	 * @param hero
+	 */
+	public void doNextAction(Hero hero) {
+		switch(nextAction) {
+		case ATTACK -> attack(hero);
+		case BLOCK -> protection+= stats.block();
+		
+		}
+		decideNextAction(); // decide the action for the next turn 
+	}
+	
+	public Action nextAction() {
+		return nextAction;
+	}
+	
+	public boolean isDead() {
+		return currentHealth <= 0;
+	}
+	
+	public int currentHealth() {
+		return currentHealth;
+	}
+	
+	public EnemyType type() {
+		return type;
+	}
+	public EnemyStats stats() {
+		return stats;
+	}
 	
 }

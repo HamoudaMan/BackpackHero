@@ -3,28 +3,24 @@ package game.dungeon.rooms;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
+
 
 import game.dungeon.Room;
 import game.dungeon.RoomType;
 import game.ennemies.*;
-import game.hero.Hero;
-import game.interaction.Combat;
-import game.interaction.CombatResult;
-import game.interaction.EnemyController;
-import game.interaction.ItemManager;
-import game.interaction.UICombat;
+
+
 //import game.items.Item;
 
 public class EnemyRoom implements Room{
-	private final List<EnemyI> enemiesList;
+	private final List<Enemy> enemiesList;
 	
-	public EnemyRoom(List<EnemyI> enemies){
+	public EnemyRoom(List<Enemy> enemies){
 		Objects.requireNonNull(enemies);
 		this.enemiesList = new ArrayList<>(enemies);
 	}
 	
-	public List<EnemyI> enemiesList() {
+	public List<Enemy> enemiesList() {
 		return enemiesList;
 	}/*
 	@Override
@@ -47,27 +43,9 @@ public class EnemyRoom implements Room{
 			enemiesList.clear();//on vide la liste des ennemies en cas de victoire 
 		}
 	}*/
-	public void enter(Hero hero) {
-
-    Combat engine = new Combat(
-        hero,
-        enemiesList,
-        new UICombat(new Scanner(System.in)),
-        new ItemManager(new UICombat(new Scanner(System.in)), new Scanner(System.in)),
-        new EnemyController()
-    );
-
-    CombatResult result = engine.startCombat();
-
-    if (result == CombatResult.WIN) enemiesList.clear();
-}
-
 	
-	public void interact(Hero hero, Scanner input) {
-		Objects.requireNonNull(hero);
-		IO.println("FIGHT IS STARTING ... ");
-		enter(hero);
-	}
+
+
 	@Override
 	public RoomType type() {
 		return RoomType.ENEMY;
@@ -79,13 +57,7 @@ public class EnemyRoom implements Room{
 	}
 
 
-	@Override
-	public String toString() {
-		var sb = new StringBuilder();
-		for( var enn : enemiesList) {
-			sb.append(enn.name()).append(" : ").append(enn.health()).append(" / ").append(enn.maxHealth()).append("\n");
-		}
-		return sb.toString();
-	}
+
+
 
 }

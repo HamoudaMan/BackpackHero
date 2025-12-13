@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import game.ennemies.EnemyI;
+import game.ennemies.Enemy;
 import game.zen.imgLoad.ImageLoader;
 /*classe pour draw les enemies 
  * objectif : si y en a 1 -> afficgage simple
@@ -22,7 +22,7 @@ public class DrawEnemyRoom {
 		this.smallRatWolf = ImageLoader.getLoadedImage("smallratwolf");
 	}
 	
-	public void render(Graphics2D g, List<EnemyI> enemies, int screenWidth, int screenHeight) {
+	public void render(Graphics2D g, List<Enemy> enemies, int screenWidth, int screenHeight) {
 		
 		var enemyCount = enemies.size();
 		var enemyW = screenWidth/12;
@@ -39,7 +39,7 @@ public class DrawEnemyRoom {
 		for(var i = 0; i<enemyCount;i++) {
 			var x = zoneX + i *space;
 			//var y = zoneY;
-			EnemyI e = enemies.get(i);
+			Enemy e = enemies.get(i);
 			/*
 			switch(e.name()) {
 			case "RatWolf" -> g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
@@ -47,7 +47,7 @@ public class DrawEnemyRoom {
 			}*/
 			g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
 			
-			DrawHealthBar.render(g,x, zoneY - 15, (int)(enemyW*0.80), e.health(), e.maxHealth());
+			DrawHealthBar.render(g,x, zoneY - 15, (int)(enemyW*0.80), e.currentHealth(), e.stats().maxHealth());
 			g.setColor(Color.WHITE);
 			g.drawString("next Action : " + enemies.get(i).nextAction().toString(), x, zoneY-30);
 

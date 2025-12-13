@@ -2,7 +2,7 @@ package game.zen.controller;
 
 import game.dungeon.Coord;
 import game.dungeon.Floor;
-import game.ennemies.EnemyI;
+import game.ennemies.Enemy;
 import game.hero.Hero;
 import game.zen.state.CombatPhase;
 import game.zen.state.ZenGameState;
@@ -53,13 +53,13 @@ public class CombatController {
 			return currentState;
 		}
 		
-		EnemyI enemy = enemies.get(0);
+		Enemy enemy = enemies.get(0);
 		//var enemy = enemies.get(0);
 		switch(phase) {//tour du hero en premier 
 			case HEROTURN->{if(boutons.clickAttack(mouseX, mouseY)) {
 												enemy.takeDamage(7);
 											
-												if(enemy.health() <=0) {
+												if(enemy.currentHealth() <=0) {
 													enemies.remove(0);//si l'ennemi est mort en le supprime 
 													
 													if(enemies.isEmpty()) {
@@ -68,19 +68,19 @@ public class CombatController {
 													}
 												enemy = enemies.get(0);
 												}
-												enemy.announceAction();
+												enemy.nextAction();
 												phase = CombatPhase.ENEMYTURN;
 												
 										 }//si on block : 
 										if(boutons.clickBLock(mouseX, mouseY)) {
 											hero.addProtection(6);
-											enemy.announceAction();
+											enemy.nextAction();
 											phase = CombatPhase.ENEMYTURN;
 										}
 										return currentState;
 			}
 											
-			case ENEMYTURN ->{enemy.doAction(hero);
+			case ENEMYTURN ->{enemy.doNextAction(hero);
 												hero.resetProtection();
 												phase = CombatPhase.HEROTURN;
 												return currentState;

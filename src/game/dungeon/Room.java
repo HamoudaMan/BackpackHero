@@ -1,17 +1,17 @@
 package game.dungeon;
 
 import java.util.List;
-import java.util.Scanner;
 
-import game.ennemies.EnemyI;
-import game.hero.Hero;
+
+import game.ennemies.Enemy;
+
+
 
 public interface Room {
-	void enter(Hero hero);
-	void interact(Hero hero, Scanner input);
+
 	RoomType type();
 	String description();
 	//methode juste pour le ZenCOntroller ne pas y faire attention 
-	public List<EnemyI> enemiesList();
+	public List<Enemy> enemiesList();
 	
 }
