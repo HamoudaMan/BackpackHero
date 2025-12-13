@@ -26,7 +26,7 @@ public final class ImageLoader {
 		}
 		IO.println("Loading all the images : ");
 		//the Dungeon : 
-		load("bg","/sprites/ui/dunjon/bg.png");
+		load("bg","/sprites/ui/dunjon/bgHH.png");
 		load("tile","/sprites/ui/dunjon/tile.png");
 		load("hero","/sprites/ui/dunjon/heroUI/retro_jojo.png");
 		//the BackPack:

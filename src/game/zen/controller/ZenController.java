@@ -19,6 +19,7 @@ import game.zen.view.DrawMiniMap;
 
 import game.zen.view.DrawTreasureRoom;
 import game.zen.view.Window;
+import game.zen.view.minimap.DrawMiniMapButton;
 import game.zen.imgLoad.ImageLoader;
 import game.zen.state.ZenGameState;
 import game.zen.view.DrawBackGround;
@@ -29,6 +30,7 @@ import game.zen.view.DrawEnemyRoom;
 public class ZenController {
 	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
 	private ZenGameState state = ZenGameState.FLOOR;// cas de base on commence dans le couloir 
+	private boolean showMiniMap = false;
 	
 	
 	public void start() {
@@ -48,6 +50,7 @@ public class ZenController {
 			var backpack = new DrawBackPack();
 			var miniMap = new DrawMiniMap(); 
 			var miniMapController = new MiniMapController(miniMap);
+			var miniMapButton = new DrawMiniMapButton();
 			var heroInDungeon = new DrawHero();
 			var treasureRoom = new DrawTreasureRoom();
 			var enemiesRoom = new DrawEnemyRoom();
@@ -67,6 +70,10 @@ public class ZenController {
 					if(p.action() == PointerEvent.Action.POINTER_DOWN) {//un click
 						var mouseX = p.location().x();
 						var mouseY = p.location().y();
+						if(miniMapButton.isClicked(mouseX, mouseY)) {
+							showMiniMap = !showMiniMap;
+							break;
+						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
 							state = combatController.manageClick(mouseX, mouseY, floor, posHero, hero, state);
@@ -96,13 +103,14 @@ public class ZenController {
 				//Ce qui sera render a chaque fois : 
 				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
 								backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
-								miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
+								if(showMiniMap)
+									miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
+								miniMapButton.render(g, screenWidth);
 								heroInDungeon.render(g, screenWidth, screenHeight);
 								heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
 								switch(state) {
 									case FLOOR ->{}
-									case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;
-									}
+									case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
 									case TREASUREROOM -> {/*ajouter le render ici */}
 									case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
 																			if(enemies.isEmpty()) {// pour ne pas reactiver le combat sur une salle ennemi deja traversée
