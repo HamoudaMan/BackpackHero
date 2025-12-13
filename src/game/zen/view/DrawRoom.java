@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import game.ennemies.Action;
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 
 public class DrawRoom {
@@ -23,7 +23,7 @@ public class DrawRoom {
     this.screenHeight = screenHeight;
   }
   
-  public void drawRoomEnemy(Graphics2D graphics,  List<Enemy> enemy, Hero hero) {
+  public void drawRoomEnemy(Graphics2D graphics,  List<EnemyI> enemy, Hero hero) {
     Objects.requireNonNull(graphics);
     Objects.requireNonNull(enemy);
     Objects.requireNonNull(hero);
@@ -193,20 +193,20 @@ public class DrawRoom {
     graphics.drawString(stringExp, stringExpX,  stringExpY);    
   }
   
-  private void drawEnemy(Graphics2D graphics, Enemy enemy, int position) {
+  private void drawEnemy(Graphics2D graphics, EnemyI enemy, int position) {
     // Where to draw from the coordinate of the rectangle entity
     var enemyX = screenWidth * 4/7 + position* screenWidth *1/7;
     var enemyY = screenHeight * 3/7;
     var enemyWidth = screenWidth / 15;
     var enemyHeight = screenHeight * 2/5;
     
-    // Enemy rectangle
+    // EnemyI rectangle
     drawEnemyEntityRectangle(graphics, enemyX, enemyY, enemyWidth, enemyHeight);
-    // Enemy HP
+    // EnemyI HP
     drawEntityHpRectangle(graphics, enemy.health(), enemy.maxHealth(), enemyX, enemyY, enemyWidth, enemyHeight);
-    // Enemy Name
+    // EnemyI Name
     drawEntityName(graphics, enemy.name(), enemyX, enemyY, enemyWidth);
-    // Enemy Next Action
+    // EnemyI Next Action
     switch (enemy.nextAction()) {
     case Action.ATTACK -> drawEnemyNextActionAttack(graphics, enemyX, enemyY, enemyWidth, enemyHeight);
     case Action.BLOCK -> drawEnemyNextActionBlock(graphics, enemyX, enemyY, enemyWidth, enemyHeight);

@@ -5,7 +5,7 @@ import game.hero.Hero;
 
 
 
-public class Slime implements Enemy {
+public class Slime implements EnemyI {
 	private final  String name;
 	private int health;
 	private final int maxHealth;

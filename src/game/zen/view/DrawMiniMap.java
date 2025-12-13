@@ -8,6 +8,7 @@ import game.dungeon.Coord;
 import game.dungeon.Floor;
 import game.dungeon.Room;
 import game.dungeon.RoomType;
+import game.zen.imgLoad.ImageLoader;
 
 public class DrawMiniMap {
 	private final BufferedImage tile;
@@ -15,8 +16,8 @@ public class DrawMiniMap {
 	public int zoneX, zoneY,zoneW, zoneH, cellWidth, cellHeight;//seront utilisé dans MiniMapController
 	
 	public DrawMiniMap() {
-		this.tile = ImageLoader.load("/sprites/ui/dunjon/tile.png");
-		this.hero = ImageLoader.load("/sprites/ui/dunjon/heroUI/jojo.png");
+		this.tile = ImageLoader.getLoadedImage("tile");
+		this.hero = ImageLoader.getLoadedImage("hero");
 	}
 	
 	public void render(Graphics2D g, Floor floor, Coord positionHero, int screenWidth, int screenHeight) {

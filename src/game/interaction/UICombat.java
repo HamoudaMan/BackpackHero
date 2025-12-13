@@ -3,7 +3,7 @@ package game.interaction;
 import java.util.Objects;
 import java.util.Scanner;
 
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 
 public class UICombat {
@@ -13,7 +13,7 @@ public class UICombat {
 		this.input = input;
 	}
 	
-	public void printTurn(Hero hero, Enemy enemy) {
+	public void printTurn(Hero hero, EnemyI enemy) {
 		Objects.requireNonNull(hero);
 		Objects.requireNonNull(enemy);
 		IO.println("========= New Turn =========");
@@ -23,7 +23,7 @@ public class UICombat {
 		
 	}
 	
-	public void printEnemyDead(Enemy enemy) {
+	public void printEnemyDead(EnemyI enemy) {
 		Objects.requireNonNull(enemy);
 		IO.println(enemy.name() + " is dead!");
 	}

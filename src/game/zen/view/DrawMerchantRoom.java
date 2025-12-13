@@ -5,11 +5,15 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import game.zen.imgLoad.ImageLoader;
+
 public class DrawMerchantRoom {
   private final BufferedImage merchant;
+  private final BufferedImage itemImage;
   
   public DrawMerchantRoom() {
-    this.merchant = ImageLoader.load("/sprites/ui/dunjon/merchant/dwarfMerchant.png");
+    this.merchant = ImageLoader.getLoadedImage("merchant");
+    this.itemImage = ImageLoader.getLoadedImage("woodensword");
   }
   
   private void merchantSpeech(Graphics2D g, int screenWidth, int screenHeight , int x, int y, int xWidth, int yHeight) {
@@ -45,7 +49,7 @@ public class DrawMerchantRoom {
     var itemWidth = screenWidth * 1/15;
     var itemHeight = screenHeight * 2/5;
     
-    var itemImage = ImageLoader.load(path);
+    //var itemImage = ImageLoader.load(path);
     var price = 2;
     DrawItemPrice(g, screenWidth, screenHeight,itemX, itemY, itemWidth, price);
     g.drawImage(itemImage, itemX, itemY, itemWidth, itemHeight, null);

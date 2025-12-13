@@ -2,7 +2,7 @@ package game.hero;
 
 import java.util.Objects;
 
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.items.Item;
 //import game.items.Item;
 import game.items.MagicBackPack;
@@ -11,7 +11,7 @@ import game.items.weapons.Weapon;
 
 
 public class Hero {
-	
+	// create a constructor 
 	private final String name;
 	private int health;
 	private final int maxHealth;
@@ -113,7 +113,7 @@ public class Hero {
 		return energy > 0 && weaponEquiped != null;
 	}
 	
-	public void attack(Enemy enemy) {
+	public void attack(EnemyI enemy) {
 		Objects.requireNonNull(enemy);
 		if(canAttack()) {
 			var damage = weaponEquiped.damage();

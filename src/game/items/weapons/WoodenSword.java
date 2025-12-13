@@ -2,7 +2,7 @@ package game.items.weapons;
 
 import java.util.Objects;
 
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 import game.items.Item;
 
@@ -23,7 +23,7 @@ public class WoodenSword implements Item, Weapon{
 	}
 	
 	@Override
-	public void use(Hero hero, Enemy enemy) {
+	public void use(Hero hero, EnemyI enemy) {
 		Objects.requireNonNull(hero);
 		Objects.requireNonNull(enemy);
 		if(!canUse(hero)) {

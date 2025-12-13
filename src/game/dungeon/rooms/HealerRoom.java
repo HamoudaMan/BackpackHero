@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import game.dungeon.Room;
 import game.dungeon.RoomType;
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 
 public class HealerRoom implements Room{
@@ -71,7 +71,7 @@ public class HealerRoom implements Room{
 
 	
 	//methode juste pour le ZenCOntroller ne pas y faire attention 
-	public List<Enemy> enemiesList() {
+	public List<EnemyI> enemiesList() {
 		return List.of();
 	}
 }

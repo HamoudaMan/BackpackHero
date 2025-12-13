@@ -5,7 +5,7 @@ import game.hero.Hero;
 
 
 
-public class RatWolf implements Enemy {
+public class RatWolf implements EnemyI {
 	private final  String name;
 	private int health;
 	private final int maxHealth;

@@ -7,6 +7,8 @@ public class MagicBackPack {
 	private static final int COLS = 5;
 	
 	private Item[][] stuff;
+	// evolution avec liste de liste 
+	//private List<List<Item>> stuff;
 	
 	public MagicBackPack() {
 		this.stuff = new Item[ROWS][COLS];

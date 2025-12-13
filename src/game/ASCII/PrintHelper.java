@@ -15,7 +15,7 @@ public class PrintHelper {
 	}
 	public static void legende() {
 		IO.println("* = Hero");
-		IO.println("E = Enemy Room");
+		IO.println("E = EnemyI Room");
 		IO.println("T = Treasure Room");
 		IO.println("M = Merchant Room");
 		IO.println("H = Healer");

@@ -1,12 +1,12 @@
 package game.items;
 
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 
 //interface de tout ce qui sera dans le backpack
 public interface Item {
 	String name();
-	void use(Hero hero, Enemy enemy);
+	void use(Hero hero, EnemyI enemy);
 	boolean canUse(Hero hero);
 	int energyCost();
 	

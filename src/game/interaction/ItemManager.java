@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 import game.items.Item;
 import game.items.consumables.Consumables;
@@ -19,7 +19,7 @@ public class ItemManager {
 		this.input = input;
 		
 	}
-	private void useItem(Hero hero, Enemy enemy) {
+	private void useItem(Hero hero, EnemyI enemy) {
 		Objects.requireNonNull(hero);// on verifie quand meme quand c'est en private ? a verifier 
 		Objects.requireNonNull(enemy);
 		
@@ -65,7 +65,7 @@ public class ItemManager {
 		}
 		return list;
 	}
-	public void heroTurn(Hero hero, Enemy enemy) {
+	public void heroTurn(Hero hero, EnemyI enemy) {
 		Objects.requireNonNull(hero);
 		Objects.requireNonNull(enemy);
 		

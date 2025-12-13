@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 
 public class Combat {
 	private final Hero hero;
-	private final List<Enemy> enemies;
+	private final List<EnemyI> enemies;
 	private final UICombat ui;
 	private final ItemManager items;
 	private final EnemyController enemyController;
 	
-	public Combat(Hero hero,List<Enemy> enemies,UICombat ui, ItemManager items, EnemyController enemyController) {
+	public Combat(Hero hero,List<EnemyI> enemies,UICombat ui, ItemManager items, EnemyController enemyController) {
 		Objects.requireNonNull(hero);
 		Objects.requireNonNull(enemies);
 		Objects.requireNonNull(ui);
@@ -29,7 +29,7 @@ public class Combat {
 	}
 	public CombatResult startCombat() {
 		while(!enemies.isEmpty()) {
-			Enemy enemy = enemies.get(0);
+			EnemyI enemy = enemies.get(0);
 			ui.printTurn(hero, enemy);
 			enemy.announceAction();
 			//tour hero
@@ -52,8 +52,8 @@ public class Combat {
 	return CombatResult.WIN;
 	}
 	/*
-	public CombatResult startCombat(Hero hero, List<Enemy> enemiesList) {
-		List<Enemy> enemies = new ArrayList<>(enemiesList);
+	public CombatResult startCombat(Hero hero, List<EnemyI> enemiesList) {
+		List<EnemyI> enemies = new ArrayList<>(enemiesList);
 		Scanner scanner = new Scanner(System.in);
 		
 		while(!enemies.isEmpty()) {//tant qu'il ya des ennemies 

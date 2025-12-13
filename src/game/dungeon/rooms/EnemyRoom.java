@@ -17,14 +17,14 @@ import game.interaction.UICombat;
 //import game.items.Item;
 
 public class EnemyRoom implements Room{
-	private final List<Enemy> enemiesList;
+	private final List<EnemyI> enemiesList;
 	
-	public EnemyRoom(List<Enemy> enemies){
+	public EnemyRoom(List<EnemyI> enemies){
 		Objects.requireNonNull(enemies);
 		this.enemiesList = new ArrayList<>(enemies);
 	}
 	
-	public List<Enemy> enemiesList() {
+	public List<EnemyI> enemiesList() {
 		return enemiesList;
 	}/*
 	@Override

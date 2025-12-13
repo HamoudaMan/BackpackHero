@@ -2,7 +2,7 @@ package game.zen.controller;
 
 import game.dungeon.Coord;
 import game.dungeon.Floor;
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 import game.zen.state.CombatPhase;
 import game.zen.state.ZenGameState;
@@ -27,7 +27,7 @@ public class CombatController {
 		if(boutons.clickAttack(mouseX, mouseY)) {
 			var enemyList = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
 			if(!enemyList.isEmpty()) {
-				Enemy e = enemyList.get(0);
+				EnemyI e = enemyList.get(0);
 				e.takeDamage(7);
 				if(e.health() <=0) {
 					enemyList.remove(0);//si l'ennemi est mort en le supprime 
@@ -53,7 +53,7 @@ public class CombatController {
 			return currentState;
 		}
 		
-		Enemy enemy = enemies.get(0);
+		EnemyI enemy = enemies.get(0);
 		//var enemy = enemies.get(0);
 		switch(phase) {//tour du hero en premier 
 			case HEROTURN->{if(boutons.clickAttack(mouseX, mouseY)) {

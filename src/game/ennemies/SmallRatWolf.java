@@ -6,7 +6,7 @@ import java.util.Random;
 import game.hero.Hero;
 
 
-public class SmallRatWolf implements Enemy {
+public class SmallRatWolf implements EnemyI {
 
 	private final  String name;
 	private int health;

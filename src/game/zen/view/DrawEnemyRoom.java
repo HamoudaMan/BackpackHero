@@ -5,7 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
+import game.zen.imgLoad.ImageLoader;
 /*classe pour draw les enemies 
  * objectif : si y en a 1 -> afficgage simple
  * 						si y'en a 2 -> l'un a cote de l'autre 
@@ -17,11 +18,11 @@ public class DrawEnemyRoom {
 	
 	
 	public DrawEnemyRoom() {
-		this.ratWolf = ImageLoader.load("/sprites/ui/dunjon/enemies/ratwolf.png");
-		this.smallRatWolf = ImageLoader.load("/sprites/ui/dunjon/enemies/smallRatWolf.png");
+		this.ratWolf = ImageLoader.getLoadedImage("ratwolf");
+		this.smallRatWolf = ImageLoader.getLoadedImage("smallratwolf");
 	}
 	
-	public void render(Graphics2D g, List<Enemy> enemies, int screenWidth, int screenHeight) {
+	public void render(Graphics2D g, List<EnemyI> enemies, int screenWidth, int screenHeight) {
 		
 		var enemyCount = enemies.size();
 		var enemyW = screenWidth/12;
@@ -38,7 +39,7 @@ public class DrawEnemyRoom {
 		for(var i = 0; i<enemyCount;i++) {
 			var x = zoneX + i *space;
 			//var y = zoneY;
-			Enemy e = enemies.get(i);
+			EnemyI e = enemies.get(i);
 			/*
 			switch(e.name()) {
 			case "RatWolf" -> g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);

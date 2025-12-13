@@ -1,6 +1,6 @@
 package game.zen.controller;
 
-import java.util.List;
+
 
 import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
@@ -8,19 +8,18 @@ import com.github.forax.zen.PointerEvent;
 import game.dungeon.Coord;
 import game.dungeon.Floor;
 import game.dungeon.RoomType;
-import game.ennemies.Enemy;
-import game.ennemies.RatWolf;
-import game.ennemies.SmallRatWolf;
+
 import game.hero.Hero;
-import game.items.MagicBackPack;
+
 import game.items.weapons.WoodenSword;
-import game.zen.view.DrawFloor;
+
 import game.zen.view.DrawHero;
 import game.zen.view.DrawMerchantRoom;
 import game.zen.view.DrawMiniMap;
-import game.zen.view.DrawRoom;
+
 import game.zen.view.DrawTreasureRoom;
 import game.zen.view.Window;
+import game.zen.imgLoad.ImageLoader;
 import game.zen.state.ZenGameState;
 import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
@@ -31,7 +30,9 @@ public class ZenController {
 	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
 	private ZenGameState state = ZenGameState.FLOOR;// cas de base on commence dans le couloir 
 	
+	
 	public void start() {
+		ImageLoader.loadAll();
 		var window = new Window();
 		window.open(context -> {
 			var screenWidth = context.getScreenInfo().width();
@@ -54,7 +55,7 @@ public class ZenController {
 			var combatBoutons = new DrawCombatBoutons();
 			var combatController = new CombatController(combatBoutons);
 
-		  //List<Enemy> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
+		  //List<EnemyI> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
 			
 			
@@ -100,7 +101,7 @@ public class ZenController {
 								heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
 								switch(state) {
 									case FLOOR ->{}
-									case MERCHANTROOM -> {  merchanRoom.render(g, screenWidth, screenHeight);;
+									case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;
 									}
 									case TREASUREROOM -> {/*ajouter le render ici */}
 									case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
@@ -139,7 +140,7 @@ public class ZenController {
 //     
      
 //   POUR DESSINER LA ROOM AVEC DES ENNEMIES
-     List<Enemy> ennemies = List.of(new SmallRatWolf(), new SmallRatWolf(), new SmallRatWolf());
+     List<EnemyI> ennemies = List.of(new SmallRatWolf(), new SmallRatWolf(), new SmallRatWolf());
      context.renderFrame(f -> drawRoom.DrawRoomEnemy(f, ennemies, hero));
 //   ---------------------------------------
 //   POUR DESSINER LA ROOM CORRIDOR

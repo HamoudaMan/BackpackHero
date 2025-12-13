@@ -2,7 +2,7 @@ package game.items.magic;
 
 import java.util.Objects;
 
-import game.ennemies.Enemy;
+import game.ennemies.EnemyI;
 import game.hero.Hero;
 import game.items.Item;
 
@@ -20,7 +20,7 @@ public class MagicWand implements Item{
 		return hero.mana() >= manaCost;
 	}
 	
-	public void use(Hero hero, Enemy enemy) {
+	public void use(Hero hero, EnemyI enemy) {
 		if(hero.mana() < manaCost()) {
 			IO.println("Not enough mana !");
 			return;

@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import game.items.MagicBackPack;
+import game.zen.imgLoad.ImageLoader;
 
 public class DrawBackPack {
 	private final BufferedImage backPack;
@@ -11,7 +12,7 @@ public class DrawBackPack {
 	private static final int cols = 5;
 		
 	public DrawBackPack(){
-		this.backPack = ImageLoader.load("/sprites/ui/backpack1.png");
+		this.backPack = ImageLoader.getLoadedImage("backpack");
 		//this.rows = 3;
 		//this.cols = 5;
 	}
@@ -34,6 +35,8 @@ public class DrawBackPack {
 				//calcul des postions x et y de chaque cell(a voir pour cree une separation 
 				var x = zoneX + c*cellWidth;
 				var y = zoneY + r*cellHeight;
+				
+			//	if(backPack.stuff().)
 				
 				g.drawRect(x, y, cellWidth , cellHeight);
 			}

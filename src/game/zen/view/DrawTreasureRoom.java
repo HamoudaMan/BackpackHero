@@ -5,12 +5,13 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 import game.items.Item;
+import game.zen.imgLoad.ImageLoader;
 
 public class DrawTreasureRoom {
 	private final BufferedImage treasure;
 	
 	public DrawTreasureRoom() {
-		this.treasure = ImageLoader.load("/sprites/items/treasure1.png");
+		this.treasure = ImageLoader.getLoadedImage("treasure");
 	}
 	
 	public void render(Graphics2D g, int screenWidth, int screenHeight ) {

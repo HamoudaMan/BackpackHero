@@ -3,11 +3,13 @@ package game.zen.view;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import game.zen.imgLoad.ImageLoader;
+
 public class DrawBackGround {
 	private final BufferedImage bg;
 	
 	public DrawBackGround() {
-		this.bg = ImageLoader.load("/sprites/ui/background2.png");//appel a load de la Class ImageLoader
+		this.bg = ImageLoader.getLoadedImage("bg");//appel a load de la Class ImageLoader
 		//System.out.println(ImageLoader.class.getResource("/sprites/background.png"));
 
 	}

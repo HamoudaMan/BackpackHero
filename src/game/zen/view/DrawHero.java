@@ -4,12 +4,13 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import game.hero.Hero;
+import game.zen.imgLoad.ImageLoader;
 
 public class DrawHero {
 	private final BufferedImage hero;
 	
 	public DrawHero() {
-		this.hero = ImageLoader.load("/sprites/ui/dunjon/heroUI/jojo.png");
+		this.hero = ImageLoader.getLoadedImage("hero");
 	}
 	
 	public void render(Graphics2D g,  int screenWidth, int screenHeight) {
