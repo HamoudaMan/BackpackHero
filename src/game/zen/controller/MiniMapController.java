@@ -43,11 +43,13 @@ public class MiniMapController {
 		if(!floor.validPosition(target)) {//  verifie que la salle est valide 
 			return false;
 		}
+		return true;
+		/*
 		//pour l'insant on peut se deplacer que dur une case voisine  (pas de diagonale)
 		var deltaR = Math.abs(target.row() - heroPos.row());
 		var deltaC = Math.abs(target.col() - heroPos.col());
 		
-		return deltaR + deltaC == 1;//autorise que deplacement sur une case voisine donc la difference doit etre ==  1 
+		return deltaR + deltaC == 1;//autorise que deplacement sur une case voisine donc la difference doit etre ==  1 */
 	}
 	
 	public Coord tryMove(Floor floor,Coord heroPos, Coord target) {
