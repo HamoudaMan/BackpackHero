@@ -1,18 +1,85 @@
-package game.items;
+package game.backpack;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import game.items.Item;
 
 public class MagicBackPack {
-	//private Weapon weaponsEquiped;
-	private static final int ROWS = 3;
-	private static final int COLS = 5;
-	
+	//MAX dimension of the backpack
+	private static final int MAX_ROWS = 5;
+	private static final int MAX_COLS = 7;
+
+	private final boolean[][] availbleCells;//unlcok new cells when lvl up 
 	private Item[][] stuff;
-	// evolution avec liste de liste 
-	//private List<List<Item>> stuff;
-	
+	private final List<Item> items;//to store items in the backpack
+
+	/**
+	 * the constructor create a backpack with 3*3 cases in the center at the begining
+	 * 
+	 * stuff -> for the items int the backpack grid 
+	 * availbleCells->to unlock cells as we advance in the game
+	 * items->a list know which items are in the backpack
+	 */
 	public MagicBackPack() {
-		this.stuff = new Item[ROWS][COLS];
+		this.stuff = new Item[MAX_ROWS][MAX_COLS];
+		this.availbleCells = new boolean[MAX_ROWS][MAX_COLS];
+		this.items = new ArrayList<>();
+		//3*3 unlocked cells in the center (inital) 
+		var startRow = 2;
+		var startCol = 1;
+		for(var r = startRow; r<startRow+3; r++) {
+			for(var c = startCol; c<startCol+3; c++) {
+				availbleCells[r][c] = true;
+			}
+		}
 	}
+	
+/*
+	public boolean canPlace(Item item, Position pos, Rotation rot) {
+		Objects.requireNonNull(item);
+		Objects.requireNonNull(pos);
+		Objects.requireNonNull(rot);
+		Set<Position>  cells = item.shape().getAbsPositions(pos, rot);
+		for(var cell: cells) {
+			var row = cell.row();
+			var col = cell.col();
+			
+			if(row<0 || row>= MAX_ROWS|| col<0 || col>=MAX_COLS) {
+				return false;
+			}
+			if(!availbleCells[row][col]) {
+				return false;
+			}
+			if(stuff[row][col] != null && stuff[row][col] != item) {
+				return false;
+			}
+		}
+		return true;
+		
+	}
+	*/
+	//place(
+	//remove(
+	//add
+	//isCellavailble
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public boolean fitsInBackPack(Item item,int row, int col ) {
 		var w = item.width();

@@ -3,7 +3,7 @@ package game.zen.view;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import game.items.MagicBackPack;
+import game.backpack.MagicBackPack;
 import game.zen.imgLoad.ImageLoader;
 
 public class DrawBackPack {
@@ -19,7 +19,7 @@ public class DrawBackPack {
 	
 	public void render(Graphics2D g, MagicBackPack backpack, int screenWidth, int screenHeight) {
 		//zone d'affichage du bakc pack
-		var zoneX = screenWidth/12;
+		var zoneX = screenWidth/3;
 		var zoneY = screenHeight/12;
 		var zoneWidth = screenWidth/3;
 		var zoneHeight = screenHeight/3;

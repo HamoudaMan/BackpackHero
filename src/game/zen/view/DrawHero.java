@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 
 import game.hero.Hero;
 import game.zen.imgLoad.ImageLoader;
+import game.zen.view.stats.DrawEnergyBar;
+import game.zen.view.stats.DrawHealthBar;
 
 public class DrawHero {
 	private final BufferedImage hero;
@@ -13,22 +15,30 @@ public class DrawHero {
 		this.hero = ImageLoader.getLoadedImage("hero");
 	}
 	
-	public void render(Graphics2D g,  int screenWidth, int screenHeight) {
-		var zoneW = screenWidth/6;
-		var zoneH = screenHeight/4;
-		var zoneX = screenWidth/4 - zoneW;
-		var zoneY = screenHeight - zoneH - (zoneH/2);// pour bien le placer ou je veux 
+	public void render(Graphics2D g, Hero h, int screenWidth, int screenHeight) {
+		var heroW = screenWidth/8;
+		var heroH = screenHeight/6;
+		var heroX = screenWidth/4 - heroW;
+		var heroY = screenHeight - heroH - (heroH/2);// pour bien le placer ou je veux 
 
 		
-		g.drawImage(hero, zoneX, zoneY, zoneW, zoneH, null);
+		g.drawImage(hero, heroX, heroY, heroW, heroH, null);
+		
+		var healthBarX = heroX+50;
+		var healthBarY = heroY+ heroH+3;
+		var healthBarW = screenWidth/16;
+		DrawHealthBar.render(g, healthBarX ,healthBarY , healthBarW, h.health(), h.maxHealth());
+		
+		DrawEnergyBar.renderEnergy(g, heroX+ heroX/3, heroY, h.energy());
 		
 	}
-	
+	/*
 	public void renderHeroStats(Graphics2D g, Hero hero, int screenWidth, int screenHeight) {
-		var zoneX = 140;
-		var zoneY = screenHeight-40;
-		var zoneW = screenWidth/6;
-		DrawHealthBar.render(g, zoneX,zoneY , zoneW, hero.health(), hero.maxHealth());
+		var healthBarX = heroX;
+		var healthBarY = 40;
+		var healthBarW = screenWidth/6;
+		DrawHealthBar.render(g, healthBarX,healthBarY , healthBarW, hero.health(), hero.maxHealth());
 	}
+	*/
 }
 

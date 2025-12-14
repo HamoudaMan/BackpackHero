@@ -2,11 +2,10 @@ package game.hero;
 
 import java.util.Objects;
 
+import game.backpack.MagicBackPack;
 import game.ennemies.Enemy;
 
 import game.items.Item;
-//import game.items.Item;
-import game.items.MagicBackPack;
 import game.items.weapons.Weapon;
 
 
@@ -91,12 +90,13 @@ public class Hero {
 			this.energy --;
 		}
 	}
-	public void restoreEnergy(int e) {
+	
+	public void restoreEnergy(int e) {//for the consumables 
 		//if(energy < 3)
 		this.energy += e;
 	}
 	
-	public void resetEnergy() {
+	public void resetEnergy() {//at the begining of a new turn the energy is reset
 		this.energy = 3;
 	}
 	//----Methode pour les duels----

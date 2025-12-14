@@ -106,8 +106,8 @@ public class ZenController {
 								if(showMiniMap)
 									miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
 								miniMapButton.render(g, screenWidth);
-								heroInDungeon.render(g, screenWidth, screenHeight);
-								heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
+								heroInDungeon.render(g,hero, screenWidth, screenHeight);
+								//heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
 								switch(state) {
 									case FLOOR ->{}
 									case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}

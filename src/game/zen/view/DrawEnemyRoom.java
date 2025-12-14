@@ -7,6 +7,7 @@ import java.util.List;
 
 import game.ennemies.Enemy;
 import game.zen.imgLoad.ImageLoader;
+import game.zen.view.stats.DrawHealthBar;
 /*classe pour draw les enemies 
  * objectif : si y en a 1 -> afficgage simple
  * 						si y'en a 2 -> l'un a cote de l'autre 
