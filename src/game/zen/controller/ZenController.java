@@ -76,6 +76,7 @@ public class ZenController {
 						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
+							//showMiniMap = !showMiniMap;
 							state = combatController.manageClick(mouseX, mouseY, floor, posHero, hero, state);
 							break;//on  bouge pas le hero et on va au prochain renderFrame 
 						}

@@ -31,6 +31,7 @@ public final class ImageLoader {
 		load("hero","/sprites/ui/dunjon/heroUI/retro_jojo.png");
 		//the BackPack:
 		load("backpack","/sprites/ui/backpack1.png");
+		load("parchemin", "/sprites/ui/parchemin.png");
 		//the Items :
 		load("woodensword","/sprites/items/weapon/woodenSword.png");
 		//the Enemies:

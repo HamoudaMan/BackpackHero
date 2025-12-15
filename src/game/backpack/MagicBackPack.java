@@ -11,7 +11,8 @@ public class MagicBackPack {
 	//MAX dimension of the backpack
 	private static final int MAX_ROWS = 5;
 	private static final int MAX_COLS = 7;
-
+	private static final int ROWS = 7;
+	private static final int COLS = 7;
 	private final boolean[][] availbleCells;//unlcok new cells when lvl up 
 	private Item[][] stuff;
 	private final List<Item> items;//to store items in the backpack
@@ -37,7 +38,7 @@ public class MagicBackPack {
 		}
 	}
 	
-/*
+
 	public boolean canPlace(Item item, Position pos, Rotation rot) {
 		Objects.requireNonNull(item);
 		Objects.requireNonNull(pos);
@@ -60,7 +61,15 @@ public class MagicBackPack {
 		return true;
 		
 	}
+	/*
 	*/
+	public void place(Item item,Position pos) {
+		var w = item.width();
+		var h = item.height();
+		if(canPlace(item,pos,  )) {
+			
+		}
+	}
 	//place(
 	//remove(
 	//add
@@ -85,7 +94,7 @@ public class MagicBackPack {
 		var w = item.width();
 		var h = item.height();
 		//on check si ca depasse du sac 
-		if(row + h > ROWS || col + w > COLS ) {
+		if(row + h > MAX_ROWS || col + w > MAX_COLS ) {
 			return false;
 		}
 		//on check si il n'y pas un item au dessu de l'autre 

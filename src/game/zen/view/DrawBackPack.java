@@ -5,14 +5,17 @@ import java.awt.image.BufferedImage;
 
 import game.backpack.MagicBackPack;
 import game.zen.imgLoad.ImageLoader;
+import game.zen.view.stats.DrawItemInfo;
 
 public class DrawBackPack {
 	private final BufferedImage backPack;
+
 	private static final int rows = 3;
 	private static final int cols = 5;
 		
 	public DrawBackPack(){
 		this.backPack = ImageLoader.getLoadedImage("backpack");
+		
 		//this.rows = 3;
 		//this.cols = 5;
 	}
@@ -41,6 +44,8 @@ public class DrawBackPack {
 				g.drawRect(x, y, cellWidth , cellHeight);
 			}
 		}
+		
+		DrawItemInfo.render(g, screenWidth, screenHeight);
 		
 		//aficher les items 
 		
