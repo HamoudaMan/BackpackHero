@@ -74,6 +74,10 @@ public class ZenController {
 							showMiniMap = !showMiniMap;
 							break;
 						}
+						if(state == ZenGameState.TREASUREROOM) {
+							treasureRoom.onClick(mouseX, mouseY);
+							//break;
+						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
 							//showMiniMap = !showMiniMap;
@@ -103,24 +107,24 @@ public class ZenController {
 			
 				//Ce qui sera render a chaque fois : 
 				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
-								backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
-								if(showMiniMap)
-									miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
-								miniMapButton.render(g, screenWidth);
-								heroInDungeon.render(g,hero, screenWidth, screenHeight);
-								//heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
-								switch(state) {
-									case FLOOR ->{}
-									case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
-									case TREASUREROOM -> {/*ajouter le render ici */}
-									case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
-																			if(enemies.isEmpty()) {// pour ne pas reactiver le combat sur une salle ennemi deja traversée
-																				state = ZenGameState.FLOOR;
-																			}
-																			enemiesRoom.render(g, enemies, screenWidth, screenHeight); 
-																			combatBoutons.render(g, screenWidth, screenHeight, 7, 5);}
-									case HEALERROOM -> {/*ajouter le render ici */}
-									case EXITROOM -> {/*ajouter le render ici */}
+																backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
+													if(showMiniMap)
+														miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
+													miniMapButton.render(g, screenWidth);
+													heroInDungeon.render(g,hero, screenWidth, screenHeight);
+													//heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
+													switch(state) {
+														case FLOOR ->{}
+														case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
+														case TREASUREROOM -> {treasureRoom.render(g, screenWidth, screenHeight);}
+														case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
+																								if(enemies.isEmpty()) {// pour ne pas reactiver le combat sur une salle ennemi deja traversée
+																									state = ZenGameState.FLOOR;
+																								}
+																								enemiesRoom.render(g, enemies, screenWidth, screenHeight); 
+																								combatBoutons.render(g, screenWidth, screenHeight, 7, 5);}
+														case HEALERROOM -> {/*ajouter le render ici */}
+														case EXITROOM -> {/*ajouter le render ici */}
 									}
 				});
 				

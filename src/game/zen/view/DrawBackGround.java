@@ -9,7 +9,7 @@ public class DrawBackGround {
 	private final BufferedImage bg;
 	
 	public DrawBackGround() {
-		this.bg = ImageLoader.getLoadedImage("bg");//appel a load de la Class ImageLoader
+		this.bg = ImageLoader.getLoadedImage("bg");
 		//System.out.println(ImageLoader.class.getResource("/sprites/background.png"));
 
 	}

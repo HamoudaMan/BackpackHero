@@ -29,6 +29,7 @@ public final class ImageLoader {
 		load("bg","/sprites/ui/dunjon/bgHH.png");
 		load("tile","/sprites/ui/dunjon/tile.png");
 		load("hero","/sprites/ui/dunjon/heroUI/retro_jojo.png");
+		load("blockIcon", "/sprites/items/blockIcon.png");
 		//the BackPack:
 		load("backpack","/sprites/ui/backpack1.png");
 		load("parchemin", "/sprites/ui/parchemin.png");
@@ -40,7 +41,8 @@ public final class ImageLoader {
 		//The merchantRoom:
 		load("merchant","/sprites/ui/dunjon/merchant/dwarfMerchant.png");
 		//the treasureRoom:
-		load("treasure","/sprites/items/treasure1.png");
+		load("treasure_close","/sprites/items/treasure_close.png");
+		load("treasure_open","/sprites/items/treasure_open.png");
 		//the healerRoom:
 		//the ExitRoom:
 		IO.println("All images are loaded ");

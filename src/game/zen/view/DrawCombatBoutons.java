@@ -13,9 +13,9 @@ public class DrawCombatBoutons {
 	}
 	
 	public void render(Graphics2D g, int screenWidth, int screenHeight, int damage, int block) {
-		var zoneY = screenHeight-120;
-		var btnW = screenWidth/6;
-		var btnH = 70;
+		var zoneY = screenHeight-50;
+		var btnW = screenWidth/8;
+		var btnH = 30;
 	  attackX = screenWidth/4 - btnW/2;
 		attackY = zoneY;
 		attackW = btnW;
@@ -33,13 +33,13 @@ public class DrawCombatBoutons {
 		g.fillRect(attackX, zoneY, btnW, btnH);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 20));
-		g.drawString("Attack +"+damage, attackX+20, zoneY+40);
+		g.drawString("Attack +"+damage, attackX+20, zoneY+20);
 		//btn block
 		g.setColor(Color.BLUE);
 		g.fillRect(blockX, zoneY, btnW, btnH);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 20));
-		g.drawString("Block +"+block, blockX+20, zoneY+40);
+		g.drawString("Blocking +"+block, blockX+20, zoneY+20);
 	
 	}
 	

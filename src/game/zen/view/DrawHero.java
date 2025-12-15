@@ -5,11 +5,13 @@ import java.awt.image.BufferedImage;
 
 import game.hero.Hero;
 import game.zen.imgLoad.ImageLoader;
+import game.zen.view.stats.DrawBlockBar;
 import game.zen.view.stats.DrawEnergyBar;
 import game.zen.view.stats.DrawHealthBar;
 
 public class DrawHero {
 	private final BufferedImage hero;
+	private final DrawBlockBar blockBar = new DrawBlockBar();
 	
 	public DrawHero() {
 		this.hero = ImageLoader.getLoadedImage("hero");
@@ -20,6 +22,7 @@ public class DrawHero {
 		var heroH = screenHeight/6;
 		var heroX = screenWidth/4 - heroW;
 		var heroY = screenHeight - heroH - (heroH/2);// pour bien le placer ou je veux 
+		
 
 		
 		g.drawImage(hero, heroX, heroY, heroW, heroH, null);
@@ -30,6 +33,7 @@ public class DrawHero {
 		DrawHealthBar.render(g, healthBarX ,healthBarY , healthBarW, h.health(), h.maxHealth());
 		
 		DrawEnergyBar.renderEnergy(g, heroX+ heroX/3, heroY, h.energy());
+		blockBar.renderBlockBar(g, healthBarX -16, healthBarY+7, h.protection());
 		
 	}
 	/*

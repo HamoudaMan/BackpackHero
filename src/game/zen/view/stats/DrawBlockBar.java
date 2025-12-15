@@ -1,24 +1,33 @@
 package game.zen.view.stats;
 
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
-public class DrawEnergyBar {
+import game.zen.imgLoad.ImageLoader;
+
+
+public class DrawBlockBar {
+	private final BufferedImage blockIcon;
 	
+	public DrawBlockBar() {
+		this.blockIcon = ImageLoader.getLoadedImage("blockIcon");
+	}
+
 	
-	public static void renderEnergy(Graphics2D g,int  centerX, int centerY, int energy) {
-	  final int rad = 10;
+	public void renderBlockBar(Graphics2D g,int  centerX, int centerY, int block) {
+	  final int rad = 14;
 		final int diametre = rad*2;
 		
 		g.setColor(new Color(255,170,60));
 		g.fillOval(centerX -rad , centerY-rad, diametre , diametre);
 		//bordure
 		g.setColor(Color.BLACK);
-		g.drawOval(centerX -rad , centerY-rad, diametre , diametre);
+		//g.drawOval(centerX -rad , centerY-rad, diametre , diametre);
+		g.drawImage(blockIcon, centerX -rad , centerY-rad, diametre , diametre, null);
 		
-		var text = String.valueOf(energy); //convert the int in string
-		g.setColor(Color.BLACK);
+		var text = String.valueOf(block); //convert the int in string
+		g.setColor(Color.WHITE);
 		
 		/*
 	// to center the text inside le health bar :
