@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import game.dungeon.state.TreasureState;
 import game.items.Item;
 import game.zen.imgLoad.ImageLoader;
 
@@ -12,7 +13,7 @@ public class DrawTreasureRoom {
 	private final BufferedImage treasureClose;
 	private final BufferedImage treasureOpen;
 	
-	private boolean isOpen = false;
+	//private boolean isOpen = false;
 	private  int  treasureWidth ,treasureHeight ,treasureX ,treasureY ;
 	
 	public DrawTreasureRoom() {
@@ -22,7 +23,7 @@ public class DrawTreasureRoom {
 	
 
 	
-	public void render(Graphics2D g, int screenWidth, int screenHeight) {
+	public void render(Graphics2D g, int screenWidth, int screenHeight, TreasureState state) {
 		//position du coffre: parite dubas , au centre 
 		treasureWidth = 200;
 		treasureHeight = 150;
@@ -30,11 +31,11 @@ public class DrawTreasureRoom {
 		//coin en haut a gauche du treasure
 		treasureX = screenWidth/2 + treasureWidth/2;
 	  treasureY = (int)(screenHeight *0.75);
-		if(isOpen ==false) {
+		if(!state.isOpened()) {
 			//g.setFont(Font.DIALOG);
 			g.drawString("Open me !", treasureX+ treasureWidth/3, treasureY);
 			g.drawImage(treasureClose, treasureX, treasureY, treasureWidth, treasureHeight, null);
-		}else if(isOpen== true) {
+		}else  {
 			g.drawImage(treasureOpen, treasureX, treasureY, treasureWidth, treasureHeight, null);
 		}
 		
@@ -42,14 +43,10 @@ public class DrawTreasureRoom {
 		//afficher les items 
 		
 	}
-	public void onClick(int mouseX, int mouseY) {
-		if(isOpen) {
-			return;
-		}
-		boolean inside =  mouseX >= treasureX && mouseX <= treasureX +treasureWidth && mouseY >= treasureY && mouseY <=treasureY+ treasureHeight;
+	public boolean isClicked(int mouseX, int mouseY) {
+
+		return mouseX >= treasureX && mouseX <= treasureX +treasureWidth && mouseY >= treasureY && mouseY <=treasureY+ treasureHeight;
 		
-		if(inside) {
-			isOpen = true;
-		}
+
 	}
 }

@@ -66,6 +66,11 @@ public class HealthStone implements Item, Consumables{
 	public void consume() {
 		consumed = true;
 	}
+	@Override
+	public String spriteKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

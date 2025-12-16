@@ -79,6 +79,11 @@ public class JackCleaver implements Item, Weapon{
 		
 		
 	}
+	@Override
+	public String spriteKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 

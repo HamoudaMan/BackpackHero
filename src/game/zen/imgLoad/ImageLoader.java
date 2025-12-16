@@ -34,7 +34,9 @@ public final class ImageLoader {
 		load("backpack","/sprites/ui/backpack1.png");
 		load("parchemin", "/sprites/ui/parchemin.png");
 		//the Items :
-		load("woodensword","/sprites/items/weapon/woodenSword.png");
+		load("woodensword","/sprites/items/weapon/woodensword.png");
+		load("magicwand","/sprites/items/weapon/magicwand.png");
+		load("roughbuckler","/sprites/items/shield.png");
 		//the Enemies:
 		load("ratwolf","/sprites/ui/dunjon/enemies/ratwolf.png");
 		load("smallratwolf","/sprites/ui/dunjon/enemies/smallRatWolf.png");

@@ -2,15 +2,20 @@ package game.zen.controller;
 
 
 
+import java.util.List;
+
 import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
 
 import game.dungeon.Coord;
 import game.dungeon.Floor;
 import game.dungeon.RoomType;
-
+import game.dungeon.state.DungeonState;
+import game.dungeon.state.TreasureState;
 import game.hero.Hero;
-
+import game.items.Item;
+import game.items.armor.RoughBuckler;
+import game.items.magic.MagicWand;
 import game.items.weapons.WoodenSword;
 
 import game.zen.view.DrawHero;
@@ -26,11 +31,14 @@ import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
 import game.zen.view.DrawCombatBoutons;
 import game.zen.view.DrawEnemyRoom;
+import game.zen.view.DrawGroundItem;
 
 public class ZenController {
 	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
 	private ZenGameState state = ZenGameState.FLOOR;// cas de base on commence dans le couloir 
 	private boolean showMiniMap = false;
+	
+	private final DungeonState dungeonState = new DungeonState();
 	
 	
 	public void start() {
@@ -53,6 +61,7 @@ public class ZenController {
 			var miniMapButton = new DrawMiniMapButton();
 			var heroInDungeon = new DrawHero();
 			var treasureRoom = new DrawTreasureRoom();
+			var groundItems = new DrawGroundItem();
 			var enemiesRoom = new DrawEnemyRoom();
 			var merchanRoom = new DrawMerchantRoom();
 			var combatBoutons = new DrawCombatBoutons();
@@ -75,8 +84,20 @@ public class ZenController {
 							break;
 						}
 						if(state == ZenGameState.TREASUREROOM) {
-							treasureRoom.onClick(mouseX, mouseY);
-							//break;
+							TreasureState ts = dungeonState.treasureState(posHero);
+							if(treasureRoom.isClicked(mouseX, mouseY)) {
+								if(!ts.isOpened()) {
+									//loot = generateTreasureLoot();
+					        List<Item> loot = List.of(
+					            new RoughBuckler(),
+					            new MagicWand(),
+					            new WoodenSword()
+					        );
+					        
+									ts.open(loot);
+								}
+							}
+							break;
 						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
@@ -116,7 +137,12 @@ public class ZenController {
 													switch(state) {
 														case FLOOR ->{}
 														case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
-														case TREASUREROOM -> {treasureRoom.render(g, screenWidth, screenHeight);}
+														case TREASUREROOM -> {TreasureState ts = dungeonState.treasureState(posHero);
+																									treasureRoom.render(g, screenWidth, screenHeight, ts);
+																									if(ts.isOpened()) {
+																										groundItems.render(g, screenWidth, screenHeight, ts.loot());
+																									}
+																									}
 														case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
 																								if(enemies.isEmpty()) {// pour ne pas reactiver le combat sur une salle ennemi deja traversée
 																									state = ZenGameState.FLOOR;

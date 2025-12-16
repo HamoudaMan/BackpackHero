@@ -69,5 +69,10 @@ public class MagicWand implements Item{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	public String spriteKey() {
+		return "magicwand";
+	}
+	
 	
 }

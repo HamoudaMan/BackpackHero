@@ -82,6 +82,9 @@ public class WoodenSword implements Item, Weapon{
 		return "Wooden Sword";
 	}
 
+	public String spriteKey() {
+		return "woodensword";
+	}
 	
 
 

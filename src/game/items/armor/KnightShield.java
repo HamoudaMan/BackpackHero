@@ -70,6 +70,12 @@ public class KnightShield implements Item, Armors{
 		return energyCost;
 	}
 
+	@Override
+	public String spriteKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 	

@@ -70,6 +70,9 @@ public class RoughBuckler implements Item, Armors{
 		return energyCost;
 	}
 
+	public String spriteKey() {
+		return "roughbuckler";
+	}
 
 
 }

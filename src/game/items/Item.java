@@ -5,6 +5,7 @@ import game.hero.Hero;
 
 //interface de tout ce qui sera dans le backpack
 public interface Item {
+	String spriteKey();
 	String name();
 	void use(Hero hero, Enemy enemy);
 	boolean canUse(Hero hero);
