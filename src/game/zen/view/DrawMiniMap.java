@@ -23,9 +23,14 @@ public class DrawMiniMap {
 	public void render(Graphics2D g, Floor floor, Coord positionHero, int screenWidth, int screenHeight) {
 		//zone d'affichage de la minimap
 		zoneW = screenWidth/3; //largeur de la map
-		zoneH = screenHeight/4; //longuer de la map
-		zoneX = screenWidth - zoneW - 40;//40 : valeur arbitraire pour la marge a gauche 
-		zoneY = 40;//marge en haut 
+		zoneH = screenHeight/3; //longuer de la map
+		zoneX = screenWidth /3;//40 : valeur arbitraire pour la marge a gauche 
+		zoneY = screenHeight/12;//marge en haut 
+		
+		/*		var zoneX = screenWidth/3;
+		var zoneY = 
+		var zoneW = screenWidth/3;
+		var zoneH = screenHeight/3;*/
 		
 		Room[][] rooms = floor.floor();
 		var rows = rooms.length;

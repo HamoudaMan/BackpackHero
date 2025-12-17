@@ -111,6 +111,7 @@ public class ZenController {
 					        );
 					        
 									ts.open(loot);
+									showMiniMap = false;
 								}
 								break;
 							}
@@ -121,7 +122,7 @@ public class ZenController {
 						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
-							//showMiniMap = !showMiniMap;
+							//showMiniMap = false;
 							state = combatController.manageClick(mouseX, mouseY, floor, posHero, hero, state);
 							break;//on  bouge pas le hero et on va au prochain renderFrame 
 						}
@@ -155,18 +156,23 @@ public class ZenController {
 				}
 				//Ce qui sera render a chaque fois : 
 				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
-																backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
+																
 																//itemInfoBox.render(g, screenWidth, screenHeight);
 													if(showMiniMap)
 														miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
+													else {
+														backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
+													}
 													miniMapButton.render(g, screenWidth);
 													heroInDungeon.render(g,hero, screenWidth, screenHeight);
+													
 													
 													//heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
 													switch(state) {
 														case FLOOR ->{}
 														case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
-														case TREASUREROOM -> {TreasureState ts = dungeonState.treasureState(posHero);
+														case TREASUREROOM -> {
+																									TreasureState ts = dungeonState.treasureState(posHero);
 																									treasureRoom.render(g, screenWidth, screenHeight, ts);
 																									if(ts.isOpened()) {
 																										groundItems.render(g, screenWidth, screenHeight, ts.loot());
@@ -176,7 +182,8 @@ public class ZenController {
 																										//hoveredGroundItem = null;
 																									}
 																									}
-														case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
+														case ENEMYROOM -> {showMiniMap = false;
+																								var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
 																								if(enemies.isEmpty()) {// pour ne pas reactiver le combat sur une salle ennemi deja traversée
 																									state = ZenGameState.FLOOR;
 																								}
