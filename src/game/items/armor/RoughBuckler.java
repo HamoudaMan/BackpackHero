@@ -73,6 +73,11 @@ public class RoughBuckler implements Item, Armors{
 	public String spriteKey() {
 		return "roughbuckler";
 	}
+	@Override
+	public String description() {
+		// TODO Auto-generated method stub
+		return" roughBuckler test ";
+	}
 
 
 }

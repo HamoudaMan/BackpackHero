@@ -14,4 +14,5 @@ public interface Item {
 	int width();
 	int height();
 	void rotate();
+	String description();
 }

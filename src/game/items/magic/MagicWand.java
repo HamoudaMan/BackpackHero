@@ -73,6 +73,9 @@ public class MagicWand implements Item{
 	public String spriteKey() {
 		return "magicwand";
 	}
-	
-	
+	@Override
+	public String description() {
+		// TODO Auto-generated method stub
+		return" magic wand  test ";
+	}
 }

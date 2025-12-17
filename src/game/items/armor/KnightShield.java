@@ -76,6 +76,12 @@ public class KnightShield implements Item, Armors{
 		return null;
 	}
 
+	@Override
+	public String description() {
+		// TODO Auto-generated method stub
+		return" knight Shield test ";
+	}
+
 
 
 	

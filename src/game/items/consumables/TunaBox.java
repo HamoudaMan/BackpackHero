@@ -71,6 +71,10 @@ public class TunaBox implements Item, Consumables{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+	@Override
+	public String description() {
+		// TODO Auto-generated method stub
+		return" tunabox test ";
+	}
 	
 }

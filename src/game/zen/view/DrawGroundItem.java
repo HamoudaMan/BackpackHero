@@ -17,7 +17,6 @@ public class DrawGroundItem {
 		var itemSize = 40;
 		BufferedImage sprite;
 
-
 		for( var i = 0;i<items.size() ; i++) {
 			sprite = ImageLoader.getLoadedImage(items.get(i).spriteKey());
 			//System.out.println(item.name() + " -> " + item.spriteKey());
@@ -26,5 +25,20 @@ public class DrawGroundItem {
 			g.drawImage(sprite, x, screenHeight -100, itemSize,itemSize, null);
 
 		}
+	}
+	
+	public GroundItemHitBox findItemAt(int mouseX, int mouseY, int screenWidth, int screenHeight, List<Item>items) {
+		var itemSize = 40;
+		var gap = 10;
+		var x = screenWidth/2;
+		var y =  screenHeight-100;
+		
+		for(Item item: items) {
+			if(mouseX >=x && mouseX <= x+itemSize && mouseY >= y && mouseY <= y+itemSize) {
+				return new GroundItemHitBox(item, x, y);
+			}
+			x+=itemSize+gap;
+		}
+		return null;
 	}
 }

@@ -19,10 +19,12 @@ import game.items.magic.MagicWand;
 import game.items.weapons.WoodenSword;
 
 import game.zen.view.DrawHero;
+import game.zen.view.DrawItemDescription;
 import game.zen.view.DrawMerchantRoom;
 import game.zen.view.DrawMiniMap;
 
 import game.zen.view.DrawTreasureRoom;
+import game.zen.view.GroundItemHitBox;
 import game.zen.view.Window;
 import game.zen.view.minimap.DrawMiniMapButton;
 import game.zen.imgLoad.ImageLoader;
@@ -39,6 +41,9 @@ public class ZenController {
 	private boolean showMiniMap = false;
 	
 	private final DungeonState dungeonState = new DungeonState();
+	private  Item hoveredItem = null;
+	private GroundItemHitBox hoveredGroundItem;
+	private int mouseX, mouseY;
 	
 	
 	public void start() {
@@ -62,6 +67,7 @@ public class ZenController {
 			var heroInDungeon = new DrawHero();
 			var treasureRoom = new DrawTreasureRoom();
 			var groundItems = new DrawGroundItem();
+			var itemDescription = new DrawItemDescription();
 			var enemiesRoom = new DrawEnemyRoom();
 			var merchanRoom = new DrawMerchantRoom();
 			var combatBoutons = new DrawCombatBoutons();
@@ -69,22 +75,29 @@ public class ZenController {
 
 		  //List<EnemyI> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
-			
+			//var mouseX = -1;
+			//var mouseY = -1;
 			
 			//boucle de jeu 
 			while(true) {
 				var event = context.pollEvent();
 				switch(event) {//soint pointerEvent(souris) ou keyboardEvent(clavier) ou null rien 
 				case PointerEvent p ->{
+					 mouseX = p.location().x();
+					 mouseY = p.location().y();
 					if(p.action() == PointerEvent.Action.POINTER_DOWN) {//un click
-						var mouseX = p.location().x();
-						var mouseY = p.location().y();
+						
 						if(miniMapButton.isClicked(mouseX, mouseY)) {
 							showMiniMap = !showMiniMap;
 							break;
 						}
+	
 						if(state == ZenGameState.TREASUREROOM) {
 							TreasureState ts = dungeonState.treasureState(posHero);
+							if(hoveredGroundItem !=null) {
+								hoveredItem = hoveredGroundItem.item();
+								break;
+							}
 							if(treasureRoom.isClicked(mouseX, mouseY)) {
 								if(!ts.isOpened()) {
 									//loot = generateTreasureLoot();
@@ -96,8 +109,10 @@ public class ZenController {
 					        
 									ts.open(loot);
 								}
+								break;
 							}
-							break;
+							hoveredItem = null;
+							
 						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
@@ -126,6 +141,13 @@ public class ZenController {
 				case null ->{}
 				}
 			
+			  
+				if(state == ZenGameState.TREASUREROOM) {
+					TreasureState ts = dungeonState.treasureState(posHero);
+					if(ts.isOpened()) {
+						hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY, screenWidth, screenHeight, ts.loot());
+					}
+				}
 				//Ce qui sera render a chaque fois : 
 				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
 																backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
@@ -141,6 +163,9 @@ public class ZenController {
 																									treasureRoom.render(g, screenWidth, screenHeight, ts);
 																									if(ts.isOpened()) {
 																										groundItems.render(g, screenWidth, screenHeight, ts.loot());
+																									}
+																									if(hoveredItem !=null && hoveredGroundItem !=null) {
+																										itemDescription.render(g, mouseX, mouseY, hoveredItem,screenWidth, screenHeight);
 																									}
 																									}
 														case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();

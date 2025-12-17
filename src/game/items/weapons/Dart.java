@@ -79,5 +79,9 @@ public class Dart implements Item, Weapon{
 		return null;
 	}
 
-
+	@Override
+	public String description() {
+		// TODO Auto-generated method stub
+		return" testets  test ";
+	}
 }

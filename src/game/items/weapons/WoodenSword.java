@@ -87,7 +87,11 @@ public class WoodenSword implements Item, Weapon{
 	}
 	
 
-
+	@Override
+	public String description() {
+		// TODO Auto-generated method stub
+		return" testets  tttttttttttttttttttest ";
+	}
 
 
 
