@@ -15,4 +15,5 @@ public interface Item {
 	int height();
 	void rotate();
 	String description();
+	int turnUsable();
 }

@@ -45,9 +45,10 @@ public class DrawBackPack {
 			}
 		}
 		
-		DrawItemInfo.render(g, screenWidth, screenHeight);
+		
 		
 		//aficher les items 
+		
 		
 	}
 

@@ -79,5 +79,11 @@ public class RoughBuckler implements Item, Armors{
 		return" roughBuckler test ";
 	}
 
+	@Override
+	public int turnUsable() {
+		// TODO Auto-generated method stub
+		return 1000;
+	}
+
 
 }

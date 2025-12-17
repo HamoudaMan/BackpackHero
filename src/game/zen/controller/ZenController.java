@@ -27,6 +27,7 @@ import game.zen.view.DrawTreasureRoom;
 import game.zen.view.GroundItemHitBox;
 import game.zen.view.Window;
 import game.zen.view.minimap.DrawMiniMapButton;
+import game.zen.view.stats.DrawItemInfo;
 import game.zen.imgLoad.ImageLoader;
 import game.zen.state.ZenGameState;
 import game.zen.view.DrawBackGround;
@@ -61,6 +62,8 @@ public class ZenController {
 			
 			var bg = new DrawBackGround();
 			var backpack = new DrawBackPack();
+			var itemInfoBox = new DrawItemInfo();
+			
 			var miniMap = new DrawMiniMap(); 
 			var miniMapController = new MiniMapController(miniMap);
 			var miniMapButton = new DrawMiniMapButton();
@@ -112,6 +115,8 @@ public class ZenController {
 								break;
 							}
 							hoveredItem = null;
+							hoveredGroundItem = null;
+							
 							
 						}
 						//si on est dans un combat 
@@ -151,10 +156,12 @@ public class ZenController {
 				//Ce qui sera render a chaque fois : 
 				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
 																backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
+																//itemInfoBox.render(g, screenWidth, screenHeight);
 													if(showMiniMap)
 														miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
 													miniMapButton.render(g, screenWidth);
 													heroInDungeon.render(g,hero, screenWidth, screenHeight);
+													
 													//heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
 													switch(state) {
 														case FLOOR ->{}
@@ -165,7 +172,8 @@ public class ZenController {
 																										groundItems.render(g, screenWidth, screenHeight, ts.loot());
 																									}
 																									if(hoveredItem !=null && hoveredGroundItem !=null) {
-																										itemDescription.render(g, mouseX, mouseY, hoveredItem,screenWidth, screenHeight);
+																										itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
+																										//hoveredGroundItem = null;
 																									}
 																									}
 														case ENEMYROOM -> {var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
@@ -176,11 +184,15 @@ public class ZenController {
 																								combatBoutons.render(g, screenWidth, screenHeight, 7, 5);}
 														case HEALERROOM -> {/*ajouter le render ici */}
 														case EXITROOM -> {/*ajouter le render ici */}
+														
 									}
+													
 				});
 				
 			}
+			
 		});
+	
 	}
 
 	

@@ -22,4 +22,10 @@ public class GroundItemHitBox {
 	public Item item() {
 		return item;
 	}
+	public int x() {
+		return x;
+	}
+	public int y() {
+		return y;
+	}
 }

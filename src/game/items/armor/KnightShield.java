@@ -82,6 +82,12 @@ public class KnightShield implements Item, Armors{
 		return" knight Shield test ";
 	}
 
+	@Override
+	public int turnUsable() {
+		// TODO Auto-generated method stub
+		return 10000;
+	}
+
 
 
 	

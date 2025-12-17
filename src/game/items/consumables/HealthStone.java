@@ -76,6 +76,11 @@ public class HealthStone implements Item, Consumables{
 		// TODO Auto-generated method stub
 		return" healthstone test ";
 	}
+	@Override
+	public int turnUsable() {
+		// TODO Auto-generated method stub
+		return 1000;
+	}
 	
 	
 }

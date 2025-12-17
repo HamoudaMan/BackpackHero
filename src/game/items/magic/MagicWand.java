@@ -78,4 +78,10 @@ public class MagicWand implements Item{
 		// TODO Auto-generated method stub
 		return" magic wand  test ";
 	}
+
+	@Override
+	public int turnUsable() {
+		// TODO Auto-generated method stub
+		return 1000;
+	}
 }
