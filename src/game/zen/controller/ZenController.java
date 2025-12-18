@@ -11,6 +11,7 @@ import game.dungeon.Coord;
 import game.dungeon.Floor;
 import game.dungeon.RoomType;
 import game.dungeon.state.DungeonState;
+import game.dungeon.state.HealerState;
 import game.dungeon.state.TreasureState;
 import game.hero.Hero;
 import game.items.Item;
@@ -35,6 +36,7 @@ import game.zen.view.DrawBackPack;
 import game.zen.view.DrawCombatBoutons;
 import game.zen.view.DrawEnemyRoom;
 import game.zen.view.DrawGroundItem;
+import game.zen.view.DrawHealerRoom;
 
 public class ZenController {
 	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
@@ -67,21 +69,30 @@ public class ZenController {
 			var miniMap = new DrawMiniMap(); 
 			var miniMapController = new MiniMapController(miniMap);
 			var miniMapButton = new DrawMiniMapButton();
+			
 			var heroInDungeon = new DrawHero();
+			
 			var treasureRoom = new DrawTreasureRoom();
 			var groundItems = new DrawGroundItem();
 			var itemDescription = new DrawItemDescription();
-			var enemiesRoom = new DrawEnemyRoom();
+			
 			var merchanRoom = new DrawMerchantRoom();
+			
+			var enemiesRoom = new DrawEnemyRoom();
+			
 			var combatBoutons = new DrawCombatBoutons();
 			var combatController = new CombatController(combatBoutons);
-
+			//healer
+			var healerController = new HealerController();
+			var healerRoom = new DrawHealerRoom();
+			
 		  //List<EnemyI> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
 			//var mouseX = -1;
 			//var mouseY = -1;
 			
 			//boucle de jeu 
+			hero.addGold(120);//juste pour test 
 			while(true) {
 				var event = context.pollEvent();
 				switch(event) {//soint pointerEvent(souris) ou keyboardEvent(clavier) ou null rien 
@@ -133,7 +144,30 @@ public class ZenController {
 							hoveredGroundItem = null;
 							//break;
 									
-						}	
+						}
+						if(state == ZenGameState.HEALERROOM) {
+							HealerState hs = dungeonState.healerState(posHero);
+							if(!hs.isUsed()) {
+								if(healerRoom.fullHealClicked(mouseX, mouseY)) {
+									healerController.healFull(hero, hs);
+					
+								}
+								else if(healerRoom.smallHealClicked(mouseX, mouseY)) {
+									healerController.healSmall(hero, hs);
+							
+								}
+								else if(healerRoom.exitClicked(mouseX, mouseY)) {
+									state = ZenGameState.FLOOR;
+								
+								}
+							}else {
+								if(healerRoom.exitClicked(mouseX, mouseY)) {
+									state = ZenGameState.FLOOR;
+									
+								}
+							}
+							break;
+						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
 							//showMiniMap = false;
@@ -203,7 +237,13 @@ public class ZenController {
 																								}
 																								enemiesRoom.render(g, enemies, screenWidth, screenHeight); 
 																								combatBoutons.render(g, screenWidth, screenHeight, 7, 5);}
-														case HEALERROOM -> {/*ajouter le render ici */}
+														case HEALERROOM -> {HealerState hs = dungeonState.healerState(posHero);
+																								if(!hs.isUsed()) {
+																									healerRoom.render(g, screenWidth, screenHeight);
+																								}else if(hs.isUsed()){
+																									healerRoom.renderUsed(g, screenWidth, screenHeight);
+																								}
+																								;}
 														case EXITROOM -> {/*ajouter le render ici */}
 														
 									}

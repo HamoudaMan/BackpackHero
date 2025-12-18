@@ -72,6 +72,9 @@ public class Hero {
 		Objects.requireNonNull(healAmount);
 		health = Math.min(maxHealth, health +healAmount);
 	}
+	public void healMax() {
+		health = maxHealth;
+	}
 	public void addProtection(int block) {
 		this.protection += block;
 	}
