@@ -88,20 +88,34 @@ public class ZenController {
 				case PointerEvent p ->{
 					 mouseX = p.location().x();
 					 mouseY = p.location().y();
+					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
+						 TreasureState ts = dungeonState.treasureState(posHero);
+						 if(state == ZenGameState.TREASUREROOM) {
+							 if(ts.isOpened()) {
+								 hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY,screenWidth,screenHeight,ts.loot());
+								 hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+							 }else {
+								 hoveredItem = null;
+									hoveredGroundItem = null;
+							 }
+						 }
+							
+									
+					 }
 					if(p.action() == PointerEvent.Action.POINTER_DOWN) {//un click
 						
 						if(miniMapButton.isClicked(mouseX, mouseY)) {
 							showMiniMap = !showMiniMap;
 							break;
 						}
-	
+						
 						if(state == ZenGameState.TREASUREROOM) {
 							TreasureState ts = dungeonState.treasureState(posHero);
 							if(hoveredGroundItem !=null) {
 								hoveredItem = hoveredGroundItem.item();
 								break;
 							}
-							if(treasureRoom.isClicked(mouseX, mouseY)) {
+							if(treasureRoom.isClicked(mouseX, mouseY)) {//tresure is clicked
 								if(!ts.isOpened()) {
 									//loot = generateTreasureLoot();
 					        List<Item> loot = List.of(
@@ -117,9 +131,9 @@ public class ZenController {
 							}
 							hoveredItem = null;
 							hoveredGroundItem = null;
-							
-							
-						}
+							//break;
+									
+						}	
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
 							//showMiniMap = false;
