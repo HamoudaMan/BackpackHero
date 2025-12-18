@@ -5,7 +5,7 @@ import game.model.backpack.BackPack;
 public class Main {
   public static void main(String[] args) {
     var backpack = new BackPack(5, 7, 1, 2, 3, 4);
-    
+    System.out.println(printBooleanGrid(backpack.getUnlocked()));
   }
   
   public static String printBooleanGrid(boolean[][] grid) {
