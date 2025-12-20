@@ -5,64 +5,74 @@ import java.util.Objects;
 import game.model.item.Item;
 
 public class BackPack {
-  private final int stuffCols;
-  private final int stuffRows;
+  private final int xStuff;
+  private final int yStuff;
   private final Item[][] stuff;
   private final boolean[][] unlocked;
+  /**
+   * Represent the mana of Hero.
+   */
+  private int mana;
+  /**
+   * Represent the gold of Hero
+   */
+  private int gold;
   
-  public BackPack(int stuffCols, int stuffRows, int unlockedMinCols, int unlockedMinRows, int unlockedMaxCols, int unlockedMaxRows) {
-    if(stuffCols < 0) {
-      throw new IllegalArgumentException("stuffCols must be > 0");
+  public BackPack(int xStuff, int yStuff, int xMinUnlocked, int yMinUnlocked, int xMaxUnlocked, int yMaxUnlocked) {
+    if(xStuff < 0 && xStuff < xMinUnlocked && xStuff < xMaxUnlocked) {
+      throw new IllegalArgumentException("xStuff must be > 0 and xStuff > xMinUnlocked and xStuff > xMaxUnlocked");
     }
-    if(stuffRows < 0) {
-      throw new IllegalArgumentException("stuffRows must be > 0");
+    if(yStuff < 0 && yStuff < yMinUnlocked && yStuff < yMaxUnlocked) {
+      throw new IllegalArgumentException("yStuff must be > 0 and stuffRows > yMinUnlocked and stuffRows > yMaxUnlocked");
     }
-    if(unlockedMinCols < 0 && unlockedMinCols > stuffCols) {
-      throw new IllegalArgumentException("unlockedMinCols must be > 0 and < stuffCols");
+    if(xMinUnlocked < 0 && xMinUnlocked > xMaxUnlocked) {
+      throw new IllegalArgumentException("xMinUnlocked must be > 0 and xMinUnlocked < xMaxUnlocked");
     }
-    if(unlockedMinRows < 0 && unlockedMinRows > stuffRows) {
-      throw new IllegalArgumentException("unlockedMinRows must be > 0 and < stuffRows");
+    if(yMinUnlocked < 0 && yMinUnlocked > yMaxUnlocked) {
+      throw new IllegalArgumentException("yMinUnlocked must be > 0 and yMinUnlocked < yMaxUnlocked");
     }
-    if(unlockedMaxCols < 0 && unlockedMaxCols > stuffCols) {
-      throw new IllegalArgumentException("unlockedMaxCols must be > 0 and < stuffCols");
+    if(xMaxUnlocked < 0) {
+      throw new IllegalArgumentException("xMaxUnlocked must be > 0");
     }
-    if(unlockedMaxRows < 0 && unlockedMaxRows > stuffRows) {
-      throw new IllegalArgumentException("unlockedMaxRows must be > 0 and < stuffRows");
+    if(yMaxUnlocked < 0) {
+      throw new IllegalArgumentException("yMaxUnlocked must be > 0");
     }
-    
-    this.stuffCols = stuffCols;
-    this.stuffRows = stuffRows;
-    this.stuff = new Item[stuffCols][stuffRows];
-    this.unlocked = new boolean[stuffCols][stuffRows];
-    for(int i = unlockedMinCols; i <= unlockedMaxCols; i++) {
-      for(int j = unlockedMinRows; j <= unlockedMaxRows; j++) {
+    this.yStuff = yStuff;
+    this.xStuff = xStuff;
+    this.stuff = new Item[yStuff][xStuff];
+    this.unlocked = new boolean[yStuff][xStuff];
+    for(int i = yMinUnlocked; i <= yMaxUnlocked; i++) {
+      for(int j = xMinUnlocked; j <= xMaxUnlocked; j++) {
       
         unlocked[i][j] = true;
       }
     }
+    this.mana = 0;
+    this.gold = 0;
   }
   
-  public boolean placeableItem(Item item, int row, int col, boolean rotate) {
+  public boolean placeableItem(Item item, int x, int y, boolean rotate) {
     Objects.requireNonNull(item);
-    if(row < 0 && row < stuffRows) {
-      throw new IllegalArgumentException("row must be < 0 and stuffRows");
+    if(y < 0 && y > yStuff) {
+      throw new IllegalArgumentException("y must be < 0 and y < yStuff");
     }
-    if(col < 0 && col < stuffCols) {
-      throw new IllegalArgumentException("col must be < 0 and stuffCols");
+    if(x < 0 && x > xStuff) {
+      throw new IllegalArgumentException("x must be < 0 and x < xStuff");
     }
     var shape = item.shape();
     if(rotate) {
-      shape = rotateBy90DegreesShape(shape);
+      shape = rotateShapeCounterClockwiseBy90Degrees(shape);
     }
     for(int i = 0; i < shape.length; i++) {
       for(int j = 0; j < shape[i].length; j++) {
         if(shape[i][j]) {
-          var actualRow = row + j;
-          var actualCol = col + i;
-          if(actualRow  > stuffRows || actualCol > stuffCols) {
+          var actualRow = y + i;
+          var actualCol = x + j;
+          if(actualRow  > yStuff || actualCol > xStuff) {
             return false;
-          }
-          if(stuff[actualCol][actualRow] != null || unlocked[actualCol][actualRow]) {
+          }          
+          System.out.println(stuff[actualRow][actualCol] != null || unlocked[actualRow][actualCol]);
+          if(stuff[actualRow][actualCol] != null || !unlocked[actualRow][actualCol]) {
             return false;
           }
         }
@@ -71,7 +81,8 @@ public class BackPack {
     return true;
   }
   
-  public boolean[][] rotateBy90DegreesShape(boolean[][] shape) {
+  // need to change to private only public for test
+  public boolean[][] rotateShapeCounterClockwiseBy90Degrees(boolean[][] shape) {
     Objects.requireNonNull(shape);
     var row = shape.length;
     var col = shape[0].length;
@@ -82,6 +93,14 @@ public class BackPack {
       }
     }
     return newShape;
+  }
+  
+  public int getMana() {
+    return mana;
+  }
+  
+  public int getGold() {
+    return gold;
   }
   
   public boolean[][] getUnlocked() {
