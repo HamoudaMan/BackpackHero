@@ -32,7 +32,7 @@ public class DrawMiniMap {
 		var zoneW = screenWidth/3;
 		var zoneH = screenHeight/3;*/
 		
-		Room[][] rooms = floor.floor();
+		Room[][] rooms = floor.rooms();
 		var rows = rooms.length;
 		var cols = rooms[0].length;
 		 cellWidth = zoneW/cols;
@@ -46,6 +46,14 @@ public class DrawMiniMap {
 				
 				g.drawImage(tile,x, y, cellWidth, cellHeight, null);
 				//une couleur pour chaque type de room (par la suite on met une image a a la place de la couleur ?)
+				
+				if(floor.isBlocked(r, c)) {
+					g.setColor(Color.BLACK);
+					g.fillRect(x, y, cellWidth, cellHeight);
+					g.setColor(Color.BLACK);
+					g.drawRect(x, y, cellWidth, cellHeight);
+					continue;//if blocked no room drawing 
+				}
 				RoomType type = rooms[r][c].type();
 				switch(type) {
 				case ENEMY -> g.setColor(new Color(255, 0, 0, 120));

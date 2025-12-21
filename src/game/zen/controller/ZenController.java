@@ -50,7 +50,9 @@ public class ZenController {
 	
 	
 	public void start() {
+		System.out.println("loading in progress .. ");
 		ImageLoader.loadAll();
+		System.out.println("loading in progress/////// .. ");
 		var window = new Window();
 		window.open(context -> {
 			var screenWidth = context.getScreenInfo().width();

@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 import game.backpack.MagicBackPack;
 import game.zen.imgLoad.ImageLoader;
-import game.zen.view.stats.DrawItemInfo;
+
 
 public class DrawBackPack {
 	private final BufferedImage backPack;

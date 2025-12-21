@@ -15,12 +15,12 @@ import game.zen.view.stats.DrawHealthBar;
  */
 public class DrawEnemyRoom {
 	private final BufferedImage ratWolf;
-	private final BufferedImage smallRatWolf;
+	//private final BufferedImage smallRatWolf;
 	
 	
 	public DrawEnemyRoom() {
 		this.ratWolf = ImageLoader.getLoadedImage("ratwolf");
-		this.smallRatWolf = ImageLoader.getLoadedImage("smallratwolf");
+		//this.smallRatWolf = ImageLoader.getLoadedImage("smallratwolf");
 	}
 	
 	public void render(Graphics2D g, List<Enemy> enemies, int screenWidth, int screenHeight) {

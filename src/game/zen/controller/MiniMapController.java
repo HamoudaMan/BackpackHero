@@ -40,7 +40,7 @@ public class MiniMapController {
 		if(target == null) {//click hors de la minimap
 			return false;
 		}
-		if(!floor.validPosition(target)) {//  verifie que la salle est valide 
+		if(!floor.validPosition(target) ) {//  verifie que la salle est valide 
 			return false;
 		}
 		return true;

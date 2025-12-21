@@ -14,11 +14,7 @@ public class DrawItemDescription {
 	private final BufferedImage parchemin ;
 	//constant margins for the display of the description on an item
 	
-	 // Marges internes
-  private static final int PADDING_X = 20;
-  private static final int TITLE_Y = 35;
-  private static final int TEXT_START_Y = 65;
-  private static final int LINE_HEIGHT = 16;
+
 	public DrawItemDescription() {
 		this.parchemin =  ImageLoader.getLoadedImage("itemparchemin");
 	}

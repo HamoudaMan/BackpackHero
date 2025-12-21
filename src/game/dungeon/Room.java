@@ -11,6 +11,11 @@ public interface Room {
 
 	RoomType type();
 	String description();
+	
+	
+	
+	
+	
 	//methode juste pour le ZenCOntroller ne pas y faire attention 
 	public List<Enemy> enemiesList();
 	

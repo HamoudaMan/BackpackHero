@@ -1,12 +1,12 @@
 package game.zen.view;
 
-import java.awt.Font;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.List;
+
 
 import game.dungeon.state.TreasureState;
-import game.items.Item;
+
 import game.zen.imgLoad.ImageLoader;
 
 public class DrawTreasureRoom {
