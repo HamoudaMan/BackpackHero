@@ -37,6 +37,7 @@ import game.zen.view.DrawBackGround;
 import game.zen.view.DrawBackPack;
 import game.zen.view.DrawCombatBoutons;
 import game.zen.view.DrawEnemyRoom;
+import game.zen.view.DrawExitDoor;
 import game.zen.view.DrawGroundItem;
 import game.zen.view.DrawHealerRoom;
 
@@ -64,7 +65,12 @@ public class ZenController {
 		}
 		dungeon.gotNextFloor();
 		floor = dungeon.getCurrentFloor();
+		posHero = floor.postionHero();
+		state = ZenGameState.FLOOR;
+		showMiniMap = false;
 	}
+	
+	
 	public void start() {
 		System.out.println("loading in progress .. ");
 		ImageLoader.loadAll();
@@ -106,6 +112,8 @@ public class ZenController {
 			//healer
 			var healerController = new HealerController();
 			var healerRoom = new DrawHealerRoom();
+			
+			var exitRoom = new DrawExitDoor();
 			
 		  //List<EnemyI> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
@@ -190,8 +198,13 @@ public class ZenController {
 							break;
 						}
 						if( state == ZenGameState.EXITROOM  ) {
-							 handleExit();
-							 break;
+							if(exitRoom.isClicked(mouseX, mouseY, screenWidth, screenHeight)) {
+								IO.println("Exit is clicked ");
+								handleExit();
+								state = ZenGameState.FLOOR;
+							}
+								
+							break;
 						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
@@ -207,7 +220,7 @@ public class ZenController {
 						//on check le type de la salle Pour savoir quoi render par la suite 
 						Room room = floor.getRoomInfo(posHero.row(),posHero.col());
 						if(room == null) {
-							return; //it's Wall so we do nothing 
+							break; //it's Wall so we do nothing 
 						}
 						RoomType type = floor.getRoomInfo(posHero.row(),	posHero.col() ).type();
 						switch(type) {//un switch pour le render qui suit 
@@ -232,8 +245,8 @@ public class ZenController {
 					}
 				}
 				//Ce qui sera render a chaque fois : 
-				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight);
-																
+				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight, floor.level());
+																	
 																//itemInfoBox.render(g, screenWidth, screenHeight);
 													if(showMiniMap)
 														miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
@@ -273,7 +286,7 @@ public class ZenController {
 																									healerRoom.renderUsed(g, screenWidth, screenHeight);
 																								}
 																								;}
-														case EXITROOM -> {/*ajouter le render ici */}
+														case EXITROOM -> {exitRoom.render(g, screenWidth, screenHeight);}
 														
 									}
 													
