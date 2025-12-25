@@ -2,6 +2,7 @@ package game.zen.controller;
 
 import game.dungeon.Coord;
 import game.dungeon.Floor;
+import game.dungeon.state.DungeonState;
 import game.ennemies.Enemy;
 import game.hero.Hero;
 import game.zen.state.CombatPhase;
@@ -44,7 +45,7 @@ public class CombatController {
 		return currentState;
 	}
 	*/
-	public ZenGameState manageClick(int mouseX, int mouseY, Floor floor, Coord posHero, Hero hero, ZenGameState currentState) {
+	public ZenGameState manageClick(int mouseX, int mouseY, Floor floor, Coord posHero, Hero hero, ZenGameState currentState, DungeonState state) {
 		if(currentState != ZenGameState.ENEMYROOM) {
 			return currentState;//on verifie si c'est bien une enemyroom
 		}
@@ -64,7 +65,9 @@ public class CombatController {
 													
 													if(enemies.isEmpty()) {
 														phase = CombatPhase.END; // le combat est terminé
-														return ZenGameState.FLOOR;//si il n'y a plus d'ennemi alors combat terminer et on peut bouger le hero 
+														state.enemyState(posHero).clear();
+														return ZenGameState.FLOOR;//si il n'y a plus d'ennemi alors combat terminer et on peut bouger le hero
+														
 													}
 												enemy = enemies.get(0);
 												}

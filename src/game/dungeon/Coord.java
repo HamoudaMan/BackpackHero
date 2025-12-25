@@ -9,5 +9,8 @@ public record Coord(int row, int col) {
 		}
 		*/
 	}
+	public Coord sum(Coord other) {
+		return new Coord(this.row + other.row() , this.col +other.row());
+	}
 	
 }

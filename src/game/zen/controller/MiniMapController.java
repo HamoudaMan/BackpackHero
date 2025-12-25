@@ -43,7 +43,11 @@ public class MiniMapController {
 		if(!floor.validPosition(target) ) {//  verifie que la salle est valide 
 			return false;
 		}
-		return true;
+		if(floor.isWall(target)) {
+			return false;
+		}
+		return floor.canReach(heroPos, target);
+		//return true;
 		/*
 		//pour l'insant on peut se deplacer que dur une case voisine  (pas de diagonale)
 		var deltaR = Math.abs(target.row() - heroPos.row());

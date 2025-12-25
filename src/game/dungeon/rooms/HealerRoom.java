@@ -35,4 +35,5 @@ public class HealerRoom implements Room{
 	public List<Enemy> enemiesList() {
 		return List.of();
 	}
+
 }

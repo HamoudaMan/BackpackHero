@@ -8,7 +8,9 @@ import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
 
 import game.dungeon.Coord;
+import game.dungeon.Dungeon;
 import game.dungeon.Floor;
+import game.dungeon.Room;
 import game.dungeon.RoomType;
 import game.dungeon.state.DungeonState;
 import game.dungeon.state.HealerState;
@@ -39,6 +41,8 @@ import game.zen.view.DrawGroundItem;
 import game.zen.view.DrawHealerRoom;
 
 public class ZenController {
+	private Dungeon dungeon;
+	private Floor floor;
 	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
 	private ZenGameState state = ZenGameState.FLOOR;// cas de base on commence dans le couloir 
 	private boolean showMiniMap = false;
@@ -48,19 +52,34 @@ public class ZenController {
 	private GroundItemHitBox hoveredGroundItem;
 	private int mouseX, mouseY;
 	
-	
+	public void handleExit() {
+		if(!floor.allEnemiesCleared(dungeonState)) {
+			IO.println("You must defat all enemies first ");
+			return;
+		}
+		floor.setCompleted();
+		if(dungeon.onLastFloor()) {
+			IO.println("Game finish");
+			return;
+		}
+		dungeon.gotNextFloor();
+		floor = dungeon.getCurrentFloor();
+	}
 	public void start() {
 		System.out.println("loading in progress .. ");
 		ImageLoader.loadAll();
 		System.out.println("loading in progress/////// .. ");
+		
 		var window = new Window();
 		window.open(context -> {
 			var screenWidth = context.getScreenInfo().width();
 			var screenHeight = context.getScreenInfo().height();
-			
+			dungeon = new Dungeon(3);
+			floor = dungeon.getCurrentFloor();
 			Hero hero = new Hero("JOTARO KUJO");
 			hero.addToBackPack(new WoodenSword());
-			var floor = new Floor(1);
+			//var floor = new Floor(1);
+			//var floor = FloorGenerator.generate();
 			this.posHero = floor.postionHero();//pos initiae du hero 
 			Coord target = null;
 			
@@ -170,10 +189,14 @@ public class ZenController {
 							}
 							break;
 						}
+						if( state == ZenGameState.EXITROOM  ) {
+							 handleExit();
+							 break;
+						}
 						//si on est dans un combat 
 						if( state == ZenGameState.ENEMYROOM) {
 							//showMiniMap = false;
-							state = combatController.manageClick(mouseX, mouseY, floor, posHero, hero, state);
+							state = combatController.manageClick(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
 							break;//on  bouge pas le hero et on va au prochain renderFrame 
 						}
 						
@@ -182,13 +205,17 @@ public class ZenController {
 						this.posHero = miniMapController.tryMove(floor, posHero,target);//le hero bouge , il change de salle 
 						
 						//on check le type de la salle Pour savoir quoi render par la suite 
+						Room room = floor.getRoomInfo(posHero.row(),posHero.col());
+						if(room == null) {
+							return; //it's Wall so we do nothing 
+						}
 						RoomType type = floor.getRoomInfo(posHero.row(),	posHero.col() ).type();
 						switch(type) {//un switch pour le render qui suit 
 							case ENEMY -> {state = ZenGameState.ENEMYROOM;combatController.reset();}
 							case TREASURE -> state = ZenGameState.TREASUREROOM;
 							case MERCHANT -> state = ZenGameState.MERCHANTROOM;
 							case HEALER -> state = ZenGameState.HEALERROOM;
-							case EXIT -> state = ZenGameState.EXITROOM;
+							case EXIT -> {state = ZenGameState.EXITROOM;}
 							default -> state = ZenGameState.FLOOR;//on se balade dans la map
 						}
 					}

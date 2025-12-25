@@ -25,4 +25,6 @@ public class CorridorRoom implements Room{
 		return List.of();
 	}
 
+
+
 }

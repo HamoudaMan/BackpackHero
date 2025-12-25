@@ -9,10 +9,12 @@ import game.dungeon.Coord;
 public class DungeonState {
 	private Map<Coord, TreasureState> treasureStates;
 	private Map<Coord, HealerState> healerStates;
+	private Map<Coord, EnemyState> enemyStates;
 	
 	public DungeonState(){
 		this.treasureStates = new HashMap<>();
 		this.healerStates = new HashMap<>();
+		this.enemyStates = new HashMap<>();
 	}
 	
 	/**
@@ -37,7 +39,17 @@ public class DungeonState {
 			healerStates.put(coord, t);
 		}
 		return healerStates.get(coord);
-		//return healerState.computeIfAbsent(coord, c->new healerState);//to test
+		//return healerStates.computeIfAbsent(coord, c->new HealerState();//to test
 	}
 	
+	public EnemyState enemyState(Coord coord) {
+		
+		Objects.requireNonNull(coord);
+		if(!enemyStates.containsKey(coord)) {
+			var t = new EnemyState();
+			enemyStates.put(coord, t);
+		}
+		return enemyStates.get(coord);
+		//return enemyStates.computeIfAbsent(coord, c->new EnemyState());//to test
+	}
 }

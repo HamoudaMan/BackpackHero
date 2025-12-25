@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Queue;
 
 import game.dungeon.rooms.*;
+import game.dungeon.state.DungeonState;
 import game.ennemies.*;
 import game.hero.Hero;
 
@@ -50,7 +51,7 @@ public class Floor {
 	 * @param c coordinates of a room 
 	 * @return a boolean
 	 */
-	private boolean isWall(Coord c) {
+	public boolean isWall(Coord c) {
 		return floorRooms[c.row()][c.col()] == null;
 	}
 	/**
@@ -162,7 +163,20 @@ public class Floor {
 		//currentRoom.enter(hero);//si la room n'est pas ennemi on y bouge notre hero
 		return true;
 	}
+	public boolean allEnemiesCleared(DungeonState dungeonState) {
+		for(var r = 0; r< rows(); r++) {
+			for(var c = 0; c <cols(); c++) {
+				Room room = floorRooms[r][c];
 	
+				if(room !=null && room.type() == RoomType.ENEMY ) {
+					if(!dungeonState.enemyState(new Coord(r, c)).isCleared())
+						return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public boolean isCompleted() {
 		return completed;
 	}
@@ -184,7 +198,7 @@ public class Floor {
 	public Room[][] floorRooms(){
 		return floorRooms;
 	}
-	
+
 	/*
 	public Floor(int level) {
 		if(level <= 0) {
@@ -243,7 +257,7 @@ public class Floor {
 	/**
 	 * 
 	 * @param coord
-	 */
+	 *//*
 	private void depthFirstSearch(Coord coord) {
 		System.out.println("DFS at " + coord);
 
@@ -270,12 +284,14 @@ public class Floor {
 	public void generatePaths(Coord startPosition) {
 		depthFirstSearch(startPosition);//recherche en profondeur 
 	}
+	*/
 	/**
 	 * finds a path between the start and the end of the floor 
 	 * @param start starting position of the hero
 	 * @param end exit room postion
 	 * @return a list of Coord that represents the path form start to end of the floor 
 	 */
+	/*
 	private List<Coord> findPath(Coord start, Coord end){
 		boolean[][] visited = new boolean[ROWS][COLS];
 		//sotres the cell before , to reconstruct the path 
@@ -312,7 +328,7 @@ public class Floor {
 		Collections.reverse(path);
 		return path;
 	}
-	
+	/*
 	private void placeRooms() {
 		Coord exit = new Coord(0,COLS-1);//exit will be random after 
 		floorRooms[exit.row()][exit.col()] = new ExitRoom();
@@ -348,13 +364,14 @@ public class Floor {
 			
 			
 	}
-	
+	*/
 
 	/**
 	 * a method to return all valid neigboors of a cell (used for the hero mouvment )
 	 * @param coord
 	 * @return anImmutable list of the neighboors of c
 	 */
+	/*
 	public List<Coord> getVoisins(Coord c){
 		Coord gauche = new Coord(c.row(), c.col() - 1);
 		Coord droite = new Coord(c.row(), c.col() + 1);
@@ -368,12 +385,12 @@ public class Floor {
 	
 	
 
-
+/*
 	public boolean isBlocked(int row, int col) {
 		return blocked[row][col];
 	}
 
-	
+	*/
 
 
 

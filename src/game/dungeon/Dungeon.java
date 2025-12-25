@@ -1,5 +1,6 @@
 package game.dungeon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Dungeon {
@@ -7,9 +8,15 @@ public class Dungeon {
 	private int currentFloor ;//rdc
 	
 	
-	public Dungeon() {
-		this.dungeonFloors = List.of(new Floor(1), new Floor(2), new Floor(3));// on a les 3 etages
-		//this.currentFloor = 0;
+	
+	public Dungeon(int floorCount) {
+		this.dungeonFloors = new ArrayList<>();
+		this.currentFloor = 0;
+		
+		RandomFloorGenerator generator = new RandomFloorGenerator();
+		for(var level = 1; level <= floorCount; level++) {
+			dungeonFloors.add(generator.generate(level));
+		}
 	}
 	
 	public List<Floor> dungeonFloors(){

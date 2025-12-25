@@ -11,8 +11,7 @@ public interface Room {
 
 	RoomType type();
 	String description();
-	
-	
+
 	
 	
 	
