@@ -48,6 +48,7 @@ public final class RandomFloorGenerator {
 		return c.row() >= 0 && c.row() < ROWS && c.col() >= 0 && c.col() < COLS;
 	}
 	
+
 	/**
 	 * this method generates a path from herStart to a Room at the end of the floor ,
 	 * the coordinates of the last room in the list will be set as an exit room in the next method
@@ -66,23 +67,23 @@ public final class RandomFloorGenerator {
 			var col = current.col();
 			List<Coord> directions = new ArrayList<>();
 			var right = new Coord(row,col+1);
-			if(validPosition(right) && rooms[right.row()][right.col()] == null) {
+			if(validPosition(right) && rooms[right.row()][right.col()] == null && !forbiddenDiagonal(right, rooms) ) {
 				directions.add(right);
 			}
 			
 			var up = new Coord(row-1, col);
-			if(validPosition(up) && rooms[up.row()][up.col()] == null) {
+			if(validPosition(up) && rooms[up.row()][up.col()] == null && !forbiddenDiagonal(up, rooms)) {
 				directions.add(up);
 			}
 			
 			var down = new Coord(row+1, col);
-			if(validPosition(down) && rooms[down.row()][down.col()] == null) {
+			if(validPosition(down) && rooms[down.row()][down.col()] == null && !forbiddenDiagonal(down, rooms)) {
 				directions.add(down);
 			}
 			
 			Coord next;
 			if(directions.isEmpty()) {
-				next = right;
+				return null;
 			}else if(directions.contains(right)&& random.nextInt(100)<70){
 					next = right;
 			}else {
@@ -140,6 +141,7 @@ public final class RandomFloorGenerator {
 			rooms[current.row()][current.col()] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALLRATWOLF)));
 		}	
 	}
+	
 	/**
 	 * Checks if a coord is adjacent to another coord
 	 * this methode is used to help us verify that no cell is generated in diagonal 
@@ -163,12 +165,30 @@ public final class RandomFloorGenerator {
 		}
 		return false;
 	}
+	private boolean forbiddenDiagonal(Coord coord, Room[][] rooms) {
+		var diagonals = List.of(new Coord(-1, -1), new Coord(-1, 1), new Coord(1, -1), new Coord(1, 1));//a list of diagonals
+		for(var d: diagonals) {
+			var diag = coord.sum(d);
+			if(!validPosition(diag)) {//if the postion is not valid continue to the next diagonal
+				continue;
+			}
+			if(rooms[diag.row()][diag.col()] != null) {
+				var a = new Coord(coord.row(), diag.col());
+				var b = new Coord(diag.row(), coord.col());
+				
+				if(!(validPosition(a) && rooms[a.row()][a.col()] != null) && !(validPosition(b) && rooms[b.row()][b.col()] != null)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	private Coord randomFreeNeighboor(Coord coord, Room[][] rooms, Set<Coord> exsistingRooms) {
 		var directions = List.of(new Coord(-1, 0), new Coord(1, 0), new Coord(0, -1), new Coord(0, 1));//a list of directions (up, down, left, right)
 		var candidates = new ArrayList<Coord>();
 		for(var d: directions) {
 			var n = coord.sum(d);
-			if(validPosition(n) && rooms[n.row()][n.col()] == null && isAdjacent(n, exsistingRooms)) {
+			if(validPosition(n) && rooms[n.row()][n.col()] == null && isAdjacent(n, exsistingRooms) && !forbiddenDiagonal(n, rooms)) {
 				candidates.add(n);
 			}
 		}
@@ -201,7 +221,7 @@ public final class RandomFloorGenerator {
 			//var direction = directions.get(random.nextInt(directions.size()));//get a random direction
 			//Collections.shuffle(new ArrayList<>(directions));
 	
-			var deadEndLength = 2+random.nextInt(3);//lenght of the deadend path between 2 and 4 
+			var deadEndLength = 2+random.nextInt(6);//lenght of the deadend path between 2 and 7
 			var current = start;
 			
 			for(var j = 0; j<deadEndLength; j++) {
@@ -229,6 +249,25 @@ public final class RandomFloorGenerator {
 		
 		return deadEnds;
 	}
+	/*
+	private void fixDiagonals(Room[][] rooms) {
+    for (int r = 0;r < ROWS - 1; r++) {
+        for (int c = 0;c <COLS - 1; c++) {
+            if (rooms[r][c] != null && rooms[r+1][c+1] != null
+                && rooms[r][c+1] == null
+                && rooms[r+1][c] == null) {
+                rooms[r][c+1] = new CorridorRoom();
+            }
+            if (rooms[r+1][c] != null && rooms[r][c+1] != null
+                && rooms[r][c] == null
+                && rooms[r+1][c+1] == null) {
+                rooms[r][c] = new CorridorRoom();
+            }
+        }
+    }
+}
+*/
+	
 	private void placeOtherRooms(List<Coord> mainPath,List<Coord> deadEnds, Room[][] rooms, Coord heroStart, Coord exit) {
 		Objects.requireNonNull(mainPath);
 		Objects.requireNonNull(deadEnds);
@@ -284,16 +323,60 @@ public final class RandomFloorGenerator {
 		
 	}
 	public Floor generate(int level) {
-		Room[][] rooms = initFloor();
-		var heroStart = chooseHeroStart();
-		var mainPath = generateMainPath(rooms, heroStart);
-		var exit = placeExit(mainPath, rooms);
-		placeEnemyRooms(mainPath, rooms, heroStart, exit);
-		var deadEnds = generateDeadEnds(mainPath, rooms);
-		placeOtherRooms(mainPath, deadEnds, rooms, heroStart, exit);
-		return new Floor(level, rooms, heroStart);
+		while (true) {
+			Room[][] rooms = initFloor();
+			var heroStart = chooseHeroStart();
+			var mainPath = generateMainPath(rooms, heroStart);
+			if(mainPath == null) {
+				continue;//restart till the mainPath is not null
+			}
+			var exit = placeExit(mainPath, rooms);
+			placeEnemyRooms(mainPath, rooms, heroStart, exit);
+			var deadEnds = generateDeadEnds(mainPath, rooms);
+			placeOtherRooms(mainPath, deadEnds, rooms, heroStart, exit);
+			//fixDiagonals(rooms);
+			assertNoDiagonal(rooms);
+			return new Floor(level, rooms, heroStart);
+		}
 		
 	}
+	private static void assertNoDiagonal(Room[][] rooms) {
+    int rows = rooms.length;
+    int cols = rooms[0].length;
+
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            if (rooms[r][c] == null) continue;
+
+            // 4 diagonales
+            int[][] diags = {
+                {-1, -1}, {-1, 1},
+                {1, -1}, {1, 1}
+            };
+
+            for (var d : diags) {
+                int rr = r + d[0];
+                int cc = c + d[1];
+
+                if (rr < 0 || rr >= rows || cc < 0 || cc >= cols) continue;
+
+                if (rooms[rr][cc] != null) {
+                    // si les deux orthogonaux sont vides → vraie diagonale
+                    boolean ortho1 = rooms[r][cc] != null;
+                    boolean ortho2 = rooms[rr][c] != null;
+
+                    if (!ortho1 && !ortho2) {
+                        throw new IllegalStateException(
+                            "DIAGONALE LOGIQUE détectée entre (" +
+                            r + "," + c + ") et (" + rr + "," + cc + ")"
+                        );
+                    }
+                }
+            }
+        }
+    }
+}
+
 	/*
 	public boolean checkInvariants(Floor floor, List<Coord>mainPath, List<Coord> deadEnds ) {
 		Objects.requireNonNull(floor);
