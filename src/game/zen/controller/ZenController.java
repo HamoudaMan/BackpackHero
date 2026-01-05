@@ -82,7 +82,12 @@ public class ZenController {
 			var screenHeight = context.getScreenInfo().height();
 			dungeon = new Dungeon(3);
 			floor = dungeon.getCurrentFloor();
+
+
 			Hero hero = new Hero("JOTARO KUJO");
+			System.out.println("Dungeon OK");
+			System.out.println("Floor = " + floor);
+			System.out.println("Hero start = " + floor.postionHero());
 			hero.addToBackPack(new WoodenSword());
 			//var floor = new Floor(1);
 			//var floor = FloorGenerator.generate();

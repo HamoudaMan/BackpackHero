@@ -2,9 +2,11 @@ package game.dungeon;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 import game.dungeon.rooms.CorridorRoom;
 import game.dungeon.rooms.EnemyRoom;
@@ -130,6 +132,7 @@ public final class RandomFloorGenerator {
 		//we don't touch the herostart and the exit 
 		candidates.remove(heroStart);
 		candidates.remove(exit);
+		
 		Collections.shuffle(candidates);
 		var enemyRoomCount = random.nextInt(1, 3);//a min to ensure no idexoutof bound ? 
 		for(var i = 0; i< enemyRoomCount; i++) {
@@ -138,7 +141,46 @@ public final class RandomFloorGenerator {
 		}	
 	}
 	/**
-	 * transform rooms filled with null and Corridor to a functional rooms with enemy, merchancht, healer and treasure 
+	 * Checks if a coord is adjacent to another coord
+	 * this methode is used to help us verify that no cell is generated in diagonal 
+	 * @param coord
+	 * @param existingRooms
+	 * @return boolean
+	 */
+	private boolean isAdjacent(Coord coord,  Set<Coord> exsistingRooms) {
+		/*
+		var dr = Math.abs(a.row() - b.row());
+		var dc = Math.abs(a.col() - b.col());
+		return dr +dc ==1;*/
+		var directions = List.of(new Coord(-1, 0), new Coord(1, 0), new Coord(0, -1), new Coord(0, 1));//a list of directions (up, down, left, right)
+		
+		for(var dir:directions) {
+			var neighboor =coord.sum(dir);
+			if(exsistingRooms.contains(neighboor)) {
+				return true;
+			}
+			
+		}
+		return false;
+	}
+	private Coord randomFreeNeighboor(Coord coord, Room[][] rooms, Set<Coord> exsistingRooms) {
+		var directions = List.of(new Coord(-1, 0), new Coord(1, 0), new Coord(0, -1), new Coord(0, 1));//a list of directions (up, down, left, right)
+		var candidates = new ArrayList<Coord>();
+		for(var d: directions) {
+			var n = coord.sum(d);
+			if(validPosition(n) && rooms[n.row()][n.col()] == null && isAdjacent(n, exsistingRooms)) {
+				candidates.add(n);
+			}
+		}
+		if(candidates.isEmpty()) {
+			return null;
+		}
+		return candidates.get(random.nextInt(candidates.size()));
+	}
+	/**
+	 * generates deadsends from the main path 
+	 * each cell is adjacacent to an existing cell
+	 * 
 	 * @param rooms
 	 * @param heroStart
 	 * @param exit
@@ -147,25 +189,41 @@ public final class RandomFloorGenerator {
 	private List<Coord> generateDeadEnds(List<Coord> mainPath,Room[][] rooms) {
 		Objects.requireNonNull(mainPath);
 		Objects.requireNonNull(rooms);
+		
 		var deadEnds = new ArrayList<Coord>();
-		var deadEndsCount = random.nextInt(1,3);
+		var exsistingRooms = new HashSet<>(mainPath);
+		var deadEndsCount = random.nextInt(3)+3;//between 3 and 5 deadends
 	
 		for(var i = 0; i<deadEndsCount; i++) {
-			var depart = mainPath.get(random.nextInt(mainPath.size()));//the start of the deadend 
-			var directions = List.of(new Coord(-1, 0), new Coord(1, 0), new Coord(0, -1));//a list of directions 
-			var direction = directions.get(random.nextInt(directions.size()));
-
-			var deadEndLength = random.nextInt(1,3);
-			var current = depart;
+			//choose a random starting cell from the mainPath 
+			var start = mainPath.get(random.nextInt(mainPath.size()));//the start of the deadend 
+			//var directions = List.of(new Coord(-1, 0), new Coord(1, 0), new Coord(0, -1), new Coord(0, 1));//a list of directions (up, down, left, right)
+			//var direction = directions.get(random.nextInt(directions.size()));//get a random direction
+			//Collections.shuffle(new ArrayList<>(directions));
+	
+			var deadEndLength = 2+random.nextInt(3);//lenght of the deadend path between 2 and 4 
+			var current = start;
 			
 			for(var j = 0; j<deadEndLength; j++) {
-				var next = current.sum(direction);
-				if(!validPosition(next) || rooms[next.row()][next.col()] != null) {
+				//var next = current.sum(direction);
+				var next = randomFreeNeighboor(current,rooms, exsistingRooms);
+				if(next ==null) {
 					break;
 				}
 				rooms[next.row()][next.col()] = new CorridorRoom(); 
 				deadEnds.add(next);
+				exsistingRooms.add(next);
 				current = next;
+				/*
+				//check valid postion or if room already ocuppied
+				if(!validPosition(next) || rooms[next.row()][next.col()] != null) {
+					break;
+				}
+				if(!isAdjacent(current,next)) {//verify adjacent or not 
+					IO.println("Case non prise en compte car non adjacaentes : "+next);
+					break;
+				}*/
+
 			}
 		}
 		
@@ -190,17 +248,35 @@ public final class RandomFloorGenerator {
 		//candidates.removeLast();//remove the exit room
 		//candidates.removeFirst();//remove the hero start 
 		Collections.shuffle(candidates, random);
-		List<RoomType> toPlace = new ArrayList<>( List.of(RoomType.TREASURE, RoomType.HEALER, RoomType.MERCHANT) );
+		for(var coord: mainPath) {
+			if(!coord.equals(heroStart)&& !coord.equals(exit)&& rooms[coord.row()][coord.col()].type() == RoomType.CORRIDOR) {
+				candidates.add(coord);
+			}
+		}
+		//candidates.addAll(deadEnds);
+		Collections.shuffle(candidates, random);
+		
+		//at least one room is places 
+		List<RoomType> toPlace = new ArrayList<>(List.of(RoomType.TREASURE, RoomType.HEALER, RoomType.MERCHANT) );
+		if(random.nextBoolean()) {
+			toPlace.add(RoomType.TREASURE);
+		}
+		/*
+		if(random.nextBoolean()) {
+			toPlace.add(RoomType.TREASURE);
+		}*/
+		Collections.shuffle(toPlace, random);
 		
 		var count = Math.min(toPlace.size(), candidates.size());//to avoid indexoutofbounds
 		
 		for(var i = 0;i<count; i++) {
-			var c = deadEnds.get(i);
+			var c = candidates.get(i);
 			var type = toPlace.get(i);
 			switch(type) {
 				case TREASURE ->rooms[c.row()][c.col()] = new TreasureRoom();
 				case HEALER -> rooms[c.row()][c.col()] = new HealerRoom();
 				case MERCHANT -> rooms[c.row()][c.col()] = new MerchantRoom();
+				default ->{}
 			}
 			
 			

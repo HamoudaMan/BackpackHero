@@ -24,8 +24,8 @@ public class DrawMiniMap {
 		//zone d'affichage de la minimap
 		zoneW = screenWidth/3; //largeur de la map
 		zoneH = screenHeight/3; //longuer de la map
-		zoneX = screenWidth /3;//40 : valeur arbitraire pour la marge a gauche 
-		zoneY = screenHeight/12;//marge en haut 
+		//zoneX = screenWidth /3;//40 : valeur arbitraire pour la marge a gauche 
+		//zoneY = screenHeight/12;//marge en haut 
 		
 		/*		var zoneX = screenWidth/3;
 		var zoneY = 
@@ -36,8 +36,13 @@ public class DrawMiniMap {
 		
 		var rows = rooms.length;
 		var cols = rooms[0].length;
-		 cellWidth = zoneW/cols;
-		cellHeight = zoneH/rows;
+		var size = Math.min(zoneW/cols, zoneH/rows);
+		cellWidth = size;
+		cellHeight = size;
+		var gridWidth = cellWidth*cols;
+		var gridHeight = cellHeight*rows;
+		zoneX = (screenWidth-gridWidth)/2;
+		zoneY = (screenHeight - gridHeight)/8;
 		
 		//dessin de la grille de la minimap
 		for(var r = 0; r<rows; r++) {
