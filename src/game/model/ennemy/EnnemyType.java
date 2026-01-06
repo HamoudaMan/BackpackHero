@@ -1,6 +1,6 @@
 package game.model.ennemy;
 
-import game.model.action.Action;
+import game.model.representation.Action;
 
 public enum EnnemyType {
   SMALL_RATWOLF(new Action[] {Action.ATTACK, Action.ATTACK, Action.BLOCK}), 
