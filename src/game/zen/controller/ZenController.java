@@ -54,6 +54,7 @@ public class ZenController {
 	private final Queue<Coord> movementQueue = new ArrayDeque<>();
 	private int moveCoolDown = 0;
 	private static final int MOVE_DELAY = 10;//frames between a movement between 2 cells 
+	private Coord lastActivatedRoom = null;
 	
 	private final DungeonState dungeonState = new DungeonState();
 	private  Item hoveredItem = null;
@@ -227,8 +228,8 @@ public class ZenController {
 						
 						//sinnon on bouge le hero sur la minimap
 						target = miniMapController.convertClick(mouseX, mouseY);
-						if(miniMapController.canMove(floor, posHero, target)) {
-							var path = floor.findPath(posHero, target);
+						if(miniMapController.canMove(floor, posHero, target,dungeonState)) {
+							var path = floor.findPath(posHero, target,dungeonState);
 							if(path.size()>1) {
 								path.remove(0);//remove the current postion
 								movementQueue.clear();//clear the queue
@@ -243,6 +244,7 @@ public class ZenController {
 						if(room == null) {
 							break; //it's Wall so we do nothing 
 						}
+						/*
 						RoomType type = floor.getRoomInfo(posHero.row(),	posHero.col() ).type();
 						switch(type) {//un switch pour le render qui suit 
 							case ENEMY -> {state = ZenGameState.ENEMYROOM;combatController.reset();}
@@ -251,7 +253,7 @@ public class ZenController {
 							case HEALER -> state = ZenGameState.HEALERROOM;
 							case EXIT -> {state = ZenGameState.EXITROOM;}
 							default -> state = ZenGameState.FLOOR;//on se balade dans la map
-						}
+						}*/
 					}
 				}
 				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
@@ -259,17 +261,21 @@ public class ZenController {
 				}
 		
 				//animation moving hero from cell to cell
+				boolean arrived  = false;
 			  if(!movementQueue.isEmpty()) {
 			  	moveCoolDown++;
 			  	if(moveCoolDown >=MOVE_DELAY) {
 			  		moveCoolDown = 0;
 				  	var next = movementQueue.poll();
-				  	floor.moveHero(next);
+				  	floor.moveHero(next, dungeonState);
 				  	posHero = floor.postionHero();
+				  	arrived = movementQueue.isEmpty();
 			  	}
 
 			  }
-			  if(!movementQueue.isEmpty()) {
+			  
+			  if(arrived || movementQueue.isEmpty() && state == ZenGameState.FLOOR && !posHero.equals(lastActivatedRoom)) {
+			  	lastActivatedRoom = posHero;
 			  	Room room = floor.getRoomInfo(posHero.row(),posHero.col());
 			  	if(room!=null) {
 			  		switch(room.type()) {

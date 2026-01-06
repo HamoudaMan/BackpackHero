@@ -2,6 +2,7 @@ package game.zen.controller;
 
 import game.dungeon.Coord;
 import game.dungeon.Floor;
+import game.dungeon.state.DungeonState;
 import game.hero.Hero;
 import game.zen.view.DrawMiniMap;
 
@@ -36,7 +37,7 @@ public class MiniMapController {
 		return new Coord(row, col);
 	}
 	
-	public boolean canMove(Floor floor, Coord heroPos, Coord target) {
+	public boolean canMove(Floor floor, Coord heroPos, Coord target, DungeonState dungeonState) {
 		if(target == null) {//click hors de la minimap
 			return false;
 		}
@@ -46,7 +47,12 @@ public class MiniMapController {
 		if(floor.isWall(target)) {
 			return false;
 		}
-		return floor.canReach(heroPos, target);
+		if (!floor.canReach(heroPos, target, dungeonState)) {
+	    IO.println("Pathway blocked+" +floor.getRoomInfo(target.row(), target.col()));
+	    return false;
+	}
+
+		return floor.canReach(heroPos, target,dungeonState);
 		//return true;
 		/*
 		//pour l'insant on peut se deplacer que dur une case voisine  (pas de diagonale)
@@ -56,9 +62,9 @@ public class MiniMapController {
 		return deltaR + deltaC == 1;//autorise que deplacement sur une case voisine donc la difference doit etre ==  1 */
 	}
 	
-	public Coord tryMove(Floor floor,Coord heroPos, Coord target) {
+	public Coord tryMove(Floor floor,Coord heroPos, Coord target, DungeonState dungeonState) {
 		
-		if(canMove(floor, heroPos, target)) {
+		if(canMove(floor, heroPos, target, dungeonState)) {
 			return target;
 		}
 		return heroPos;
