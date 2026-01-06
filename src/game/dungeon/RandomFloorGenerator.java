@@ -212,6 +212,7 @@ public final class RandomFloorGenerator {
 		
 		var deadEnds = new ArrayList<Coord>();
 		var exsistingRooms = new HashSet<>(mainPath);
+		
 		var deadEndsCount = random.nextInt(3)+3;//between 3 and 5 deadends
 	
 		for(var i = 0; i<deadEndsCount; i++) {

@@ -2,7 +2,9 @@ package game.zen.controller;
 
 
 
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 
 import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
@@ -47,6 +49,11 @@ public class ZenController {
 	private Coord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
 	private ZenGameState state = ZenGameState.FLOOR;// cas de base on commence dans le couloir 
 	private boolean showMiniMap = false;
+	
+	//hero movment
+	private final Queue<Coord> movementQueue = new ArrayDeque<>();
+	private int moveCoolDown = 0;
+	private static final int MOVE_DELAY = 10;//frames between a movement between 2 cells 
 	
 	private final DungeonState dungeonState = new DungeonState();
 	private  Item hoveredItem = null;
@@ -220,7 +227,16 @@ public class ZenController {
 						
 						//sinnon on bouge le hero sur la minimap
 						target = miniMapController.convertClick(mouseX, mouseY);
-						this.posHero = miniMapController.tryMove(floor, posHero,target);//le hero bouge , il change de salle 
+						if(miniMapController.canMove(floor, posHero, target)) {
+							var path = floor.findPath(posHero, target);
+							if(path.size()>1) {
+								path.remove(0);//remove the current postion
+								movementQueue.clear();//clear the queue
+								movementQueue.addAll(path);//prepare the next movements 
+							}
+						}
+						//this.posHero = miniMapController.tryMove(floor, posHero,target);//le hero bouge , il change de salle 
+
 						
 						//on check le type de la salle Pour savoir quoi render par la suite 
 						Room room = floor.getRoomInfo(posHero.row(),posHero.col());
@@ -241,8 +257,31 @@ public class ZenController {
 				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
 				case null ->{}
 				}
-			
-			  
+		
+				//animation moving hero from cell to cell
+			  if(!movementQueue.isEmpty()) {
+			  	moveCoolDown++;
+			  	if(moveCoolDown >=MOVE_DELAY) {
+			  		moveCoolDown = 0;
+				  	var next = movementQueue.poll();
+				  	floor.moveHero(next);
+				  	posHero = floor.postionHero();
+			  	}
+
+			  }
+			  if(!movementQueue.isEmpty()) {
+			  	Room room = floor.getRoomInfo(posHero.row(),posHero.col());
+			  	if(room!=null) {
+			  		switch(room.type()) {
+							case ENEMY -> {state = ZenGameState.ENEMYROOM;combatController.reset();}
+							case TREASURE -> state = ZenGameState.TREASUREROOM;
+							case MERCHANT -> state = ZenGameState.MERCHANTROOM;
+							case HEALER -> state = ZenGameState.HEALERROOM;
+							case EXIT -> {state = ZenGameState.EXITROOM;}
+							default -> state = ZenGameState.FLOOR;//on se balade dans la map
+			  		}
+			  	}
+			  }
 				if(state == ZenGameState.TREASUREROOM) {
 					TreasureState ts = dungeonState.treasureState(posHero);
 					if(ts.isOpened()) {

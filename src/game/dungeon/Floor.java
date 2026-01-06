@@ -145,6 +145,52 @@ public class Floor {
 		return false;
 		
 	}
+	public List<Coord> findPath(Coord start, Coord dest){
+		if(start.equals(dest)) {
+			return List.of(start);
+		}
+		boolean visited[][] = new boolean[ROWS][COLS];// to track all visited cells (false->not visited)
+		Coord[][] parent = new Coord[ROWS][COLS];
+		Queue<Coord> queue = new ArrayDeque<>();
+		
+		queue.add(start);
+		visited[start.row()][start.col()] = true;//si une case est visité on met true 
+		
+		while(!queue.isEmpty()) {
+			Coord current = queue.remove();
+			if(current.equals(dest)) {
+				break; //already at dest
+			}
+			for(Coord next: neighboors(current)) {
+				if(visited[next.row()][next.col()]) {
+					continue;
+				}
+				Room room = floorRooms[next.row()][next.col()];
+				if(!safeToAccess(room)) {
+					continue;
+				}
+				
+				visited[next.row()][next.col()] = true;//set true the cell that we visited 
+				parent[next.row()][next.col()] = current;
+				queue.add(next);
+			}
+			
+		}
+		List<Coord> path = new ArrayList<>();
+		Coord step = dest;
+		while(step !=null && !step.equals(start)) {
+			path.add(step);
+			step = parent[step.row()][step.col()];
+		}
+		if(step == null) {
+			return List.of();//return empty, no path
+		}
+		path.add(start);
+		Collections.reverse(path);
+		return path;
+	}
+	
+	
 	
 	public boolean moveHero(Coord dest ) {
 		if( positionHero.equals(dest) ) {
