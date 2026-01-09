@@ -43,6 +43,9 @@ public class HeroStats {
   public int health() {
   	return health;
   }
+  public int protection() {
+  	return protection;
+  }
   public int maxHealth() {
   	return maxHealth;
   }
