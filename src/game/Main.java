@@ -1,5 +1,6 @@
 package game;
 
+import game.controller.ZenController;
 import game.model.backpack.BackPack;
 import game.model.hero.Hero;
 import game.model.item.ItemInstance;
@@ -8,7 +9,18 @@ import game.model.representation.Coord;
 import game.model.representation.StateRotation;
 
 public class Main {
+	
+	
+	
+	
+	
   public static void main(String[] args) {
+  	
+  	
+  	System.out.println("starting main ");
+    new ZenController().start();
+  	
+  	
     var hero = new Hero("Test");
     var backpack = new BackPack(7, 5, 2, 1, 4, 3);
     var itemTest = new Weapon("Test", 0, 0, 0, new boolean[][] {{true, true, false}}); 

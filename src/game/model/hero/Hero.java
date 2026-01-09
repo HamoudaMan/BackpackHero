@@ -32,6 +32,21 @@ public class Hero {
     this.backPack = new BackPack(7, 5, 2, 1, 4, 3);
   }
   
+  public boolean canPay(int amount) {
+  	return backPack.hasGold(amount);
+  }
+  public void pay(int amount) {
+  	backPack.spendGold(amount);
+  }
+  public int gold() {
+  	return backPack.getGold();
+  }
+  public void earnGold(int amount) {
+  	backPack.addGold(amount);
+  }
+  
+  
+  
   public void takeDamage(int dmg) {
   	Math.max(0, stats.health()-dmg);
   }

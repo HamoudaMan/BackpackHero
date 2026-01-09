@@ -55,7 +55,29 @@ public class BackPack {
     this.mana = 0;
     this.gold = 0;
   }
+  //managing the gold : 
+  public boolean hasGold(int amount) {
+  	if(amount < 0) {
+  		throw new IllegalArgumentException();
+  	}
+  	return gold >= amount;
+  }
   
+  public void spendGold(int amount ) {
+  	if(amount < 0) {
+  		throw new IllegalArgumentException();
+  	}
+  	if(hasGold(amount)) {
+  		gold -=amount;
+  	}
+  }
+  
+  public void addGold(int amount) {
+  	if(amount < 0) {
+  		throw new IllegalArgumentException();
+  	}
+  	gold+= amount ;
+  }
   private boolean nextToUnlocked(Coord coord) {
     Objects.requireNonNull(coord);
     var x = coord.x();
