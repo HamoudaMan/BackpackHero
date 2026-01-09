@@ -222,7 +222,7 @@ public final class RandomFloorGenerator {
 			//var direction = directions.get(random.nextInt(directions.size()));//get a random direction
 			//Collections.shuffle(new ArrayList<>(directions));
 	
-			var deadEndLength = 2+random.nextInt(6);//lenght of the deadend path between 2 and 7
+			var deadEndLength = 5+random.nextInt(6);//lenght of the deadend path between 2 and 7
 			var current = start;
 			
 			for(var j = 0; j<deadEndLength; j++) {
