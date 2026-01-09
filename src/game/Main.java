@@ -9,7 +9,7 @@ import game.model.representation.StateRotation;
 
 public class Main {
   public static void main(String[] args) {
-    var hero = new Hero("Test", 25, 25);
+    var hero = new Hero("Test");
     var backpack = new BackPack(7, 5, 2, 1, 4, 3);
     var itemTest = new Weapon("Test", 0, 0, 0, new boolean[][] {{true, true, false}}); 
     var stateRotation = StateRotation.Base;

@@ -1,4 +1,4 @@
-package game.model.representation;
+package game.model.enemy;
 
 public enum Action {
   ATTACK,
