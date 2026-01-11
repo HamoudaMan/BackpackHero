@@ -22,8 +22,8 @@ public class DrawHealerRoom {
 		leaveX = centerX;
 		leaveY = smallY+ buttonHeight+30;
 		
-		drawButton(g, fullX,fullY, "Heal Full HP for 10 gold");
-		drawButton(g, smallX,smallY, "Heal small HP for 5 gold");
+		drawButton(g, fullX,fullY, "Heal Full HP for 20 gold");
+		drawButton(g, smallX,smallY, "Heal small HP for 7 gold");
 		drawButton(g, leaveX,leaveY, "Leave");
 		
 		

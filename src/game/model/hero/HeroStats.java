@@ -18,7 +18,7 @@ public class HeroStats {
     if(damage < 0) {
       throw new IllegalArgumentException("damage must be >= 0");
     }
-    var effectiveDamage = damage - protection; 
+    var effectiveDamage = Math.max(0, damage- protection) ; 
     health = Math.max(0, health-effectiveDamage);
     protection = 0;
   }
@@ -36,7 +36,10 @@ public class HeroStats {
     }
     this.protection += protection;
   }
-  
+  public void resetProtection() {
+  	protection = 0;
+  }
+
   public boolean isDead() {
   	return health <= 0;
   }

@@ -25,12 +25,14 @@ public class Enemy {
 	}
 
 	public void attack(Hero hero) {
+		System.out.println("[ENEMY ATTACK] dmg = " + stats.damage());
 		hero.takeDamage(stats.damage());
 	}
 	
 	
 	public void playTurn(Hero hero) {
 		Action action = type.nextAction(turn++);
+		 System.out.println("[ENEMY TURN] action = " + action);
 		switch(action) {
 			case ATTACK -> attack(hero);
 			case BLOCK -> protection += stats.block();

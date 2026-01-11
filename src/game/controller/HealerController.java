@@ -25,9 +25,11 @@ public class HealerController {
 	 */
 	public boolean healSmall(Hero hero,HealerState state) {
 		if(state.isUsed() || !hero.canPay(SMALL_HEAL_COST) ) {
+			IO.println("healer used OR Not enough gold! Need " + SMALL_HEAL_COST + " gold, you have " + hero.gold());
 			return false;
 		}
-			hero.pay(SMALL_HEAL_AMOUNT);
+
+			hero.pay(SMALL_HEAL_COST);
 			hero.stats().heal(SMALL_HEAL_AMOUNT);
 			state.use();//set the treasure room as used 
 			return true;
@@ -40,7 +42,9 @@ public class HealerController {
 	 * @return a boolean
 	 */
 	public boolean healFull(Hero hero,HealerState state) {
+
 		if(state.isUsed() || !hero.canPay(FULL_HEAL_COST) ) {
+			IO.println("healer used OR Not enough gold! Need " + FULL_HEAL_COST + " gold, you have " + hero.gold());
 			return false;
 		}
 		hero.pay(FULL_HEAL_COST);

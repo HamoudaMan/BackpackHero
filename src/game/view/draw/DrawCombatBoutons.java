@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 public class DrawCombatBoutons {
 	public int attackX, attackY, attackW,attackH;
 	public int blockX, blockY, blockW,blockH;
+	public int endTurnX, endTurnY, endTurnW,endTurnH;
 	
 	public DrawCombatBoutons() {
 		//pas la peine de utiliser le constructeur car apres les valeur des btn peuvent changais dans le cas ou on recadre la fentre (a tester)
@@ -25,6 +26,11 @@ public class DrawCombatBoutons {
 		blockW = btnW;
 		blockH=btnH;
 		
+		endTurnX = 20;
+		endTurnY = screenHeight/2+200;
+		endTurnW = btnW/2;
+		endTurnH=btnH;
+		
 		
 		var blockX = 3* screenWidth/4 -btnW/2;
 		
@@ -40,6 +46,13 @@ public class DrawCombatBoutons {
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 20));
 		g.drawString("Blocking +"+block, blockX+20, zoneY+20);
+		
+		//btn end turn 
+		g.setColor(Color.ORANGE);
+		g.fillRect(endTurnX, endTurnY, btnW/2, btnH);
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Arial", Font.BOLD, 15));
+		g.drawString("END TURN", endTurnX+20, endTurnY+20);
 	
 	}
 	
@@ -49,5 +62,8 @@ public class DrawCombatBoutons {
 	
 	public boolean clickBLock(int mouseX, int mouseY) {
 		return mouseX >=blockX && mouseX <= blockX + blockW && mouseY>= blockY && mouseY<= blockY +blockH;
+	}
+	public boolean clickEndTurn(int mouseX, int mouseY) {
+		return mouseX >=endTurnX && mouseX <= endTurnX + endTurnW && mouseY>= endTurnY && mouseY<= endTurnY +endTurnH;
 	}
 }

@@ -20,7 +20,7 @@ public class HeroEnergy {
     if(energyToConsume < 0) {
       throw new IllegalArgumentException("energyToConsume must be >= 0");
     }
-
+    if (energy < energyToConsume) throw new IllegalStateException("not enough energy");
     energy -= energyToConsume;
   }
   

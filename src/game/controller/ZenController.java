@@ -219,9 +219,10 @@ public class ZenController {
 							break;
 						}
 						//si on est dans un combat 
-						if( state == ZenGameState.ENEMYROOM) {
+						if( state == ZenGameState.ENEMYROOM ) {
 							//showMiniMap = false;
-							state = combatController.manageClick(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
+							state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
+							//combatController.manageEnemyTurn(floor, posHero,	 hero);
 							break;//on  bouge pas le hero et on va au prochain renderFrame 
 						}
 						
@@ -243,22 +244,19 @@ public class ZenController {
 						if(room == null) {
 							break; //it's Wall so we do nothing 
 						}
-						/*
-						RoomType type = floor.getRoomInfo(posHero.row(),	posHero.col() ).type();
-						switch(type) {//un switch pour le render qui suit 
-							case ENEMY -> {state = ZenGameState.ENEMYROOM;combatController.reset();}
-							case TREASURE -> state = ZenGameState.TREASUREROOM;
-							case MERCHANT -> state = ZenGameState.MERCHANTROOM;
-							case HEALER -> state = ZenGameState.HEALERROOM;
-							case EXIT -> {state = ZenGameState.EXITROOM;}
-							default -> state = ZenGameState.FLOOR;//on se balade dans la map
-						}*/
+
 					}
 				}
 				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
 				case null ->{}
 				}
-		
+				
+				if( state == ZenGameState.ENEMYROOM ) {
+					//showMiniMap = false;
+					//state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
+					combatController.manageEnemyTurn(floor, posHero,	 hero);
+					//break;//on  bouge pas le hero et on va au prochain renderFrame 
+				}
 				//animation moving hero from cell to cell
 				boolean arrived  = false;
 			  if(!movementQueue.isEmpty()) {

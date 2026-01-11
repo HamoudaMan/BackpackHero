@@ -7,7 +7,7 @@ public enum EnemyType {
 	
 	
   SMALL_RATWOLF(new Action[] {Action.ATTACK, Action.ATTACK, Action.BLOCK},
-  							new EnemyStats(30,5,4,5)
+  							new EnemyStats(25,5,4,5)
   ), 
   
   RATWOLF(new Action[] {Action.ATTACK, Action.BLOCK, Action.ATTACK, Action.BLOCK},
@@ -15,7 +15,7 @@ public enum EnemyType {
   		),
   
   SLIME(new Action[] {Action.ATTACK, Action.HEAL, Action.ATTACK, Action.HEAL},
-  			new EnemyStats(30,5,4,5)
+  			new EnemyStats(27,5,4,5)
   		);
   
   private final Action[] pattern;

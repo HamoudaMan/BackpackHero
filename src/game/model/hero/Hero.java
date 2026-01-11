@@ -48,7 +48,7 @@ public class Hero {
   
   
   public void takeDamage(int dmg) {
-  	Math.max(0, stats.health()-dmg);
+  	stats().takeDamage(dmg);
   }
   public String name() {
     return name;
