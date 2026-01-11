@@ -32,7 +32,7 @@ public class ZenController {
 	private Dungeon dungeon;
 	private Floor floor;
 	private DCoord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
-	private ZenGameState state = ZenGameState.FLOOR;// cas de base on commence dans le couloir 
+	private ZenGameState state = ZenGameState.MENU;// cas de base on commence dans le couloir 
 	private boolean showMiniMap = false;
 	
 	//hero movment
@@ -73,20 +73,21 @@ public class ZenController {
 		window.open(context -> {
 			var screenWidth = context.getScreenInfo().width();
 			var screenHeight = context.getScreenInfo().height();
-			dungeon = new Dungeon(3);
-			floor = dungeon.getCurrentFloor();
+			
+			//floor = dungeon.getCurrentFloor();
 
 
 			Hero hero = new Hero("JOTARO KUJO");
-			System.out.println("Dungeon OK");
-			System.out.println("Floor = " + floor);
-			System.out.println("Hero start = " + floor.postionHero());
+			//System.out.println("Dungeon OK");
+			//System.out.println("Floor = " + floor);
+			//System.out.println("Hero start = " + floor.postionHero());
 			//hero.addToBackPack(new WoodenSword());
 			//var floor = new Floor(1);
 			//var floor = FloorGenerator.generate();
-			this.posHero = floor.postionHero();//pos initiae du hero 
+			//this.posHero = floor.postionHero();//pos initiae du hero 
 			DCoord target = null;
 			
+			var menu = new DrawMenu();
 			var bg = new DrawBackGround();
 			var backpack = new DrawBackPack();
 			var itemInfoBox = new DrawItemInfo();
@@ -126,6 +127,19 @@ public class ZenController {
 				case PointerEvent p ->{
 					 mouseX = p.location().x();
 					 mouseY = p.location().y();
+					 
+					 if(state == ZenGameState.MENU) {
+						 if(menu.isClicked(mouseX, mouseY)) {
+							 dungeon = new Dungeon(3);
+							 floor = dungeon.getCurrentFloor();
+							 posHero = floor.postionHero();
+							 state = ZenGameState.FLOOR;
+							 System.out.println("Dungeon OK");
+				        System.out.println("Floor = " + floor);
+				        System.out.println("Hero start = " + posHero);
+						 }
+						 break;
+					 }
 					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
 						 TreasureState ts = dungeonState.treasureState(posHero);
 						 if(state == ZenGameState.TREASUREROOM) {
@@ -280,7 +294,12 @@ public class ZenController {
 					}
 				}
 				//Ce qui sera render a chaque fois : 
-				context.renderFrame(g-> { bg.render(g, screenWidth, screenHeight, floor.level());
+				context.renderFrame(g-> { 
+													if(state == ZenGameState.MENU) {
+															menu.render(g, screenWidth, screenHeight);
+															return;
+													}
+														bg.render(g, screenWidth, screenHeight, floor.level());
 																	
 																//itemInfoBox.render(g, screenWidth, screenHeight);
 													if(showMiniMap)
@@ -322,6 +341,7 @@ public class ZenController {
 																								}
 																								;}
 														case EXITROOM -> {exitRoom.render(g, screenWidth, screenHeight);}
+														case MENU -> {menu.render(g, screenWidth, screenHeight);return;} 
 														
 									}
 													

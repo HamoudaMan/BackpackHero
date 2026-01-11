@@ -24,9 +24,13 @@ public final class ImageLoader {
 		if(loaded) {
 			throw new IllegalStateException("already loaded ");
 		}
-		IO.println("Loading all the images : ");
+		IO.println("Loading all the images ... ");
+		
+		//menu 
+		load("bg_menu","/sprites/ui/bg_menu.png");
+		load("play_button","/sprites/ui/play_button.png");
 		//the Dungeon : 
-		load("bg","/sprites/ui/dunjon/bgHH.png");
+		load("bg","/sprites/ui/dunjon/bhHH.png");
 		load("tile","/sprites/ui/dunjon/tile.png");
 		load("hero","/sprites/ui/dunjon/heroUI/retro_jojo.png");
 		load("blockIcon", "/sprites/items/blockIcon.png");
