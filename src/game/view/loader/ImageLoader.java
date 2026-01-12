@@ -45,6 +45,9 @@ public final class ImageLoader {
 		//the Enemies:
 		load("ratwolf","/sprites/ui/dunjon/enemies/ratwolf.png");
 		load("smallratwolf","/sprites/ui/dunjon/enemies/smallRatWolf.png");
+		load("muskratbrigand","/sprites/ui/dunjon/enemies/muskratBrigand.png");
+		load("lilbee","/sprites/ui/dunjon/enemies/lilBee.png");
+		load("slime","/sprites/ui/dunjon/enemies/slime.png");
 		//The merchantRoom:
 		load("merchant","/sprites/ui/dunjon/merchant/dwarfMerchant.png");
 		//the treasureRoom:

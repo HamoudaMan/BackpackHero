@@ -139,7 +139,7 @@ public final class RandomFloorGenerator {
 		var enemyRoomCount = random.nextInt(1, 3);//a min to ensure no idexoutof bound ? 
 		for(var i = 0; i< enemyRoomCount; i++) {
 			var current = candidates.get(i);
-			rooms[current.row()][current.col()] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALL_RATWOLF)));
+			rooms[current.row()][current.col()] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALL_RATWOLF), EnemyFactory.create(EnemyType.SLIME), EnemyFactory.create(EnemyType.LILBEE)));
 		}	
 	}
 	

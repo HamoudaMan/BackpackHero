@@ -25,7 +25,7 @@ public class Enemy {
 	}
 
 	public void attack(Hero hero) {
-		System.out.println("[ENEMY ATTACK] dmg = " + stats.damage());
+		System.out.println("ENEMY ATTACK dmg = " + stats.damage());
 		hero.takeDamage(stats.damage());
 	}
 	

@@ -15,12 +15,21 @@ import game.view.stats.DrawHealthBar;
  */
 public class DrawEnemyRoom {
 	private final BufferedImage ratWolf;
+	private final BufferedImage smallRatWolf;
+	private final BufferedImage slime;
+	private final BufferedImage lilBee;
+	private final BufferedImage muskratBrigand;
 	//private final BufferedImage smallRatWolf;
 	
 	
 	public DrawEnemyRoom() {
 		this.ratWolf = ImageLoader.getLoadedImage("ratwolf");
-		//this.smallRatWolf = ImageLoader.getLoadedImage("smallratwolf");
+		this.smallRatWolf = ImageLoader.getLoadedImage("smallratwolf");
+		this.slime = ImageLoader.getLoadedImage("slime");
+		this.lilBee = ImageLoader.getLoadedImage("lilbee");
+		this.muskratBrigand = ImageLoader.getLoadedImage("muskratbrigand");
+		
+		
 	}
 	
 	public void render(Graphics2D g, List<Enemy> enemies, int screenWidth, int screenHeight) {
@@ -41,14 +50,17 @@ public class DrawEnemyRoom {
 			var x = zoneX + i *space;
 			//var y = zoneY;
 			Enemy e = enemies.get(i);
-			/*
-			switch(e.name()) {
-			case "RatWolf" -> g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
-			case "SmallRatWolf" -> g.drawImage(smallRatWolf, x, zoneY, enemyW, enemyH, null);
-			}*/
-			g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
 			
-			DrawHealthBar.render(g,x, zoneY - 15, (int)(enemyW*0.80), e.currentHealth(), e.stats().maxHealth());
+			switch(e.type()) {
+			case RATWOLF -> g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
+			case SMALL_RATWOLF -> g.drawImage(smallRatWolf, x, zoneY, enemyW, enemyH, null);
+			case SLIME -> g.drawImage(slime, x, zoneY, enemyW, enemyH, null);
+			case MUSKRAT_BRIGAND -> g.drawImage(muskratBrigand, x, zoneY, enemyW, enemyH, null);
+			case LILBEE -> g.drawImage(lilBee, x, zoneY, enemyW, enemyH, null);
+			}
+			//g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
+			
+			DrawHealthBar.render(g,x+25, zoneY +enemyH+5, (int)(enemyW*0.60), e.currentHealth(), e.stats().maxHealth());
 			g.setColor(Color.WHITE);
 			//g.drawString("next Action : " + enemies.get(i).nextAction().toString(), x, zoneY-30);
 
