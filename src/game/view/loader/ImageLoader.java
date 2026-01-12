@@ -33,26 +33,36 @@ public final class ImageLoader {
 		load("bg","/sprites/ui/dunjon/bhHH.png");
 		load("tile","/sprites/ui/dunjon/tile.png");
 		load("hero","/sprites/ui/dunjon/heroUI/retro_jojo.png");
+		
+		//icons
 		load("blockIcon", "/sprites/items/blockIcon.png");
+		load("attackicon", "/sprites/items/attackicon.png");
+		load("healicon", "/sprites/items/attackIcon.png");
+		
 		//the BackPack:
 		load("backpack","/sprites/ui/backpack1.png");
 		load("parchemin", "/sprites/ui/parchemin.png");
+		
 		//the Items :
 		load("woodensword","/sprites/items/weapon/woodensword.png");
 		load("magicwand","/sprites/items/weapon/magicwand.png");
 		load("roughbuckler","/sprites/items/shield.png");
 		load("itemparchemin","/sprites/items/itemparchemin.png");
+		
 		//the Enemies:
 		load("ratwolf","/sprites/ui/dunjon/enemies/ratwolf.png");
 		load("smallratwolf","/sprites/ui/dunjon/enemies/smallRatWolf.png");
 		load("muskratbrigand","/sprites/ui/dunjon/enemies/muskratBrigand.png");
 		load("lilbee","/sprites/ui/dunjon/enemies/lilBee.png");
 		load("slime","/sprites/ui/dunjon/enemies/slime.png");
+		
 		//The merchantRoom:
 		load("merchant","/sprites/ui/dunjon/merchant/dwarfMerchant.png");
+		
 		//the treasureRoom:
 		load("treasure_close","/sprites/items/treasure_close.png");
 		load("treasure_open","/sprites/items/treasure_open.png");
+		
 		//the healerRoom:
 		//the ExitRoom:
 		IO.println("All images are loaded ");

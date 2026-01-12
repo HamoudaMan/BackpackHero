@@ -17,7 +17,7 @@ public class DrawMenu {
 		//this.playButton = ImageLoader.getLoadedImage("play_button");
 	}
 	public void render(Graphics2D g, int width, int height) {
-		
+		//IO.println("drawing menu ");
 		buttonWidth = 400;
 		buttonHeight = 120;
 		buttonX = 570;
@@ -29,7 +29,9 @@ public class DrawMenu {
 	}	
 	
 	public boolean isClicked(int mouseX, int mouseY) {
-
+		System.out.println("Checking click: mx=" + mouseX + " my=" + mouseY); // ← DEBUG
+    System.out.println("Button bounds: x=" + buttonX + " y=" + buttonY + 
+                      " w=" + buttonWidth + " h=" + buttonHeight); // ← DEBUG
 		return mouseX >= buttonX && mouseX <= buttonX +buttonWidth && mouseY >= buttonY && mouseY <=buttonY+ buttonHeight;
 		
 

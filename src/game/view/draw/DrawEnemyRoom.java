@@ -5,8 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import game.model.enemy.Action;
 import game.model.enemy.Enemy;
 import game.view.loader.ImageLoader;
+import game.view.stats.DrawBlockBar;
 import game.view.stats.DrawHealthBar;
 /*classe pour draw les enemies 
  * objectif : si y en a 1 -> afficgage simple
@@ -19,6 +21,12 @@ public class DrawEnemyRoom {
 	private final BufferedImage slime;
 	private final BufferedImage lilBee;
 	private final BufferedImage muskratBrigand;
+	private final BufferedImage attackIcon;
+	private final BufferedImage blockIcon;
+	private final BufferedImage healIcon;
+	private final DrawBlockBar blockBar = new DrawBlockBar();
+	
+	
 	//private final BufferedImage smallRatWolf;
 	
 	
@@ -28,6 +36,9 @@ public class DrawEnemyRoom {
 		this.slime = ImageLoader.getLoadedImage("slime");
 		this.lilBee = ImageLoader.getLoadedImage("lilbee");
 		this.muskratBrigand = ImageLoader.getLoadedImage("muskratbrigand");
+		this.attackIcon = ImageLoader.getLoadedImage("attackicon");
+		this.blockIcon = ImageLoader.getLoadedImage("blockIcon");
+		this.healIcon = ImageLoader.getLoadedImage("healicon");
 		
 		
 	}
@@ -43,14 +54,42 @@ public class DrawEnemyRoom {
 		var zoneY = (screenHeight *4) /6;
 		var space = enemyW;
 
+
 		
 		//var totalWidth = enemyCount * enemyW;
 		//var totalHeight = enemyCount *enemyH;
 		for(var i = 0; i<enemyCount;i++) {
 			var x = zoneX + i *space;
+			//to center the healthbar under the enemy
+			var barW = (int)(enemyW*0.6);
+			var barX = x+ (enemyW-barW)/2;
+			var barY = zoneY+enemyH+ 6;
+
+			
+			
 			//var y = zoneY;
 			Enemy e = enemies.get(i);
 			
+			
+			//to draw the nextAction Icon
+			var iconW = enemyW/4;
+			var iconX = x +(enemyW-iconW)/2;
+			var iconY = zoneY - iconW -8;
+			Action a = e.nextAction();
+			var actionVal = e.nextActionValue();
+		  BufferedImage icon = switch(a) {
+		  	case ATTACK -> attackIcon;
+		  	case BLOCK -> blockIcon;
+		  	case HEAL -> healIcon;
+		  	default ->{ throw new IllegalArgumentException("icon or type not found ");}
+		  };
+		  
+			g.drawImage(icon, iconX, iconY, iconW,iconW,  null);
+			g.setColor(Color.WHITE);
+			g.drawString(String.valueOf(actionVal), iconX+iconW/2,iconY+iconW +11 );
+					
+			
+					//draw the sprite 
 			switch(e.type()) {
 			case RATWOLF -> g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
 			case SMALL_RATWOLF -> g.drawImage(smallRatWolf, x, zoneY, enemyW, enemyH, null);
@@ -58,11 +97,13 @@ public class DrawEnemyRoom {
 			case MUSKRAT_BRIGAND -> g.drawImage(muskratBrigand, x, zoneY, enemyW, enemyH, null);
 			case LILBEE -> g.drawImage(lilBee, x, zoneY, enemyW, enemyH, null);
 			}
-			//g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
+		
 			
-			DrawHealthBar.render(g,x+25, zoneY +enemyH+5, (int)(enemyW*0.60), e.currentHealth(), e.stats().maxHealth());
-			g.setColor(Color.WHITE);
-			//g.drawString("next Action : " + enemies.get(i).nextAction().toString(), x, zoneY-30);
+			DrawHealthBar.render(g,barX, barY, barW, e.currentHealth(), e.stats().maxHealth());
+			if(e.stats().block() >0) {
+				blockBar.renderBlockBar(g, barX, barY +8, e.protection());
+			}
+			
 
 		}
 		

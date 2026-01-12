@@ -127,22 +127,36 @@ public class ZenController {
 				case PointerEvent p ->{
 					 mouseX = p.location().x();
 					 mouseY = p.location().y();
-					 
-					 if(state == ZenGameState.MENU) {
+					 IO.println("Event: " + p.action() + " | State: " + state); 
+					 if(state == ZenGameState.MENU && p.action() == PointerEvent.Action.POINTER_DOWN) {
+						 IO.println("Menu check: isClicked = " + menu.isClicked(mouseX, mouseY));
+
 						 if(menu.isClicked(mouseX, mouseY)) {
+							 IO.println("CREATING DUNGEON...");
 							 dungeon = new Dungeon(3);
+							 IO.println("Dungeon created: " + dungeon);
 							 floor = dungeon.getCurrentFloor();
+							 IO.println("Floor retrieved: " + floor);
 							 posHero = floor.postionHero();
+							 IO.println("Hero position: " + posHero);
 							 state = ZenGameState.FLOOR;
 							 System.out.println("Dungeon OK");
 				        System.out.println("Floor = " + floor);
 				        System.out.println("Hero start = " + posHero);
+				        //continue;
 						 }
 						 break;
+						 
 					 }
+           if(state == ZenGameState.MENU) {
+          	 IO.println("Still in menu, breaking");
+             break;
+           }
 					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
 						 TreasureState ts = dungeonState.treasureState(posHero);
 						 if(state == ZenGameState.TREASUREROOM) {
+							 System.out.println("STATE3 = " + state);
+
 							 if(ts.isOpened()) {
 								 hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY,screenWidth,screenHeight,ts.loot());
 								 hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
@@ -155,6 +169,7 @@ public class ZenController {
 									
 					 }
 					if(p.action() == PointerEvent.Action.POINTER_DOWN) {//un click
+						 
 						
 						if(miniMapButton.isClicked(mouseX, mouseY)) {
 							showMiniMap = !showMiniMap;
@@ -250,13 +265,19 @@ public class ZenController {
 				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
 				case null ->{}
 				}
-				
+		    if(state == ZenGameState.MENU) {
+	        context.renderFrame(g-> {
+	            menu.render(g, screenWidth, screenHeight);
+	        });
+	        continue; // ← LA CLÉ : Sauter tout le reste de la boucle !
+		    }
 				if( state == ZenGameState.ENEMYROOM ) {
 					//showMiniMap = false;
 					//state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
 					combatController.manageEnemyTurn(floor, posHero,	 hero);
 					//break;//on  bouge pas le hero et on va au prochain renderFrame 
 				}
+
 				//animation moving hero from cell to cell
 				boolean arrived  = false;
 			  if(!movementQueue.isEmpty()) {
@@ -285,6 +306,7 @@ public class ZenController {
 			  		}
 			  	}
 			  }
+
 				if(state == ZenGameState.TREASUREROOM) {
 					TreasureState ts = dungeonState.treasureState(posHero);
 					if(ts.isOpened()) {
@@ -293,10 +315,10 @@ public class ZenController {
 				}
 				//Ce qui sera render a chaque fois : 
 				context.renderFrame(g-> { 
-													if(state == ZenGameState.MENU) {
+													/*if(state == ZenGameState.MENU) {
 															menu.render(g, screenWidth, screenHeight);
 															return;
-													}
+													}*/
 														bg.render(g, screenWidth, screenHeight, floor.level());
 																	
 																//itemInfoBox.render(g, screenWidth, screenHeight);
@@ -339,7 +361,7 @@ public class ZenController {
 																								}
 																								;}
 														case EXITROOM -> {exitRoom.render(g, screenWidth, screenHeight);}
-														case MENU -> {menu.render(g, screenWidth, screenHeight);return;} 
+														case MENU -> {/*menu.render(g, screenWidth, screenHeight);return;*/} 
 														
 									}
 													

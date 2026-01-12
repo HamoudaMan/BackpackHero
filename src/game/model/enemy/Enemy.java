@@ -37,7 +37,7 @@ public class Enemy {
 			case ATTACK -> attack(hero);
 			case BLOCK -> protection += stats.block();
 			//afiner le heal pour une valuer precise 
-			case HEAL ->  currentHealth = Math.min(stats.maxHealth(), currentHealth+stats.block());
+			case HEAL ->  currentHealth = Math.min(stats.maxHealth(), currentHealth+stats.heal());
 			default -> {}
 		}
 	}
@@ -51,7 +51,24 @@ public class Enemy {
 		protection = 0;
 	}
 	
+	public Action nextAction() {
+		return type.nextAction(turn);
+	}
+	public int nextActionValue() {
+		return switch(nextAction()) {
+			case ATTACK -> stats.damage();
+			case BLOCK -> stats.block();
+			case HEAL -> stats().heal();
+			case CURSE -> 0;
+			case PASS -> 0;
+		
+		
+		};
+	}
 
+	public int protection() {
+		return protection;
+	}
 
 	public boolean isDead() {
 		return currentHealth <= 0;
