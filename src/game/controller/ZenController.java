@@ -107,7 +107,7 @@ public class ZenController {
 			var enemiesRoom = new DrawEnemyRoom();
 			
 			var combatBoutons = new DrawCombatBoutons();
-			var combatController = new CombatController(combatBoutons);
+			var combatController = new CombatController(combatBoutons,enemiesRoom );
 			//healer
 			var healerController = new HealerController();
 			var healerRoom = new DrawHealerRoom();

@@ -18,10 +18,10 @@ public class DrawMenu {
 	}
 	public void render(Graphics2D g, int width, int height) {
 		//IO.println("drawing menu ");
-		buttonWidth = 420;
-		buttonHeight = 120;
-		buttonX = 515;
-		buttonY =600;
+		buttonWidth = 620;
+		buttonHeight = 420;
+		buttonX = width/2 - buttonWidth/2;
+		buttonY = height/2  ;
 		//buttonX = width/2 - buttonWidth/2;
 		//buttonY = height/2 - buttonHeight/2;
 		//g.setColor(java.awt.Color.RED);
@@ -30,7 +30,7 @@ public class DrawMenu {
 		//bg
 		g.drawImage(menuBg, 0,0,  width, height, null );
 		//play button 
-		//g.drawImage(playButton, buttonX, buttonY, buttonWidth, buttonHeight, null);
+		g.drawImage(playButton, buttonX, buttonY, buttonWidth, buttonHeight, null);
 	}	
 	
 	public boolean isClicked(int mouseX, int mouseY) {

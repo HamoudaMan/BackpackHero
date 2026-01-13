@@ -9,14 +9,18 @@ import game.model.enemy.Enemy;
 import game.model.hero.Hero;
 
 import game.view.draw.DrawCombatBoutons;
+import game.view.draw.DrawEnemyRoom;
 
 public class CombatController {
 	private final DrawCombatBoutons boutons;
+	private final DrawEnemyRoom drawEnemyRoom;
 	private CombatPhase phase = CombatPhase.HEROTURN;
 	private boolean enemyTurnExecuted = false;
+	private Enemy selectedEnemy = null;
 	
-	public CombatController(DrawCombatBoutons boutons) {
+	public CombatController(DrawCombatBoutons boutons, DrawEnemyRoom drawEnemyRoom) {
 		this.boutons = boutons;
+		this.drawEnemyRoom = drawEnemyRoom;
 	}
 	public void reset() {
 		this.phase = CombatPhase.HEROTURN;
@@ -40,16 +44,38 @@ public class CombatController {
 
 		//hero always starts first 
 		if(phase == CombatPhase.HEROTURN) {
-		
 			
+			Enemy clickedEnemy = drawEnemyRoom.enemyIsClicked(mouseX, mouseY, enemies);
+			if(clickedEnemy != null) {
+				selectedEnemy = clickedEnemy ;
+				drawEnemyRoom.setSelectedEnemy(selectedEnemy);
+				IO.println("selected Enemy from controller" + selectedEnemy.type());
+				return currentState;
+				
+			}
 			if(boutons.clickAttack(mouseX, mouseY) && hero.energy().energy() >0 ) {
+				Enemy target = selectedEnemy;
+				if( selectedEnemy == null) {
+					target = enemies.get(0);
+					selectedEnemy = target;
+					drawEnemyRoom.setSelectedEnemy(target);
+					IO.println("no target selecting the first enn : "+ target.type());
+				}
+				if(!enemies.contains(target)) {
+					target = enemies.get(0);
+					selectedEnemy = target;
+					drawEnemyRoom.setSelectedEnemy(target);
+					IO.println("switcch target the last one dead  : "+ target.type());
+				}
 				hero.energy().consumeEnergy(1);//consume one enrgy
-				enemy.takeDamage(7);
+				target.takeDamage(7);
 				IO.println("Hero attacks for " + 7 + " damage! Energy left: " + hero.energy().energy());
 				
-				if(enemy.isDead()) {
+				if(target.isDead()) {
 					IO.println("ENemy defeated");
-					enemies.remove(0);//si l'ennemi est mort en le supprime 
+					enemies.remove(target);//si l'ennemi est mort en le supprime 
+					selectedEnemy = null;
+					drawEnemyRoom.setSelectedEnemy(null);
 						
 					if(enemies.isEmpty()) {
 						IO.println("all enemies defeated");

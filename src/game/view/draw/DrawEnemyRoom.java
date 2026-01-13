@@ -26,6 +26,13 @@ public class DrawEnemyRoom {
 	private final BufferedImage healIcon;
 	private final DrawBlockBar blockBar = new DrawBlockBar();
 	
+	private int enemyW;
+	private int enemyH;
+	private int zoneX;
+	private int zoneY;
+	private int space;
+	
+	private Enemy selectedEnemy = null;
 	
 	//private final BufferedImage smallRatWolf;
 	
@@ -43,16 +50,20 @@ public class DrawEnemyRoom {
 		
 	}
 	
+	public void setSelectedEnemy(Enemy enemy) {
+		this.selectedEnemy = enemy;
+	}
+	private void calculateDimensions(int screenWidth, int screenHeight) {
+		enemyW = screenWidth/12;
+		enemyH = screenHeight/6;
+		zoneX = (int)(screenWidth*0.7) ;
+		zoneY = (screenHeight *4) /6;
+	  space = enemyW;
+	}
 	public void render(Graphics2D g, List<Enemy> enemies, int screenWidth, int screenHeight) {
-		
+		calculateDimensions(screenWidth, screenHeight);
 		var enemyCount = enemies.size();
-		var enemyW = screenWidth/12;
-		var enemyH = screenHeight/6;//peut etre meme plus petit 
 		
-		//afichage sur la meme ligne pour l'instant 
-		var zoneX = (int)(screenWidth*0.7) ;// debut de la ligne 
-		var zoneY = (screenHeight *4) /6;
-		var space = enemyW;
 
 
 		
@@ -70,7 +81,12 @@ public class DrawEnemyRoom {
 			//var y = zoneY;
 			Enemy e = enemies.get(i);
 			
-			
+			//draw around the enmy a box 
+			if (e == selectedEnemy) {
+		    g.setColor(new Color(255, 255, 0, 120));
+		    g.fillRect(x, zoneY, enemyW, enemyH);
+		}
+
 			//to draw the nextAction Icon
 			var iconW = enemyW/4;
 			var iconX = x +(enemyW-iconW)/2;
@@ -89,7 +105,7 @@ public class DrawEnemyRoom {
 			g.drawString(String.valueOf(actionVal), iconX+iconW/2,iconY+iconW +11 );
 					
 			
-					//draw the sprite 
+			//draw the sprite 
 			switch(e.type()) {
 			case RATWOLF -> g.drawImage(ratWolf, x, zoneY, enemyW, enemyH, null);
 			case SMALL_RATWOLF -> g.drawImage(smallRatWolf, x, zoneY, enemyW, enemyH, null);
@@ -109,4 +125,23 @@ public class DrawEnemyRoom {
 		
 		
 	}
+	
+
+	public Enemy enemyIsClicked(int mouseX, int mouseY, List<Enemy> enemies) {
+		
+		var enemyCount = enemies.size();
+		
+		
+		for(var i = 0; i<enemyCount;i++) {
+			var x = zoneX + i *space;
+			var y = zoneY;
+			if(mouseX >= x && mouseX <= x +enemyW && mouseY >= y && mouseY <=y + enemyH  ) {
+				IO.println("enemy : " + enemies.get(i).type());
+				return enemies.get(i);
+			}
+		}
+
+		return null;
+	}
+	
 }

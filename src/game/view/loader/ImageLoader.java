@@ -27,8 +27,8 @@ public final class ImageLoader {
 		IO.println("Loading all the images ... ");
 		
 		//menu 
-		load("bg_menu","/sprites/ui/bg_menu.png");
-		load("play_button","/sprites/ui/play_button.png");
+		load("bg_menu","/sprites/ui/menu_bg.png");
+		load("play_button","/sprites/ui/play_btn.png");
 		//the Dungeon : 
 		load("bg","/sprites/ui/dunjon/bhHH.png");
 		load("tile","/sprites/ui/dunjon/tile.png");
