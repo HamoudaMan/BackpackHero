@@ -8,20 +8,25 @@ import game.view.loader.ImageLoader;
 
 public class DrawMenu {
 	private final BufferedImage menuBg ;
-//	private final BufferedImage playButton;
+	private final BufferedImage playButton;
 	
 	private  int buttonWidth, buttonHeight, buttonX, buttonY;
 	
 	public DrawMenu() {
 		this.menuBg = ImageLoader.getLoadedImage("bg_menu");
-		//this.playButton = ImageLoader.getLoadedImage("play_button");
+		this.playButton = ImageLoader.getLoadedImage("play_button");
 	}
 	public void render(Graphics2D g, int width, int height) {
 		//IO.println("drawing menu ");
-		buttonWidth = 400;
+		buttonWidth = 420;
 		buttonHeight = 120;
-		buttonX = 570;
-		buttonY =700;
+		buttonX = 515;
+		buttonY =600;
+		//buttonX = width/2 - buttonWidth/2;
+		//buttonY = height/2 - buttonHeight/2;
+		//g.setColor(java.awt.Color.RED);
+		//g.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
 		//bg
 		g.drawImage(menuBg, 0,0,  width, height, null );
 		//play button 
