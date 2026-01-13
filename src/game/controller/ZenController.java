@@ -352,7 +352,13 @@ public class ZenController {
 																									state = ZenGameState.FLOOR;
 																								}
 																								enemiesRoom.render(g, enemies, screenWidth, screenHeight); 
-																								combatBoutons.render(g, screenWidth, screenHeight, 7, 5);}
+																								combatBoutons.render(g, screenWidth, screenHeight, 7, 5);
+																		            if(hero.energy().energy() == 0) {
+																		            	
+																	                enemiesRoom.renderLowEnergy(g); 
+																	            }
+																								
+																							}
 														case HEALERROOM -> {HealerState hs = dungeonState.healerState(posHero);
 																								if(!hs.isUsed()) {
 																									healerRoom.render(g, screenWidth, screenHeight);

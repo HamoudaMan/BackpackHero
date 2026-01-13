@@ -2,6 +2,7 @@ package game.view.draw;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
 public class DrawCombatBoutons {
@@ -52,7 +53,12 @@ public class DrawCombatBoutons {
 		g.fillRect(endTurnX, endTurnY, btnW/2, btnH);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.BOLD, 15));
-		g.drawString("END TURN", endTurnX+20, endTurnY+20);
+		FontMetrics metrics = g.getFontMetrics();
+		metrics = g.getFontMetrics(); 
+		String endText = "END TURN";
+		int endTextX = endTurnX + (btnW/2 - metrics.stringWidth(endText)) / 2;
+		int endTextY = endTurnY + (btnH + metrics.getAscent()) / 2;
+		g.drawString("END TURN", endTextX, endTextY);
 	
 	}
 	

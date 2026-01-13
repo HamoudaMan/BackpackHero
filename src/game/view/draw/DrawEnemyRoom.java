@@ -24,6 +24,7 @@ public class DrawEnemyRoom {
 	private final BufferedImage attackIcon;
 	private final BufferedImage blockIcon;
 	private final BufferedImage healIcon;
+	private final BufferedImage lowEnergy;
 	private final DrawBlockBar blockBar = new DrawBlockBar();
 	
 	private int enemyW;
@@ -31,6 +32,7 @@ public class DrawEnemyRoom {
 	private int zoneX;
 	private int zoneY;
 	private int space;
+	private int screenH, screenW;
 	
 	private Enemy selectedEnemy = null;
 	
@@ -46,6 +48,7 @@ public class DrawEnemyRoom {
 		this.attackIcon = ImageLoader.getLoadedImage("attackicon");
 		this.blockIcon = ImageLoader.getLoadedImage("blockIcon");
 		this.healIcon = ImageLoader.getLoadedImage("healicon");
+		this.lowEnergy = ImageLoader.getLoadedImage("lowenergy");
 		
 		
 	}
@@ -54,12 +57,19 @@ public class DrawEnemyRoom {
 		this.selectedEnemy = enemy;
 	}
 	private void calculateDimensions(int screenWidth, int screenHeight) {
+		screenW = screenWidth;
+		screenH = screenHeight;
 		enemyW = screenWidth/12;
 		enemyH = screenHeight/6;
 		zoneX = (int)(screenWidth*0.7) ;
 		zoneY = (screenHeight *4) /6;
 	  space = enemyW;
 	}
+	
+	public void renderLowEnergy(Graphics2D g) {
+		g.drawImage(lowEnergy, screenW/2 -200, screenH-150, 400, 250 , null);
+	}
+	
 	public void render(Graphics2D g, List<Enemy> enemies, int screenWidth, int screenHeight) {
 		calculateDimensions(screenWidth, screenHeight);
 		var enemyCount = enemies.size();
@@ -84,7 +94,7 @@ public class DrawEnemyRoom {
 			//draw around the enmy a box 
 			if (e == selectedEnemy) {
 		    g.setColor(new Color(255, 255, 0, 120));
-		    g.fillRect(x, zoneY, enemyW, enemyH);
+		    g.drawRect(x, zoneY, enemyW, enemyH);
 		}
 
 			//to draw the nextAction Icon

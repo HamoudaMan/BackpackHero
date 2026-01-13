@@ -50,6 +50,7 @@ public final class ImageLoader {
 		load("itemparchemin","/sprites/items/itemparchemin.png");
 		
 		//the Enemies:
+		load("lowenergy","/sprites/ui/dunjon/enemies/low_energy.png");
 		load("ratwolf","/sprites/ui/dunjon/enemies/ratwolf.png");
 		load("smallratwolf","/sprites/ui/dunjon/enemies/smallRatWolf.png");
 		load("muskratbrigand","/sprites/ui/dunjon/enemies/muskratBrigand.png");
