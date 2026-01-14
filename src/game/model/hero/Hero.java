@@ -19,6 +19,7 @@ public class Hero {
   private final HeroEnergy energy;
   private final HeroEquipment equipment;
   private final BackPack backPack;
+  private int level; 
   
   
   
@@ -30,6 +31,7 @@ public class Hero {
     this.energy = new HeroEnergy(3);
     this.equipment = new HeroEquipment();
     this.backPack = new BackPack(7, 5, 2, 1, 4, 3);
+    this.level = 1;
   }
   
   public boolean canPay(int amount) {
@@ -44,8 +46,12 @@ public class Hero {
   public void earnGold(int amount) {
   	backPack.addGold(amount);
   }
-  
-  
+  public void gainOneLevel() {
+    level += 1;
+  }
+  public int getLevel() {
+    return level;
+  }
   
   public void takeDamage(int dmg) {
   	stats().takeDamage(dmg);

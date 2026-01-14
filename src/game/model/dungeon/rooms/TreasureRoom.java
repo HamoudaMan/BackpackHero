@@ -12,7 +12,7 @@ import game.model.enemy.*;
  * does not store the items 
  * items will be generated in the state 
  */
-public class TreasureRoom implements Room{
+public class TreasureRoom implements Room {
 	
 
 

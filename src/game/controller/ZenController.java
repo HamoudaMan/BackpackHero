@@ -3,6 +3,7 @@ package game.controller;
 
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -19,11 +20,26 @@ import game.model.dungeon.state.HealerState;
 import game.model.dungeon.state.TreasureState;
 import game.model.hero.Hero;
 import game.model.item.Item;
+import game.model.item.ItemOnScreen;
 import game.model.item.Weapon;
+import game.model.representation.Coord;
 import game.view.Window;
-
-import game.view.draw.*;
-
+import game.view.draw.DrawBackGround;
+import game.view.draw.DrawBackPack;
+import game.view.draw.DrawCombatBoutons;
+import game.view.draw.DrawEnemyRoom;
+import game.view.draw.DrawExitDoor;
+import game.view.draw.DrawGroundItem;
+import game.view.draw.DrawHealerRoom;
+import game.view.draw.DrawHero;
+import game.view.draw.DrawItemDescription;
+import game.view.draw.DrawItemOnScreen;
+import game.view.draw.DrawMenu;
+import game.view.draw.DrawMerchantRoom;
+import game.view.draw.DrawMiniMap;
+import game.view.draw.DrawMiniMapButton;
+import game.view.draw.DrawTreasureRoom;
+import game.view.draw.GroundItemHitBox;
 import game.view.loader.ImageLoader;
 import game.view.stats.DrawItemInfo;
 
@@ -34,7 +50,7 @@ public class ZenController {
 	private DCoord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
 	private ZenGameState state = ZenGameState.MENU;// cas de base on commence dans le couloir 
 	private boolean showMiniMap = false;
-	
+		
 	//hero movment
 	private final Queue<DCoord> movementQueue = new ArrayDeque<>();
 	private int moveCoolDown = 0;
@@ -42,8 +58,9 @@ public class ZenController {
 	private DCoord lastActivatedRoom = null;
 	
 	private final DungeonState dungeonState = new DungeonState();
-	private  Item hoveredItem = null;
+	private Item hoveredItem = null;
 	private GroundItemHitBox hoveredGroundItem;
+	private ArrayList<ItemOnScreen> listItemOnScreen = new ArrayList<>();
 	private int mouseX, mouseY;
 	
 	public void handleExit() {
@@ -84,7 +101,7 @@ public class ZenController {
 			//hero.addToBackPack(new WoodenSword());
 			//var floor = new Floor(1);
 			//var floor = FloorGenerator.generate();
-			//this.posHero = floor.postionHero();//pos initiae du hero 
+			//this.posHero = floor.postionHero();//pos initiae du hero
 			DCoord target = null;
 			
 			var menu = new DrawMenu();
@@ -113,6 +130,15 @@ public class ZenController {
 			var healerRoom = new DrawHealerRoom();
 			
 			var exitRoom = new DrawExitDoor();
+			// ------------------------------------------
+			var drawItemOnScreen = new DrawItemOnScreen();
+			boolean[][] shape = {{true}, {true},{true}};
+      var weapon = new Weapon("Wooden Sword", 1, 0, 5, shape); 
+      var OneitemOnSreen = new ItemOnScreen(weapon, new Coord(0, 0));
+      listItemOnScreen.add(OneitemOnSreen);
+      ItemOnScreen dragItem = null;
+      var index = -1;
+      // ------------------------------------------
 			
 		  //List<EnemyI> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
@@ -133,13 +159,13 @@ public class ZenController {
 							 dungeon = new Dungeon(3);
 							 floor = dungeon.getCurrentFloor();
 							 posHero = floor.postionHero();
-							 state = ZenGameState.FLOOR;
+							 state = ZenGameState.CHOOSEITEM;
 							 System.out.println("Dungeon OK");
-				        System.out.println("Floor = " + floor);
-				        System.out.println("Hero start = " + posHero);
+							 System.out.println("Floor = " + floor);
+							 System.out.println("Hero start = " + posHero);
 						 }
 						 break;
-					 }
+					 }	 
 					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
 						 TreasureState ts = dungeonState.treasureState(posHero);
 						 if(state == ZenGameState.TREASUREROOM) {
@@ -250,7 +276,6 @@ public class ZenController {
 				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
 				case null ->{}
 				}
-				
 				if( state == ZenGameState.ENEMYROOM ) {
 					//showMiniMap = false;
 					//state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
@@ -297,7 +322,7 @@ public class ZenController {
 															menu.render(g, screenWidth, screenHeight);
 															return;
 													}
-														bg.render(g, screenWidth, screenHeight, floor.level());
+													bg.render(g, screenWidth, screenHeight, floor.level());
 																	
 																//itemInfoBox.render(g, screenWidth, screenHeight);
 													if(showMiniMap)
@@ -313,16 +338,18 @@ public class ZenController {
 													switch(state) {
 														case FLOOR ->{}
 														case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
-														case TREASUREROOM -> {
-																									TreasureState ts = dungeonState.treasureState(posHero);
-																									treasureRoom.render(g, screenWidth, screenHeight, ts);
-																									if(ts.isOpened()) {
-																										groundItems.render(g, screenWidth, screenHeight, ts.loot());
-																									}
-																									if(hoveredItem !=null && hoveredGroundItem !=null) {
-																										itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
-																										//hoveredGroundItem = null;
-																									}
+														case CHOOSEITEM -> {
+														                      drawItemOnScreen.render(g, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
+														                    }
+														case TREASUREROOM -> {  TreasureState ts = dungeonState.treasureState(posHero);
+  																									treasureRoom.render(g, screenWidth, screenHeight, ts);
+  																									if(ts.isOpened()) {
+  																										groundItems.render(g, screenWidth, screenHeight, ts.loot());
+  																									}
+  																									if(hoveredItem !=null && hoveredGroundItem !=null) {
+  																										itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
+  																										//hoveredGroundItem = null;
+  																									}
 																									}
 														case ENEMYROOM -> {showMiniMap = false;
 																								var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
@@ -344,14 +371,40 @@ public class ZenController {
 									}
 													
 				});
-				
+				if(state == ZenGameState.CHOOSEITEM) {
+				  while(true) {
+				    System.out.println(listItemOnScreen);
+				    var eventChooseItem = context.pollEvent();
+				    switch(eventChooseItem) {//soint pointerEvent(souris) ou keyboardEvent(clavier) ou null rien 
+              case PointerEvent p ->{
+                mouseX = p.location().x();
+                mouseY = p.location().y();
+                if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+                  index = drawItemOnScreen.findItemAt(mouseX, mouseY, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
+                  if(index != -1) {
+                    dragItem = listItemOnScreen.get(index);
+                  }
+                }
+                if(p.action() == PointerEvent.Action.POINTER_MOVE && dragItem != null && index != -1) {
+                  var test =  listItemOnScreen.get(index);
+                  context.renderFrame(g-> drawItemOnScreen.renderOneItem(g, mouseX, mouseY, screenWidth, screenHeight, test , hero.backPack(), backpack));
+    //             System.out.println(mouseX + " " + mouseY);
+    //             continue;
+                 
+                 }
+                if(p.action() == PointerEvent.Action.POINTER_UP && index != -1 && dragItem != null) {
+                  listItemOnScreen.set(0, new ItemOnScreen(listItemOnScreen.get(0), new Coord(mouseX, mouseY)));
+                  index = -1;
+                  dragItem = null;
+                }
+              }
+              case null -> {}
+              case KeyboardEvent e ->{context.dispose(); System.exit(0);}
+//            default -> throw new IllegalArgumentException("Unexpected value: " + eventChooseItem);
+				    }
+				  }
+				}
 			}
-			
 		});
-	
 	}
-
-	
-	
-   
 }

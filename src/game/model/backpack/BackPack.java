@@ -181,7 +181,7 @@ public class BackPack {
         }
       }
     }
-    return new ItemInstance(item, coordItemInstance);
+    return new ItemInstance(item, coordItemInstance, rotation);
   }
   
   public void addItemInstanceToBackpack(ItemInstance itemInstance) {
@@ -233,6 +233,14 @@ public class BackPack {
   
   public int getGold() {
     return gold;
+  }
+  
+  public int getMaxX() {
+    return xStuff;
+  }
+  
+  public int getMaxY() {
+    return yStuff;
   }
   
   public boolean[][] getUnlocked() {

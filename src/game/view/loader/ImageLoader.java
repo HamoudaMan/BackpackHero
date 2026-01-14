@@ -60,7 +60,7 @@ public final class ImageLoader {
 	private static void load(String key, String path) {
 		Objects.requireNonNull(key, "key can't be null");
 		Objects.requireNonNull(path, "path can't be null");
-		
+		System.out.println(path);
 		try(InputStream input = ImageLoader.class.getResourceAsStream(path)){
 			if(input == null) {
 				throw new IOException("image not found , "+ path);
