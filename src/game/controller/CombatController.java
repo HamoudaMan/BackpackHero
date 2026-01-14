@@ -73,6 +73,12 @@ public class CombatController {
 				
 				if(target.isDead()) {
 					IO.println("ENemy defeated");
+					
+					//increase xp of the hero 
+					int xpGain = target.stats().exp();
+					hero.addXp(xpGain);
+					hero.incrementEnemiesDefeated();
+					
 					enemies.remove(target);//si l'ennemi est mort en le supprime 
 					selectedEnemy = null;
 					drawEnemyRoom.setSelectedEnemy(null);

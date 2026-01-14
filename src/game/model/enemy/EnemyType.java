@@ -6,11 +6,11 @@ package game.model.enemy;
 public enum EnemyType {
 	
 	
-  SMALL_RATWOLF(new Action[] {Action.ATTACK, Action.ATTACK, Action.BLOCK},
+  SMALL_RATWOLF(new Action[] {Action.BLOCK, Action.ATTACK, Action.BLOCK},
   							new EnemyStats(32,7,13,0,6)
   ), 
   
-  RATWOLF(new Action[] {Action.ATTACK, Action.BLOCK, Action.ATTACK, Action.BLOCK},
+  RATWOLF(new Action[] {Action.BLOCK, Action.BLOCK, Action.ATTACK, Action.BLOCK},
   				new EnemyStats(45,8,15,0,6)
   		),
   

@@ -1,5 +1,7 @@
 package game.view.draw;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
@@ -19,6 +21,34 @@ public class DrawHero {
 		this.hero = ImageLoader.getLoadedImage("hero");
 	}
 	
+  private void renderXPBar(Graphics2D g, Hero hero, int screenWidth, int screenHeight) {
+    var barWidth = 200;
+    var barHeight = 20;
+    var x = 20;
+    var y = screenHeight - barHeight - 45;
+    
+    
+    
+    g.setColor(Color.WHITE);
+    g.setFont(new Font("Arial", Font.BOLD, 12));
+    var text = "Level " + hero.lvl() + " - XP: "+ hero.experience() + "/" + hero.xpToNextLvl();
+    g.drawString(text, x, y-5 );
+    
+    g.setColor(new Color(50, 50, 50));
+    g.fillRect(x, y, barWidth, barHeight);
+    //bar 
+    int xpPercentage = hero.xpToPercentage();
+    int fillWidth = (barWidth * xpPercentage) / 100;
+    g.setColor(new Color(255, 215, 0)); 
+    g.fillRect(x, y , fillWidth, barHeight);
+    
+    //border
+    g.setColor(Color.WHITE);
+    g.drawRect(x, y, barWidth, barHeight);
+
+    
+  }
+  
 	public void render(Graphics2D g, Hero h, int screenWidth, int screenHeight) {
 		var heroW = screenWidth/8;
 		var heroH = screenHeight/6;
@@ -36,8 +66,9 @@ public class DrawHero {
 		
 		DrawEnergyBar.renderEnergy(g, heroX+ heroX/3, heroY, h.energy().energy());
 		blockBar.renderBlockBar(g, healthBarX -16, healthBarY+7, h.stats().protection());
-		
+		renderXPBar(g, h, screenWidth, screenHeight);
 	}
+	
 	/*
 	public void renderHeroStats(Graphics2D g, Hero hero, int screenWidth, int screenHeight) {
 		var healthBarX = heroX;

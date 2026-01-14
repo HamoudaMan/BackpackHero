@@ -43,6 +43,8 @@ public class HeroStats {
   public boolean isDead() {
   	return health <= 0;
   }
+  
+
   public int health() {
   	return health;
   }

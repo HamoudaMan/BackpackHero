@@ -29,6 +29,8 @@ public final class ImageLoader {
 		//menu 
 		load("bg_menu","/sprites/ui/menu_bg.png");
 		load("play_button","/sprites/ui/play_btn.png");
+		//map
+		load("mapBtn","/sprites/ui/mapBtn.png");
 		//gameOver
 		load("gameOver","/sprites/ui/gameOver.png");
 		load("retryBtn","/sprites/ui/retryBtn.png");
@@ -41,7 +43,7 @@ public final class ImageLoader {
 		//icons
 		load("blockIcon", "/sprites/items/blockIcon.png");
 		load("attackicon", "/sprites/items/attackicon.png");
-		load("healicon", "/sprites/items/attackIcon.png");
+		load("healicon", "/sprites/items/healIcon.png");
 		
 		//the BackPack:
 		load("backpack","/sprites/ui/backpack1.png");

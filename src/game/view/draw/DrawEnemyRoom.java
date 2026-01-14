@@ -98,7 +98,7 @@ public class DrawEnemyRoom {
 		}
 
 			//to draw the nextAction Icon
-			var iconW = enemyW/4;
+			var iconW = enemyW/3;
 			var iconX = x +(enemyW-iconW)/2;
 			var iconY = zoneY - iconW -8;
 			Action a = e.nextAction();
