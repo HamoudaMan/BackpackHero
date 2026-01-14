@@ -29,6 +29,10 @@ public final class ImageLoader {
 		//menu 
 		load("bg_menu","/sprites/ui/menu_bg.png");
 		load("play_button","/sprites/ui/play_btn.png");
+		//gameOver
+		load("gameOver","/sprites/ui/gameOver.png");
+		load("retryBtn","/sprites/ui/retryBtn.png");
+		load("mainMenuBtn","/sprites/ui/mainMenuBtn.png");
 		//the Dungeon : 
 		load("bg","/sprites/ui/dunjon/bhHH.png");
 		load("tile","/sprites/ui/dunjon/tile.png");

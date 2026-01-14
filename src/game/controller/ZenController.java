@@ -31,6 +31,7 @@ import game.view.stats.DrawItemInfo;
 public class ZenController {
 	private Dungeon dungeon;
 	private Floor floor;
+	private Hero hero ;
 	private DCoord posHero;//obligé de passé posHero ici sinn j'ai des pobleme avec le swithc et le render
 	private ZenGameState state = ZenGameState.MENU;// cas de base on commence dans le couloir 
 	private boolean showMiniMap = false;
@@ -77,7 +78,7 @@ public class ZenController {
 			//floor = dungeon.getCurrentFloor();
 
 
-			Hero hero = new Hero("JOTARO KUJO");
+			//Hero hero = new Hero("JOTARO KUJO");
 			//System.out.println("Dungeon OK");
 			//System.out.println("Floor = " + floor);
 			//System.out.println("Hero start = " + floor.postionHero());
@@ -89,6 +90,7 @@ public class ZenController {
 			
 			var menu = new DrawMenu();
 			var bg = new DrawBackGround();
+			var gameOverScreen = new DrawGameOver();
 			var backpack = new DrawBackPack();
 			var itemInfoBox = new DrawItemInfo();
 			
@@ -121,6 +123,8 @@ public class ZenController {
 			
 			//boucle de jeu 
 			//hero.addGold(120);//juste pour test 
+			
+			this.hero = new Hero("JOTARO KUJO");
 			while(true) {
 				var event = context.pollEvent();
 				switch(event) {//soint pointerEvent(souris) ou keyboardEvent(clavier) ou null rien 
@@ -148,10 +152,44 @@ public class ZenController {
 						 break;
 						 
 					 }
+				
+					 
            if(state == ZenGameState.MENU) {
           	 IO.println("Still in menu, breaking");
              break;
            }
+           
+           if(state == ZenGameState.GAMEOVER && p.action() == PointerEvent.Action.POINTER_DOWN) {
+						 if(gameOverScreen.retryIsClicked(mouseX, mouseY)) {
+							 IO.println("retry is clicked ...");
+							 
+							 hero = new Hero("Jotaro");
+               dungeon = new Dungeon(3);
+               floor = dungeon.getCurrentFloor();
+               posHero = floor.postionHero();
+               //dungeonState.clear(); 
+               state = ZenGameState.FLOOR;
+               showMiniMap = false;
+               movementQueue.clear();
+               
+               break;
+						 }
+					 }
+           if(state == ZenGameState.GAMEOVER && p.action() == PointerEvent.Action.POINTER_DOWN) {
+						 if(gameOverScreen.mainMenuBtnIsClicked(mouseX, mouseY)) {
+							 IO.println("main menu clicked ...");
+							 hero = null;
+							 state = ZenGameState.MENU;
+							 dungeon = null;
+							 floor = null;
+							 posHero = null;
+							 movementQueue.clear();
+               
+               break;
+						 }
+					 }
+           
+          
 					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
 						 TreasureState ts = dungeonState.treasureState(posHero);
 						 if(state == ZenGameState.TREASUREROOM) {
@@ -237,6 +275,10 @@ public class ZenController {
 						if( state == ZenGameState.ENEMYROOM ) {
 							//showMiniMap = false;
 							state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
+							if(hero.stats().isDead() ) {
+								IO.println("switch to gameover screen");
+								state = ZenGameState.GAMEOVER;
+							}
 							//combatController.manageEnemyTurn(floor, posHero,	 hero);
 							break;//on  bouge pas le hero et on va au prochain renderFrame 
 						}
@@ -269,7 +311,7 @@ public class ZenController {
 	        context.renderFrame(g-> {
 	            menu.render(g, screenWidth, screenHeight);
 	        });
-	        continue; // ← LA CLÉ : Sauter tout le reste de la boucle !
+	        continue; 
 		    }
 				if( state == ZenGameState.ENEMYROOM ) {
 					//showMiniMap = false;
@@ -277,6 +319,12 @@ public class ZenController {
 					combatController.manageEnemyTurn(floor, posHero,	 hero);
 					//break;//on  bouge pas le hero et on va au prochain renderFrame 
 				}
+		    if(state == ZenGameState.GAMEOVER) {
+	        context.renderFrame(g-> {
+	            gameOverScreen.render(g, screenWidth, screenHeight);
+	        });
+	        continue; 
+		    }
 
 				//animation moving hero from cell to cell
 				boolean arrived  = false;
@@ -368,6 +416,7 @@ public class ZenController {
 																								;}
 														case EXITROOM -> {exitRoom.render(g, screenWidth, screenHeight);}
 														case MENU -> {/*menu.render(g, screenWidth, screenHeight);return;*/} 
+														case GAMEOVER ->{}
 														
 									}
 													
