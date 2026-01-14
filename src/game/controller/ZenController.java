@@ -136,6 +136,7 @@ public class ZenController {
 						 IO.println("Menu check: isClicked = " + menu.isClicked(mouseX, mouseY));
 
 						 if(menu.isClicked(mouseX, mouseY)) {
+							 hero = new Hero("JOTARO KUJO");
 							 IO.println("CREATING DUNGEON...");
 							 dungeon = new Dungeon(3);
 							 IO.println("Dungeon created: " + dungeon);
@@ -171,23 +172,30 @@ public class ZenController {
                state = ZenGameState.FLOOR;
                showMiniMap = false;
                movementQueue.clear();
+               lastActivatedRoom = null;
                
                break;
 						 }
-					 }
-           if(state == ZenGameState.GAMEOVER && p.action() == PointerEvent.Action.POINTER_DOWN) {
-						 if(gameOverScreen.mainMenuBtnIsClicked(mouseX, mouseY)) {
-							 IO.println("main menu clicked ...");
-							 hero = null;
-							 state = ZenGameState.MENU;
-							 dungeon = null;
-							 floor = null;
-							 posHero = null;
-							 movementQueue.clear();
-               
-               break;
+						 if(state == ZenGameState.GAMEOVER && p.action() == PointerEvent.Action.POINTER_DOWN) {
+							 if(gameOverScreen.mainMenuBtnIsClicked(mouseX, mouseY)) {
+								 IO.println("main menu clicked ...");
+								// hero = null;
+								 state = ZenGameState.MENU;
+								 dungeon = null;
+								 floor = null;
+								 posHero = null;
+								 movementQueue.clear();
+								 lastActivatedRoom = null;
+	               
+	               break;
+							 }
 						 }
+						 break;
 					 }
+           if(state == ZenGameState.GAMEOVER) {
+          	 break;
+           }
+           
            
           
 					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
@@ -313,18 +321,20 @@ public class ZenController {
 	        });
 	        continue; 
 		    }
-				if( state == ZenGameState.ENEMYROOM ) {
-					//showMiniMap = false;
-					//state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
-					combatController.manageEnemyTurn(floor, posHero,	 hero);
-					//break;//on  bouge pas le hero et on va au prochain renderFrame 
-				}
+		    
 		    if(state == ZenGameState.GAMEOVER) {
 	        context.renderFrame(g-> {
 	            gameOverScreen.render(g, screenWidth, screenHeight);
 	        });
 	        continue; 
 		    }
+				if( state == ZenGameState.ENEMYROOM ) {
+					//showMiniMap = false;
+					//state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
+					combatController.manageEnemyTurn(floor, posHero,	 hero);
+					//break;//on  bouge pas le hero et on va au prochain renderFrame 
+				}
+
 
 				//animation moving hero from cell to cell
 				boolean arrived  = false;
