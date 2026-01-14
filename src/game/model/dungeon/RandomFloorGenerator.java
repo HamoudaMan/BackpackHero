@@ -122,7 +122,7 @@ public final class RandomFloorGenerator {
 	 * @param heroStart
 	 * @param exit
 	 */
-	private void placeEnemyRooms(List<DCoord> mainPath, Room[][] rooms, DCoord heroStart, DCoord exit) {
+	private void placeEnemyRooms(List<DCoord> mainPath, Room[][] rooms, DCoord heroStart, DCoord exit, int level) {
 		Objects.requireNonNull(mainPath);
 		Objects.requireNonNull(rooms);
 		Objects.requireNonNull(heroStart);
@@ -139,7 +139,7 @@ public final class RandomFloorGenerator {
 		var enemyRoomCount = random.nextInt(1, 3);//a min to ensure no idexoutof bound ? 
 		for(var i = 0; i< enemyRoomCount; i++) {
 			var current = candidates.get(i);
-			rooms[current.row()][current.col()] = new EnemyRoom(List.of( EnemyFactory.create(EnemyType.SMALL_RATWOLF), EnemyFactory.create(EnemyType.SLIME), EnemyFactory.create(EnemyType.LILBEE)));
+			rooms[current.row()][current.col()] = new EnemyRoom(level);
 		}	
 	}
 	
@@ -333,7 +333,7 @@ public final class RandomFloorGenerator {
 				continue;//restart till the mainPath is not null
 			}
 			var exit = placeExit(mainPath, rooms);
-			placeEnemyRooms(mainPath, rooms, heroStart, exit);
+			placeEnemyRooms(mainPath, rooms, heroStart, exit, level);
 			var deadEnds = generateDeadEnds(mainPath, rooms);
 			placeOtherRooms(mainPath, deadEnds, rooms, heroStart, exit);
 			//fixDiagonals(rooms);

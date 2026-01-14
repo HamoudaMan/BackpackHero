@@ -21,6 +21,10 @@ public class DrawEnemyRoom {
 	private final BufferedImage slime;
 	private final BufferedImage lilBee;
 	private final BufferedImage muskratBrigand;
+	//obliged enemies
+	private final BufferedImage frogSorcerer;
+	private final BufferedImage livingShadow;
+	private final BufferedImage beeQueen;
 	private final BufferedImage attackIcon;
 	private final BufferedImage blockIcon;
 	private final BufferedImage healIcon;
@@ -49,6 +53,10 @@ public class DrawEnemyRoom {
 		this.blockIcon = ImageLoader.getLoadedImage("blockIcon");
 		this.healIcon = ImageLoader.getLoadedImage("healicon");
 		this.lowEnergy = ImageLoader.getLoadedImage("lowenergy");
+	
+		this.frogSorcerer = ImageLoader.getLoadedImage("frogSorcerer");
+		this.livingShadow = ImageLoader.getLoadedImage("livingShadow");
+		this.beeQueen = ImageLoader.getLoadedImage("beeQueen");
 		
 		
 	}
@@ -122,6 +130,9 @@ public class DrawEnemyRoom {
 			case SLIME -> g.drawImage(slime, x, zoneY, enemyW, enemyH, null);
 			case MUSKRAT_BRIGAND -> g.drawImage(muskratBrigand, x, zoneY, enemyW, enemyH, null);
 			case LILBEE -> g.drawImage(lilBee, x, zoneY, enemyW, enemyH, null);
+			case FROG_SORCERER ->g.drawImage(frogSorcerer, x, zoneY, enemyW, enemyH, null);
+			case LIVING_SHADOW ->g.drawImage(livingShadow, x, zoneY, enemyW, enemyH, null);
+			case BEE_QUEEN ->g.drawImage(beeQueen, x, zoneY, enemyW, enemyH, null);
 			}
 		
 			

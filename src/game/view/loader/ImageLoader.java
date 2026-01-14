@@ -39,6 +39,7 @@ public final class ImageLoader {
 		load("bg","/sprites/ui/dunjon/bhHH.png");
 		load("tile","/sprites/ui/dunjon/tile.png");
 		load("hero","/sprites/ui/dunjon/heroUI/retro_jojo.png");
+		load("exitDoor","/sprites/ui/dunjon/exitDoor.png");
 		
 		//icons
 		load("blockIcon", "/sprites/items/blockIcon.png");
@@ -62,6 +63,9 @@ public final class ImageLoader {
 		load("muskratbrigand","/sprites/ui/dunjon/enemies/muskratBrigand.png");
 		load("lilbee","/sprites/ui/dunjon/enemies/lilBee.png");
 		load("slime","/sprites/ui/dunjon/enemies/slime.png");
+		load("frogSorcerer","/sprites/ui/dunjon/enemies/frogSorcerer.png");
+		load("livingShadow","/sprites/ui/dunjon/enemies/livingShadow.png");
+		load("beeQueen","/sprites/ui/dunjon/enemies/beeQueen.png");
 		
 		//The merchantRoom:
 		load("merchant","/sprites/ui/dunjon/merchant/dwarfMerchant.png");

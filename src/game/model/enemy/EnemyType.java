@@ -6,7 +6,7 @@ package game.model.enemy;
 public enum EnemyType {
 	
 	
-  SMALL_RATWOLF(new Action[] {Action.BLOCK, Action.ATTACK, Action.BLOCK},
+  SMALL_RATWOLF(new Action[] {Action.ATTACK, Action.ATTACK, Action.BLOCK},
   							new EnemyStats(32,7,13,0,6)
   ), 
   
@@ -23,7 +23,17 @@ public enum EnemyType {
 		),
   LILBEE(new Action[] {Action.ATTACK, Action.HEAL, Action.ATTACK, Action.BLOCK},
 			new EnemyStats(16,7,14,5,4)
-		);
+		),
+  FROG_SORCERER(new Action[] {Action.ATTACK,  Action.BLOCK, Action.BLOCK},
+  		new EnemyStats(35, 10, 8,8, 12)
+  		),
+  BEE_QUEEN(new Action[] {Action.ATTACK,  Action.BLOCK,Action.SUMMON, Action.ATTACK, Action.BLOCK},
+  		new EnemyStats(60, 15, 12,0, 25)
+  		),
+  LIVING_SHADOW(new Action[] {Action.ATTACK,  Action.ATTACK, Action.BLOCK},
+  		new EnemyStats(25, 12, 6,0, 10)
+  		);
+  
   
   private final Action[] pattern;
   private final EnemyStats stats;

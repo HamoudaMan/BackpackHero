@@ -148,12 +148,15 @@ public class CombatController {
         var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
         
         if(!enemies.isEmpty()) {
-            IO.println("=== ENEMY TURN ===");
-            
+            IO.println("ENEMY TURN");
+            //var enemyCount = enemies.size();
             // all enemies do their action 
             for(int i = 0; i < enemies.size(); i++) {
+            		if( i>= enemies.size()) {
+            			break;
+            		}
                 Enemy enemy = enemies.get(i);
-                IO.println("Enemy " + (i+1) + " attacks!");
+                IO.println("Enemy " + (i+1) + " attacks");
                 enemy.playTurn(hero);
             }
             

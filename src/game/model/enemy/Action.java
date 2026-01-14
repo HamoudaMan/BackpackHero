@@ -5,5 +5,6 @@ public enum Action {
   BLOCK,
   HEAL,
   CURSE,
+  SUMMON,
   PASS
 }

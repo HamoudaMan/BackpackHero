@@ -15,11 +15,17 @@ import game.model.enemy.*;
 
 public class EnemyRoom implements Room{
 	private final List<Enemy> enemiesList;
+	private static final EnemyGenerator enemyGen = new EnemyGenerator();
 	
-	public EnemyRoom(List<Enemy> enemies){
-		Objects.requireNonNull(enemies);
-		this.enemiesList = new ArrayList<>(enemies);
+	public EnemyRoom(int floorLevel){
+		if(floorLevel <1) {
+			throw new IllegalArgumentException("floor must be greater than 1 : "+ floorLevel);
+		}
+		//Objects.requireNonNull(enemies);
+		//this.enemiesList = new ArrayList<>(enemies);
+		this.enemiesList = enemyGen.generateEnemies(floorLevel);
 	}
+	
 	
 	public List<Enemy> enemiesList() {
 		return enemiesList;

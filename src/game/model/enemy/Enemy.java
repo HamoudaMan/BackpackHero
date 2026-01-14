@@ -1,5 +1,7 @@
 package game.model.enemy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import game.model.hero.Hero;
 /**
@@ -30,7 +32,7 @@ public class Enemy {
 	}
 	
 	
-	public void playTurn(Hero hero) {
+	public void playTurn(Hero hero, List<Enemy> enemies) {
 		Action action = type.nextAction(turn++);
 		 System.out.println("[ENEMY TURN] action = " + action);
 		switch(action) {
@@ -38,7 +40,25 @@ public class Enemy {
 			case BLOCK -> protection += stats.block();
 			//afiner le heal pour une valuer precise 
 			case HEAL ->  currentHealth = Math.min(stats.maxHealth(), currentHealth+stats.heal());
+			case SUMMON -> summon(enemies);
 			default -> {}
+		}
+	}
+	//2 possible cases so we keep another playTurn for comptibility
+	public void playTurn(Hero hero ) {
+		playTurn(hero, new ArrayList<>());
+	}
+
+	private void summon(List<Enemy> enemies) {
+		if(enemies.size()>=3) {
+			IO.println("not enough space to summon all ");
+			return;//not enough space 
+		}
+		if(type == EnemyType.BEE_QUEEN) {
+			Enemy summonedBee = EnemyFactory.create(EnemyType.LILBEE);
+			enemies.add(summonedBee);
+			
+			IO.println("Queen bee summon lil bee");
 		}
 	}
 
@@ -59,6 +79,7 @@ public class Enemy {
 			case ATTACK -> stats.damage();
 			case BLOCK -> stats.block();
 			case HEAL -> stats().heal();
+			case SUMMON ->0;
 			case CURSE -> 0;
 			case PASS -> 0;
 		
