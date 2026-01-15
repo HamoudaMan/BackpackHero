@@ -49,10 +49,15 @@ public class DrawItemOnScreen {
     var cellHeight = draw.getCellHeight(backpack, screenHeight);
     for(var i = 0; i < itemOnScreen.size(); i++) {
       var actualItem = itemOnScreen.get(i);
-      if(mouseX >= actualItem.coord().x() && mouseY >= actualItem.coord().y() && mouseX <= cellWidth * actualItem.item().shape()[0].length && mouseY <= cellHeight * actualItem.item().shape().length) {
+      
+      
+      if(mouseX >= actualItem.coord().x() && mouseY >= actualItem.coord().y() && 
+      		mouseX <= actualItem.coord().x() + cellWidth * actualItem.item().shape()[0].length &&
+      		mouseY <= actualItem.coord().y() + cellHeight * actualItem.item().shape().length) {
         return i;
       }
     }
     return -1;
   }
 }
+

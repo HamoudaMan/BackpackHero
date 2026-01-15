@@ -58,11 +58,19 @@ public class ZenController {
 	private DCoord lastActivatedRoom = null;
 	
 	private final DungeonState dungeonState = new DungeonState();
+	
 	private Item hoveredItem = null;
 	private GroundItemHitBox hoveredGroundItem;
 	private ArrayList<ItemOnScreen> listItemOnScreen = new ArrayList<>();
 	private int mouseX, mouseY;
 	
+	//DRAG AND DROP STATE //////////////////////////
+	private ItemOnScreen draggedItem = null;//the item taht we drag 
+	private int draggedItemIndex = -1;
+	private int dragOffSetX = 0;// where we clcik on the item 
+	private int dragOffSetY = 0;// where we clcik on the item 
+	///////////////////
+	///
 	public void handleExit() {
 		if(!floor.allEnemiesCleared(dungeonState)) {
 			IO.println("You must defat all enemies first ");
@@ -136,8 +144,8 @@ public class ZenController {
       var weapon = new Weapon("Wooden Sword", 1, 0, 5, shape); 
       var OneitemOnSreen = new ItemOnScreen(weapon, new Coord(0, 0));
       listItemOnScreen.add(OneitemOnSreen);
-      ItemOnScreen dragItem = null;
-      var index = -1;
+     // ItemOnScreen dragItem = null;
+      //var index = -1;
       // ------------------------------------------
 			
 		  //List<EnemyI> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
@@ -165,7 +173,48 @@ public class ZenController {
 							 System.out.println("Hero start = " + posHero);
 						 }
 						 break;
-					 }	 
+					 }
+					 //////////////////////////
+					 if(state == ZenGameState.CHOOSEITEM) {
+						 if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+							 var index = drawItemOnScreen.findItemAt(mouseX, mouseY, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
+							 if(index != -1) {
+								 //found an item
+								 draggedItemIndex = index;
+								 draggedItem = listItemOnScreen.get(index);
+								 dragOffSetX = mouseX - draggedItem.coord().x();
+								 dragOffSetY = mouseY - draggedItem.coord().y();
+								 //remove the itme from the list when dragging 
+								 listItemOnScreen.remove(index);
+								 IO.println("Start du dragging of item at index " + index);
+								 
+							 }
+							 break;
+						 }
+						 if(p.action() == PointerEvent.Action.POINTER_UP && draggedItem != null) {
+							 // Drop de l'item
+							 int newX = mouseX - dragOffSetX;
+							 int newY = mouseY - dragOffSetY;
+						
+							 //create new item with the new postion 
+							 ItemOnScreen droppedItem = new ItemOnScreen(draggedItem.item(), new Coord(newX, newY));
+							 
+							 listItemOnScreen.add(droppedItem);
+							 
+							 System.out.println("Dropped item at (" + newX + ", " + newY + ")");
+							 
+							 // Reset  drag state
+							 draggedItem = null;
+							 draggedItemIndex = -1;
+							 dragOffSetX = 0;
+							 dragOffSetY = 0;
+							 break;
+						 }
+						 
+						 break;
+					 	
+					 }
+					 ////////////////////////
 					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
 						 TreasureState ts = dungeonState.treasureState(posHero);
 						 if(state == ZenGameState.TREASUREROOM) {
@@ -339,7 +388,20 @@ public class ZenController {
 														case FLOOR ->{}
 														case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
 														case CHOOSEITEM -> {
-														                      drawItemOnScreen.render(g, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
+														// draw all item except the on beeing dragged 
+															drawItemOnScreen.render(g, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
+															
+																							//if we dragging drawx the item beeing dragged 
+																								if(draggedItem != null) {
+																									int drawX = mouseX - dragOffSetX;
+																									int drawY = mouseY - dragOffSetY;
+																									 //to not have the exception when the coord is negative 
+																									 drawX = Math.max(0, drawX);
+																									 drawY = Math.max(0,drawY);
+																									ItemOnScreen tempItem = new ItemOnScreen(draggedItem.item(), new Coord(drawX, drawY));
+																									drawItemOnScreen.renderOneItem(g, drawX, drawY, screenWidth, screenHeight, tempItem, hero.backPack(), backpack);
+																								}
+														
 														                    }
 														case TREASUREROOM -> {  TreasureState ts = dungeonState.treasureState(posHero);
   																									treasureRoom.render(g, screenWidth, screenHeight, ts);
@@ -371,6 +433,7 @@ public class ZenController {
 									}
 													
 				});
+				/*
 				if(state == ZenGameState.CHOOSEITEM) {
 				  while(true) {
 				    System.out.println(listItemOnScreen);
@@ -404,6 +467,7 @@ public class ZenController {
 				    }
 				  }
 				}
+				*/
 			}
 		});
 	}
