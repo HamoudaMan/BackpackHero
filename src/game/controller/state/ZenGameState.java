@@ -8,5 +8,6 @@ public enum ZenGameState {
 	MERCHANTROOM,
 	HEALERROOM,
 	EXITROOM,
-	GAMEOVER
+	GAMEOVER,
+	ENEMYLOOT//when the combat is finished and the loot is in the ground 
 }
