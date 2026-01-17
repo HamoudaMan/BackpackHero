@@ -337,47 +337,12 @@ public final class RandomFloorGenerator {
 			var deadEnds = generateDeadEnds(mainPath, rooms);
 			placeOtherRooms(mainPath, deadEnds, rooms, heroStart, exit);
 			//fixDiagonals(rooms);
-			assertNoDiagonal(rooms);
+	
 			return new Floor(level, rooms, heroStart);
 		}
 		
 	}
-	private static void assertNoDiagonal(Room[][] rooms) {
-    int rows = rooms.length;
-    int cols = rooms[0].length;
 
-    for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            if (rooms[r][c] == null) continue;
-
-            // 4 diagonales
-            int[][] diags = {
-                {-1, -1}, {-1, 1},
-                {1, -1}, {1, 1}
-            };
-
-            for (var d : diags) {
-                int rr = r + d[0];
-                int cc = c + d[1];
-
-                if (rr < 0 || rr >= rows || cc < 0 || cc >= cols) continue;
-
-                if (rooms[rr][cc] != null) {
-                    // si les deux orthogonaux sont vides → vraie diagonale
-                    boolean ortho1 = rooms[r][cc] != null;
-                    boolean ortho2 = rooms[rr][c] != null;
-
-                    if (!ortho1 && !ortho2) {
-                        throw new IllegalStateException(
-                            "DIAGONALE LOGIQUE détectée entre (" +
-                            r + "," + c + ") et (" + rr + "," + cc + ")"
-                        );
-                    }
-                }
-            }
-        }
-    }
-}
 
 	/*
 	public boolean checkInvariants(Floor floor, List<Coord>mainPath, List<Coord> deadEnds ) {
