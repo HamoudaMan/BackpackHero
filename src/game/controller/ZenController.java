@@ -17,6 +17,10 @@ import game.model.dungeon.Room;
 import game.model.dungeon.state.DungeonState;
 import game.model.dungeon.state.HealerState;
 import game.model.dungeon.state.TreasureState;
+import game.model.hallOfFame.GameStats;
+import game.model.hallOfFame.HallOfFame;
+import game.model.hallOfFame.HallOfFameStorage;
+import game.model.hallOfFame.ScoreCalculator;
 import game.model.hero.Hero;
 import game.model.item.Item;
 import game.model.item.Weapon;
@@ -47,6 +51,9 @@ public class ZenController {
 	private GroundItemHitBox hoveredGroundItem;
 	private int mouseX, mouseY;
 	
+	private final HallOfFameStorage hallOfFameStorage = new HallOfFameStorage();
+	private HallOfFame  hallOfFame;
+	
 	public void handleExit() {
 		if(!floor.allEnemiesCleared(dungeonState)) {
 			IO.println("You must defat all enemies first ");
@@ -68,8 +75,9 @@ public class ZenController {
 	public void start() {
 		System.out.println("loading in progress .. ");
 		ImageLoader.loadAll();
-		System.out.println("loading in progress/////// .. ");
-		
+		System.out.println("loading in progress ..... ");
+		this.hallOfFame = hallOfFameStorage.load();
+		System.out.println("Hall of fame loaded.. "+ hallOfFame.results().size());
 		var window = new Window();
 		window.open(context -> {
 			var screenWidth = context.getScreenInfo().width();
@@ -138,7 +146,7 @@ public class ZenController {
 						 if(menu.isClicked(mouseX, mouseY)) {
 							 hero = new Hero("JOTARO KUJO");
 							 IO.println("CREATING DUNGEON...");
-							 dungeon = new Dungeon(3);
+							 dungeon = new Dungeon(100);
 							 IO.println("Dungeon created: " + dungeon);
 							 floor = dungeon.getCurrentFloor();
 							 IO.println("Floor retrieved: " + floor);
@@ -168,7 +176,7 @@ public class ZenController {
                dungeon = new Dungeon(3);
                floor = dungeon.getCurrentFloor();
                posHero = floor.postionHero();
-               //dungeonState.clear(); 
+               dungeonState.reset(); 
                state = ZenGameState.FLOOR;
                showMiniMap = false;
                movementQueue.clear();
@@ -285,6 +293,15 @@ public class ZenController {
 							state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
 							if(hero.stats().isDead() ) {
 								IO.println("switch to gameover screen");
+								var stats = new GameStats(hero.stats().maxHealth(), hero.lvl(), hero.enemiesDefeated(), 0, hero.floorsCompleted());
+								var calculator = new ScoreCalculator();
+								var result = calculator.scoreCalculator(stats);
+								hallOfFame.add(result);
+								if(hallOfFameStorage.save(hallOfFame)) {
+									IO.println("score saved :"+ result.score()+"points" ); 
+								}else {
+									IO.println("couln not save ");
+								}
 								state = ZenGameState.GAMEOVER;
 							}
 							//combatController.manageEnemyTurn(floor, posHero,	 hero);
@@ -317,7 +334,7 @@ public class ZenController {
 				}
 		    if(state == ZenGameState.MENU) {
 	        context.renderFrame(g-> {
-	            menu.render(g, screenWidth, screenHeight);
+	            menu.render(g, screenWidth, screenHeight, hallOfFame);
 	        });
 	        continue; 
 		    }

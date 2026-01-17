@@ -179,7 +179,7 @@ public class CombatController {
             hero.stats().resetProtection(); // La protection est consommée
             hero.energy().resetEnergy();     // Le héros récupère ses 3 points d'énergie
             
-            IO.println("=== NEW HERO TURN ===");
+            IO.println("NEW HERO TURN ");
             IO.println("Hero ready -> HP=" + hero.stats().health() + 
                       " Protection=" + hero.stats().protection() + 
                       " Energy=" + hero.energy().energy());

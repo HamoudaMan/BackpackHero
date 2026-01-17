@@ -10,6 +10,7 @@ public class DungeonState {
 	private Map<DCoord, TreasureState> treasureStates;
 	private Map<DCoord, HealerState> healerStates;
 	private Map<DCoord, EnemyState> enemyStates;
+	//private int totalEnemiesDefeated = 0;
 	
 	public DungeonState(){
 		this.treasureStates = new HashMap<>();
@@ -18,7 +19,7 @@ public class DungeonState {
 	}
 	
 	/**
-	 * each treasure room has a state , if it has no state yet a new one is created 
+	 * each treasure room has a state , if it has no state a new one is created 
 	 * @param coord the coord of the current room
 	 * @return the treasure state associated with this room 
 	 */
@@ -31,7 +32,11 @@ public class DungeonState {
 		return treasureStates.get(coord);
 		//return treasureStates.computeIfAbsent(coord, c->new TreasureState());//to test
 	}
-	
+	/**
+	 * each healer room has a state , if it has no state a new one is created 
+	 * @param coord the coord of the current room
+	 * @return the thealer state associated with this room 
+	 */
 	public HealerState healerState(DCoord coord) {
 		Objects.requireNonNull(coord);
 		if(!healerStates.containsKey(coord)) {
@@ -41,7 +46,11 @@ public class DungeonState {
 		return healerStates.get(coord);
 		//return healerStates.computeIfAbsent(coord, c->new HealerState();//to test
 	}
-	
+	/**
+	 * each enemy  room has a state , if it has no state a new one is created 
+	 * @param coord the coord of the current room
+	 * @return the enemy state associated with this room 
+	 */
 	public EnemyState enemyState(DCoord coord) {
 		
 		Objects.requireNonNull(coord);
@@ -51,5 +60,14 @@ public class DungeonState {
 		}
 		return enemyStates.get(coord);
 		//return enemyStates.computeIfAbsent(coord, c->new EnemyState());//to test
+	}
+
+	/**
+	 * reset all the dungeon states for a new game 
+	 */
+	public void reset() {
+		treasureStates.clear();
+		healerStates.clear();
+		enemyStates.clear();
 	}
 }

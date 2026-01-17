@@ -28,6 +28,7 @@ public class DrawEnemyRoom {
 	private final BufferedImage attackIcon;
 	private final BufferedImage blockIcon;
 	private final BufferedImage healIcon;
+	private final BufferedImage summonIcon;
 	private final BufferedImage lowEnergy;
 	private final DrawBlockBar blockBar = new DrawBlockBar();
 	
@@ -53,6 +54,7 @@ public class DrawEnemyRoom {
 		this.blockIcon = ImageLoader.getLoadedImage("blockIcon");
 		this.healIcon = ImageLoader.getLoadedImage("healicon");
 		this.lowEnergy = ImageLoader.getLoadedImage("lowenergy");
+		this.summonIcon = ImageLoader.getLoadedImage("summonIcon");
 	
 		this.frogSorcerer = ImageLoader.getLoadedImage("frogSorcerer");
 		this.livingShadow = ImageLoader.getLoadedImage("livingShadow");
