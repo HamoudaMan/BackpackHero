@@ -35,11 +35,11 @@ public class DrawBackPack {
 	  return screenHeight/3;
 	}
 	
-	private int calculateCellWidth(BackPack backpack, int screenWidth) {
+	public int calculateCellWidth(BackPack backpack, int screenWidth) {
 	  Objects.requireNonNull(backpack);
 	  return calculateZoneWidth(screenWidth)/backpack.getMaxX();
 	}
-	private int calculateCellHeight(BackPack backpack, int screenHeight) {
+	public int calculateCellHeight(BackPack backpack, int screenHeight) {
 	  Objects.requireNonNull(backpack);
     return calculateZoneHeight(screenHeight)/backpack.getMaxY();
   }
@@ -47,10 +47,17 @@ public class DrawBackPack {
 	public int getXOffset(int screenWidth) {
 	  return calculateZoneX(screenWidth);
 	}
-	
-	public int getYOffset(BackPack backpack, int screenHeight) {
-	  Objects.requireNonNull(backpack);
+  
+  public int getYOffset(int screenHeight) {
     return calculateZoneY(screenHeight);
+  }
+  
+  public int getZoneWidth(int screenWidth) {
+    return calculateZoneWidth(screenWidth) + getXOffset(screenWidth);
+  }
+  
+  public int getZoneHeight(int screenHeight) {
+    return calculateZoneHeight(screenHeight) + getYOffset(screenHeight);
   }
 	
 	public int getCellWidth(BackPack backpack, int screenWidth) {

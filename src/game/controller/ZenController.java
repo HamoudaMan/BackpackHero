@@ -11,6 +11,7 @@ import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
 
 import game.controller.state.ZenGameState;
+import game.model.backpack.BackPack;
 import game.model.dungeon.DCoord;
 import game.model.dungeon.Dungeon;
 import game.model.dungeon.Floor;
@@ -23,6 +24,7 @@ import game.model.item.Item;
 import game.model.item.ItemOnScreen;
 import game.model.item.Weapon;
 import game.model.representation.Coord;
+import game.model.representation.StateRotation;
 import game.view.Window;
 import game.view.draw.DrawBackGround;
 import game.view.draw.DrawBackPack;
@@ -103,6 +105,7 @@ public class ZenController {
 
 
 			Hero hero = new Hero("JOTARO KUJO");
+			var backpackData = new BackPack(7, 5, 2, 1, 4, 3);
 			//System.out.println("Dungeon OK");
 			//System.out.println("Floor = " + floor);
 			//System.out.println("Hero start = " + floor.postionHero());
@@ -195,12 +198,28 @@ public class ZenController {
 							 // Drop de l'item
 							 int newX = mouseX - dragOffSetX;
 							 int newY = mouseY - dragOffSetY;
-						
-							 //create new item with the new postion 
+							 if(newX < 0) {
+							   newX = 0;
+							 }
+							 if(newY < 0) {
+                 newY = 0;
+               }
+							 //create new item with the new postion
 							 ItemOnScreen droppedItem = new ItemOnScreen(draggedItem.item(), new Coord(newX, newY));
 							 
 							 listItemOnScreen.add(droppedItem);
 							 
+							 var res = backpackData.CheckAndAddInBackpack(draggedItem.item(),
+							     StateRotation.Base,
+							     droppedItem.coord(), 
+							     backpack.getXOffset(screenWidth),
+							     backpack.getYOffset(screenHeight),
+							     backpack.getZoneWidth(screenWidth),
+							     backpack.getZoneHeight(screenHeight),
+							     backpack.getCellWidth(backpackData, screenWidth),
+							     backpack.getCellHeight(backpackData, screenHeight)
+							 );
+							 System.out.println("RES = " + res);
 							 System.out.println("Dropped item at (" + newX + ", " + newY + ")");
 							 
 							 // Reset  drag state
