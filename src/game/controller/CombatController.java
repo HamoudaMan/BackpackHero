@@ -7,13 +7,14 @@ import game.model.dungeon.Floor;
 import game.model.dungeon.state.DungeonState;
 import game.model.enemy.Enemy;
 import game.model.hero.Hero;
-
+import game.model.item.EnemyLootGenerator;
 import game.view.draw.DrawCombatBoutons;
 import game.view.draw.DrawEnemyRoom;
 
 public class CombatController {
 	private final DrawCombatBoutons boutons;
 	private final DrawEnemyRoom drawEnemyRoom;
+	private final EnemyLootGenerator lootGenerator= new EnemyLootGenerator();
 	private CombatPhase phase = CombatPhase.HEROTURN;
 	private boolean enemyTurnExecuted = false;
 	private Enemy selectedEnemy = null;
@@ -79,19 +80,25 @@ public class CombatController {
 					hero.addXp(xpGain);
 					hero.incrementEnemiesDefeated();
 					
-					enemies.remove(target);//si l'ennemi est mort en le supprime 
+					enemies.remove(target);//enemy is dead 
 					selectedEnemy = null;
 					drawEnemyRoom.setSelectedEnemy(null);
 						
 					if(enemies.isEmpty()) {
 						IO.println("all enemies defeated");
-						state.enemyState(posHero).clear();
+						var enemyState = state.enemyState(posHero);
+						//generate loot
+						if(!enemyState.hasItems()) {
+							var items = lootGenerator.generate(floor.level());
+							enemyState.generateItems(items);
+						}
+						//state.enemyState(posHero).clear();
 						hero.energy().resetEnergy();
-						phase = CombatPhase.END; // le combat est terminé
-						return ZenGameState.FLOOR;
+						phase = CombatPhase.END; // end of combat 
+						return ZenGameState.ENEMYLOOT;
 					}
 				}
-					//IO.println("Not enough energy, Click End Turn to pass.");
+				
 				
 				return currentState;
 			}

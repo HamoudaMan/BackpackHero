@@ -12,16 +12,19 @@ public class EnemyLootGenerator {
 	 */
 	private Item randomItem() {
 		var r = random.nextInt(100);
+		if(r< 25) {
+			return ItemCatalog.random(ItemCategory.MAGIC);
+		}
 		if(r< 50) {
 			return ItemCatalog.random(ItemCategory.WEAPON);
 		}
 		if(r< 70) {
-			return ItemCatalog.random(ItemCategory.CONSUMABLES);
+			return ItemCatalog.random(ItemCategory.SHIELD);
 		}
 		if(r< 90) {
-			return ItemCatalog.random(ItemCategory.ACCESSORY);
+			return ItemCatalog.random(ItemCategory.CONSUMABLES);
 		}
-		return ItemCatalog.random(ItemCategory.MAGIC); //add curse
+		return ItemCatalog.random(ItemCategory.CONSUMABLES); //add curse
 	}
 	/**
 	 * generate loot after enemyroom is cleared 

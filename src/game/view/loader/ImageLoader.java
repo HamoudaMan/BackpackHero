@@ -25,13 +25,15 @@ public final class ImageLoader {
 			throw new IllegalStateException("already loaded ");
 		}
 		IO.println("Loading all the images ... ");
-		
+		load("uknown", "/sprites/ui/uknown.png");
 		//menu 
 		load("bg_menu","/sprites/ui/menu_bg.png");
 		load("play_button","/sprites/ui/play_btn.png");
 		load("title","/sprites/ui/title.png");
 		//map
 		load("mapBtn","/sprites/ui/mapBtn.png");
+		//loot
+		load("finishLooting","/sprites/ui/finishLooting.png");
 		//gameOver
 		load("gameOver","/sprites/ui/gameOver.png");
 		load("retryBtn","/sprites/ui/retryBtn.png");
@@ -53,9 +55,15 @@ public final class ImageLoader {
 		
 		//the Items :
 		load("woodensword","/sprites/items/weapon/woodensword.png");
+		load("woodenSword","/sprites/items/woodenSword.png");
 		load("magicwand","/sprites/items/weapon/magicwand.png");
-		load("roughbuckler","/sprites/items/shield.png");
+		load("roughbuckler","/sprites/items/sshield.png");
+		load("paladinSword","/sprites/items/paladinSword.png");
+		load("gold","/sprites/items/gold.png");
+		load("booShield","/sprites/items/booShield.png");
+		load("manaStone","/sprites/items/manaStone.png");
 		load("itemparchemin","/sprites/items/itemparchemin.png");
+		load("thunaBox","/sprites/items/thunaBox.png");
 		
 		//the Enemies:
 		load("lowenergy","/sprites/ui/dunjon/enemies/low_energy.png");

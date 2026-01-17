@@ -5,8 +5,12 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import game.model.item.Consumables;
 import game.model.item.Curse;
+import game.model.item.Gold;
 import game.model.item.Item;
+import game.model.item.Magic;
+import game.model.item.Shield;
 import game.model.item.Weapon;
 import game.view.loader.ImageLoader;
 
@@ -47,8 +51,14 @@ public class DrawItemDescription {
 		
 		var name = "";
 		var energyCost = 0;
+		var numberOfUse = "";
 		switch(item) {
-			case Weapon w -> name = w.name() ;
+			case Weapon w -> {name = w.name() ; energyCost = w.energyCost();}
+			case Shield s ->{name = s.name() ; energyCost = s.energyCost();}
+			case Gold go -> name = "Gold ( " + go.amount()+" )";
+			case Consumables c -> {name = c.name() ; energyCost = c.energyCost();}
+			case Magic m -> name = m.name();
+			
 			case Curse c -> name = c.name();
 		default -> name = " unknown";
 		}
@@ -56,11 +66,16 @@ public class DrawItemDescription {
 		g.drawString(name, x+90, y+108);
 		//description:
 		g.setFont(new Font("Serif", Font.BOLD, 12));
+		
 		var textY = y+ 124;
 		//stats:
 		switch(item) {
 			case Weapon w->{g.drawString("Damage: "+w.damage(), x+90, textY); textY+=15; energyCost = w.energyCost();}
-			//case Armors a->{g.drawString("Block: "+ a.block(), x+90, textY);textY+=15;energyCost = a.energyCost()}
+			case Consumables c ->{ g.drawString("Heal: "+c.heal(), x+90, textY); textY+=15; energyCost = c.energyCost();
+															textY += 15; numberOfUse = "1";
+															g.drawString("Number of Use: "+numberOfUse, x+90, textY);}
+			case Shield s->{g.drawString("Block: "+ s.protection(), x+90, textY);textY+=15;energyCost = s.energyCost();}
+			case Magic m -> g.drawString("Stores mana  ", x+90, textY);
 		default ->{/*TODO : ADD ALL TYPES OF ITEMS*/ }
 		}
 		if(energyCost >0) {
@@ -75,7 +90,7 @@ public class DrawItemDescription {
 			}else {
 				uses = "Uses per turn: "+item.turnUsable();
 			}*/
-			g.drawString("x uses", x+90, textY);
+			//g.drawString("x uses", x+90, textY);
 		}
 
 		

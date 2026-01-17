@@ -123,6 +123,7 @@ public class ZenController {
 			var treasureRoom = new DrawTreasureRoom();
 			var groundItems = new DrawGroundItem();
 			var itemDescription = new DrawItemDescription();
+			var finishButton = new DrawFinishButton();
 			
 			var merchanRoom = new DrawMerchantRoom();
 			
@@ -221,7 +222,7 @@ public class ZenController {
 					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
 						 TreasureState ts = dungeonState.treasureState(posHero);
 						 if(state == ZenGameState.TREASUREROOM) {
-							 System.out.println("STATE3 = " + state);
+					
 
 							 if(ts.isOpened()) {
 								 hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY,screenWidth,screenHeight,ts.loot());
@@ -311,7 +312,19 @@ public class ZenController {
 							//combatController.manageEnemyTurn(floor, posHero,	 hero);
 							break;//on  bouge pas le hero et on va au prochain renderFrame 
 						}
-						
+						/////////////////////////////////
+						if(state == ZenGameState.ENEMYLOOT) {
+							var eState = dungeonState.enemyState(posHero);
+							if(finishButton.isClicked(mouseX, mouseY, screenWidth, screenHeight)) {
+								IO.println("Fininsh items enemy selection");
+								eState.finishItemsSelection()	;
+								hoveredItem = null;
+								hoveredGroundItem = null;
+								state = ZenGameState.FLOOR;
+							}
+							break;
+						}
+						/////////////////////////////
 						//sinnon on bouge le hero sur la minimap
 						target = miniMapController.convertClick(mouseX, mouseY);
 						if(miniMapController.canMove(floor, posHero, target,dungeonState)) {
@@ -397,6 +410,12 @@ public class ZenController {
 						hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY, screenWidth, screenHeight, ts.loot());
 					}
 				}
+				if(state == ZenGameState.ENEMYLOOT) {
+					var eState = dungeonState.enemyState(posHero);
+					hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY, screenWidth, screenHeight, eState.items());
+					IO.println("hitbox = " + hoveredGroundItem);
+					 hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+				}
 				//Ce qui sera render a chaque fois : 
 				context.renderFrame(g-> { 
 													/*if(state == ZenGameState.MENU) {
@@ -427,6 +446,7 @@ public class ZenController {
 																									}
 																									if(hoveredItem !=null && hoveredGroundItem !=null) {
 																										itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
+																										hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
 																										//hoveredGroundItem = null;
 																									}
 																									}
@@ -441,8 +461,22 @@ public class ZenController {
 																		            	
 																	                enemiesRoom.renderLowEnergy(g); 
 																	            }
+
 																								
 																							}
+													   case ENEMYLOOT ->{
+				  	 										var eState = dungeonState.enemyState(posHero);
+				  	 										//render the enemy room empty 
+				  	 										enemiesRoom.render(g, List.of(), screenWidth, screenHeight);
+				  	 										//render ground items
+				  	 										groundItems.render(g, screenWidth, screenHeight, eState.items());
+				  	 										if(hoveredItem !=null && hoveredGroundItem !=null) {
+																	itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
+																	hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+																	//hoveredGroundItem = null;
+																}
+				  	 										finishButton.render(g, screenWidth, screenHeight);
+				   											}
 														case HEALERROOM -> {HealerState hs = dungeonState.healerState(posHero);
 																								if(!hs.isUsed()) {
 																									healerRoom.render(g, screenWidth, screenHeight);
