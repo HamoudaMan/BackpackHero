@@ -157,7 +157,7 @@ public class CombatController {
             		}
                 Enemy enemy = enemies.get(i);
                 IO.println("Enemy " + (i+1) + " attacks");
-                enemy.playTurn(hero);
+                enemy.playTurn(hero, enemies);
             }
             
             IO.println("Hero stats after enemy turn -> HP=" + hero.stats().health() + 
