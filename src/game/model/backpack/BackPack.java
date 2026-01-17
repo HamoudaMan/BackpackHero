@@ -57,26 +57,26 @@ public class BackPack {
   }
   //managing the gold : 
   public boolean hasGold(int amount) {
-  	if(amount < 0) {
-  		throw new IllegalArgumentException();
-  	}
-  	return gold >= amount;
+    if(amount < 0) {
+      throw new IllegalArgumentException();
+    }
+    return gold >= amount;
   }
   
   public void spendGold(int amount ) {
-  	if(amount < 0) {
-  		throw new IllegalArgumentException();
-  	}
-  	if(hasGold(amount)) {
-  		gold -=amount;
-  	}
+    if(amount < 0) {
+      throw new IllegalArgumentException();
+    }
+    if(hasGold(amount)) {
+      gold -=amount;
+    }
   }
   
   public void addGold(int amount) {
-  	if(amount < 0) {
-  		throw new IllegalArgumentException();
-  	}
-  	gold+= amount ;
+    if(amount < 0) {
+      throw new IllegalArgumentException();
+    }
+    gold+= amount ;
   }
   private boolean nextToUnlocked(Coord coord) {
     Objects.requireNonNull(coord);
@@ -181,7 +181,7 @@ public class BackPack {
         }
       }
     }
-    return new ItemInstance(item, coordItemInstance);
+    return new ItemInstance(item, coordItemInstance, rotation);
   }
   
   public void addItemInstanceToBackpack(ItemInstance itemInstance) {
@@ -235,6 +235,14 @@ public class BackPack {
     return gold;
   }
   
+  public int getMaxX() {
+    return xStuff;
+  }
+  
+  public int getMaxY() {
+    return yStuff;
+  }
+  
   public boolean[][] getUnlocked() {
     var copy = new boolean[yStuff][xStuff];
     for(int i = 0; i < yStuff; i++) {
@@ -249,5 +257,66 @@ public class BackPack {
       copy[i] = stuff[i].clone();
     }
     return copy;
+  }
+  
+  public int CheckAndAddInBackpack(Item item, StateRotation rotation, Coord coord, int backpackOffsetX, int backpackOffsetY, int backpacksWitdh, int backpackHeight, int cellWidth, int cellHeight) {
+    System.out.println("x = " + coord.x() + " y = " + coord.y());
+    System.out.println("backpackOffsetX = " + backpackOffsetX + " backpackOffsetY = " + backpackOffsetY);
+    System.out.println("backpacksWitdh = " + backpacksWitdh + " backpackHeight = " + backpackHeight);
+    System.out.println("cellWidth = " + cellWidth + "cellHeight" + cellHeight);
+    if(coord.x() < backpackOffsetX
+        || coord.x() > backpacksWitdh 
+        || coord.y() < backpackOffsetY
+        || coord.y() > backpackHeight
+    ) {
+      System.out.println("what");
+      return 1;
+    }
+    boolean findCell = false;
+    Coord coordCell = null;
+    for(int i = 0; i < yStuff; i++) {
+      for(int j = 0; j < xStuff; j++) {
+        if(backpackOffsetX + j*cellWidth < coord.x() 
+            && backpackOffsetX + (j+1)*cellWidth > coord.x()
+            && backpackOffsetY + i*cellHeight < coord.y() 
+            && backpackOffsetY + (i+1)*cellHeight > coord.y()) {
+          coordCell = new Coord(j, i);
+          findCell = true;
+        }
+        if(findCell) {
+          break;
+        }
+      }
+      if(findCell) {
+        break;
+      }
+    }
+    if(coordCell == null || !findCell) {
+      System.err.println("Error coord is in draw backpack but can't find cell appropriate for this coord, paramater may be the issue");
+      return 2;
+    }
+    System.out.println(coordCell + "");
+    
+    if(placeableItem(item, coordCell, rotation)) {
+      var itemInstance = createItemIntance(item, coordCell, rotation);
+      addItemInstanceToBackpack(itemInstance);
+    }
+    System.out.println(printItemGrid(stuff));
+    return 0;
+  }
+  
+  public String printItemGrid(ItemInstance[][] grid) {
+    var builder = new StringBuilder();
+    for(var i = 0; i < grid.length; i++) {
+      for(var j = 0; j < grid[i].length; j++) {
+        if (grid[i][j] != null) {
+          builder.append("[1]");
+        } else {
+          builder.append("[0]");
+        }
+      }
+      builder.append("\n");
+    }
+    return builder.toString();
   }
 }
