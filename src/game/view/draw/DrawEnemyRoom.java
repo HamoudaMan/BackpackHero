@@ -117,7 +117,8 @@ public class DrawEnemyRoom {
 		  	case ATTACK -> attackIcon;
 		  	case BLOCK -> blockIcon;
 		  	case HEAL -> healIcon;
-		  	default ->{ throw new IllegalArgumentException("icon or type not found ");}
+		  	case SUMMON -> summonIcon;
+		  	default ->{ throw new IllegalArgumentException("icon or type not found "+e.type());}
 		  };
 		  
 			g.drawImage(icon, iconX, iconY, iconW,iconW,  null);

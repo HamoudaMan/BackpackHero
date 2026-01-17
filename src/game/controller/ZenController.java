@@ -54,7 +54,7 @@ public class ZenController {
 	private final HallOfFameStorage hallOfFameStorage = new HallOfFameStorage();
 	private HallOfFame  hallOfFame;
 	
-	public void handleExit() {
+	private void handleExit() {
 		if(!floor.allEnemiesCleared(dungeonState)) {
 			IO.println("You must defat all enemies first ");
 			return;
@@ -69,6 +69,18 @@ public class ZenController {
 		posHero = floor.postionHero();
 		state = ZenGameState.FLOOR;
 		showMiniMap = false;
+	}
+	
+	private void saveGameScore() {
+		var stats = new GameStats(hero.stats().maxHealth(), hero.lvl(), hero.enemiesDefeated(), 0,floor.level());
+		var calculator = new ScoreCalculator();
+		var result = calculator.scoreCalculator(stats);
+		hallOfFame.add(result);
+		if(hallOfFameStorage.save(hallOfFame)) {
+			IO.println("score saved :"+ result.score()+"points" ); 
+		}else {
+			IO.println("couln not save ");
+		}
 	}
 	
 	
@@ -293,15 +305,7 @@ public class ZenController {
 							state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
 							if(hero.stats().isDead() ) {
 								IO.println("switch to gameover screen");
-								var stats = new GameStats(hero.stats().maxHealth(), hero.lvl(), hero.enemiesDefeated(), 0, hero.floorsCompleted());
-								var calculator = new ScoreCalculator();
-								var result = calculator.scoreCalculator(stats);
-								hallOfFame.add(result);
-								if(hallOfFameStorage.save(hallOfFame)) {
-									IO.println("score saved :"+ result.score()+"points" ); 
-								}else {
-									IO.println("couln not save ");
-								}
+								saveGameScore();
 								state = ZenGameState.GAMEOVER;
 							}
 							//combatController.manageEnemyTurn(floor, posHero,	 hero);
@@ -349,6 +353,11 @@ public class ZenController {
 					//showMiniMap = false;
 					//state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
 					combatController.manageEnemyTurn(floor, posHero,	 hero);
+					if(hero.stats().isDead()) {
+						IO.println("Hero dead during ennemy turnn");
+						saveGameScore();
+						state = ZenGameState.GAMEOVER;
+					}
 					//break;//on  bouge pas le hero et on va au prochain renderFrame 
 				}
 

@@ -142,7 +142,7 @@ public class CombatController {
 		return currentState;
 	}
 	
-  public void manageEnemyTurn(Floor floor, DCoord posHero, Hero hero) {
+  public ZenGameState manageEnemyTurn(Floor floor, DCoord posHero, Hero hero) {
     //enemy plays 
     if(phase == CombatPhase.ENEMYTURN && !enemyTurnExecuted) {
         var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
@@ -169,7 +169,7 @@ public class CombatController {
                 // Ici vous pourriez gérer le game over
                 phase = CombatPhase.END;
                 enemyTurnExecuted = true;
-                return;
+                return ZenGameState.GAMEOVER;
             }
             
             // enemy playes his turn so true 
@@ -188,6 +188,7 @@ public class CombatController {
             phase = CombatPhase.HEROTURN;
         }
     }
+    return ZenGameState.ENEMYROOM;
 }
 
 public CombatPhase getPhase() {

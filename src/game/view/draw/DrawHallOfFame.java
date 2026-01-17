@@ -23,7 +23,7 @@ public class DrawHallOfFame {
     g.setFont(new Font("Serif", Font.BOLD, 40));
     g.drawString("Hall of Fame", startX, y);
     //g.setColor(Color.MAGENTA);
-    g.setFont(new Font("Serif", Font.PLAIN, 25));
+    g.setFont(new Font("Serif", Font.BOLD, 25));
     y += 50;
     int place = 1;
     for (GameResult res : hallOfFame.results()) {
