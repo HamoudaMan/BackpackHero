@@ -228,7 +228,6 @@ public class ZenController {
 							 draggedItemIndex = -1;
 							 dragOffSetX = 0;
 							 dragOffSetY = 0;
-							 break;
 						 }
 						 
 						 break;
