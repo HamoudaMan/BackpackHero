@@ -209,9 +209,10 @@ public class ZenController {
 							 
 							 listItemOnScreen.add(droppedItem);
 							 
-							 var res = backpackData.CheckAndAddInBackpack(draggedItem.item(),
+							 var res = backpackData.CheckAndAddInBackpack(
+							     draggedItem.item(),
 							     StateRotation.Base,
-							     droppedItem.coord(), 
+							     droppedItem.coord(),
 							     backpack.getXOffset(screenWidth),
 							     backpack.getYOffset(screenHeight),
 							     backpack.getZoneWidth(screenWidth),
