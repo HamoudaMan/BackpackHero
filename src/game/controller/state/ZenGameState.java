@@ -9,5 +9,6 @@ public enum ZenGameState {
 	HEALERROOM,
 	EXITROOM,
 	GAMEOVER,
-	ENEMYLOOT//when the combat is finished and the loot is in the ground 
+	ENEMYLOOT,//when the combat is finished and the loot is in the ground 
+	CHOOSEITEM
 }
