@@ -29,6 +29,7 @@ public final class ImageLoader {
 		//menu 
 		load("bg_menu","/sprites/ui/menu_bg.png");
 		load("play_button","/sprites/ui/play_btn.png");
+		load("exit_button","/sprites/ui/exit_btn.png");
 		load("title","/sprites/ui/title.png");
 		//map
 		load("mapBtn","/sprites/ui/mapBtn.png");

@@ -37,6 +37,7 @@ import game.view.draw.DrawBackGround;
 import game.view.draw.DrawBackPack;
 import game.view.draw.DrawCombatBoutons;
 import game.view.draw.DrawEnemyRoom;
+import game.view.draw.DrawExitButton;
 import game.view.draw.DrawExitDoor;
 import game.view.draw.DrawFinishButton;
 import game.view.draw.DrawGameOver;
@@ -476,7 +477,7 @@ public class ZenController {
 														DrawGroundItem groundItems, DrawFinishButton finishButton,DrawTreasureRoom treasureRoom,
 														DrawHealerRoom healerRoom, HealerController healerController, DrawExitDoor exitRoom,
 														MiniMapController miniMapController, DrawMiniMapButton miniMapButton ,
-														DrawItemOnScreen drawItemOnScreen, DrawBackPack backpack) {
+														DrawItemOnScreen drawItemOnScreen, DrawBackPack backpack, DrawExitButton exitButton) {
 		mouseX = p.location().x();
 		mouseY = p.location().y();
 		
@@ -523,6 +524,11 @@ public class ZenController {
 			handlePointerFloor(p, miniMapButton, miniMapController);
 	
 		}
+		if(p.action() == PointerEvent.Action.POINTER_DOWN && exitButton.isClicked(mouseX, mouseY)) {
+			IO.println("Exiting game ...");
+			
+			System.exit(0);
+		}
 	}
 	/**
 	 * a methode to save the score of the game that has been played , 
@@ -551,7 +557,7 @@ public class ZenController {
 	 * @param miniMapButton
 	 * @param heroInDungeon
 	 */
-	private void renderUI(Graphics2D g, DrawBackGround bg, DrawMiniMap miniMap,DrawBackPack backpack,DrawMiniMapButton miniMapButton,DrawHero heroInDungeon) {
+	private void renderUI(Graphics2D g, DrawBackGround bg, DrawMiniMap miniMap,DrawBackPack backpack,DrawMiniMapButton miniMapButton,DrawHero heroInDungeon, DrawExitButton exitButton) {
 		bg.render(g, screenWidth, screenHeight, floor.level());
 		if(showMiniMap)
 			miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
@@ -560,6 +566,7 @@ public class ZenController {
 		}
 		miniMapButton.render(g, screenWidth);
 		heroInDungeon.render(g,hero, screenWidth, screenHeight);
+		exitButton.render(g, screenWidth, screenHeight);
 	}
 	
 
@@ -681,6 +688,7 @@ public class ZenController {
 			DCoord target = null;
 			
 			var menu = new DrawMenu();
+			var exitButton = new DrawExitButton();
 			var bg = new DrawBackGround();
 			var gameOverScreen = new DrawGameOver();
 			var backpack = new DrawBackPack();
@@ -711,90 +719,24 @@ public class ZenController {
 			
 			var drawItemOnScreen = new DrawItemOnScreen();
 			boolean[][] shape = {{true}, {true},{true}};
-      var weapon = new Weapon("Wooden Sword", 1, 0, 5, shape); 
-      //var OneitemOnSreen = new ItemOnScreen(weapon, new Coord(0, 0));
-     // listItemOnScreen.add(OneitemOnSreen);
-      //var backpackData = new BackPack(7, 5, 2, 1, 4, 3);
-			
-
-			
+      //var weapon = new Weapon("Wooden Sword", 1, 0, 5, shape); 
 			this.hero = new Hero("JOTARO KUJO");
 			while(true) {
 				var event = context.pollEvent();
 				switch(event) {//soint pointerEvent(souris) ou keyboardEvent(clavier) ou null rien 
 				case PointerEvent p ->{
-				//mouseX and Y are already in handlePointerEvent methode 
-					 //mouseX = p.location().x();
-					 //mouseY = p.location().y();
-					IO.println("Event: " + p.action() + " | State: " + state); 
+				//mouseX and Y are already in handlePointerEvent method
+					
+
 					 //handling all pointer events : 
-					handlePointerEvent(p,menu, gameOverScreen, combatController,groundItems, finishButton,treasureRoom, healerRoom, healerController,  exitRoom, miniMapController,  miniMapButton,drawItemOnScreen,  backpack);
+					handlePointerEvent(p,menu, gameOverScreen, combatController,groundItems, finishButton,treasureRoom, healerRoom, healerController,  exitRoom, miniMapController,  miniMapButton,drawItemOnScreen,  backpack, exitButton);
 					if(state == ZenGameState.MENU|| state == ZenGameState.GAMEOVER) {
 						continue;//do nothing and continue to the next frame 
 				
 					}
 
-					/*
-					 if(state == ZenGameState.ENEMYLOOT) {
-             if(p.action() == PointerEvent.Action.POINTER_DOWN) {
-               var index = drawItemOnScreen.findItemAt(mouseX, mouseY, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
-               if(index != -1) {
-                 //found an item
-                 draggedItemIndex = index;
-                 draggedItem = listItemOnScreen.get(index);
-                 dragOffSetX = mouseX - draggedItem.coord().x();
-                 dragOffSetY = mouseY - draggedItem.coord().y();
-                 //remove the itme from the list when dragging 
-                 listItemOnScreen.remove(index);
-                 IO.println("Start du dragging of item at index " + index);
-                 
-               }
-               break;
-             }
-             
-             if(p.action() == PointerEvent.Action.POINTER_UP && draggedItem != null) {
-               // Drop de l'item
-               int newX = mouseX - dragOffSetX;
-               int newY = mouseY - dragOffSetY;
-               if(newX < 0) {
-                 newX = 0;
-               }
-               if(newY < 0) {
-                 newY = 0;
-               }
-               //create new item with the new postion
-               ItemOnScreen droppedItem = new ItemOnScreen(draggedItem.item(), new Coord(newX, newY));
-               
-               listItemOnScreen.add(droppedItem);
-               
-               var res = backpackData.CheckAndAddInBackpack(
-                   draggedItem.item(),
-                   StateRotation.Base,
-                   droppedItem.coord(),
-                   backpack.getXOffset(screenWidth),
-                   backpack.getYOffset(screenHeight),
-                   backpack.getZoneWidth(screenWidth),
-                   backpack.getZoneHeight(screenHeight),
-                   backpack.getCellWidth(backpackData, screenWidth),
-                   backpack.getCellHeight(backpackData, screenHeight)
-               );
-               System.out.println("RES = " + res);
-               System.out.println("Dropped item at (" + newX + ", " + newY + ")");
-               
-               // Reset  drag state
-               draggedItem = null;
-               draggedItemIndex = -1;
-               dragOffSetX = 0;
-               dragOffSetY = 0;
-             }
-            
-           }
-					 */
-
-					
-
 				}
-				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
+				case KeyboardEvent e ->{           context.dispose(); System.exit(0);}
 				case null ->{}
 				
 				
@@ -856,7 +798,7 @@ public class ZenController {
 													    }
 												         
 													   //render background , backback, hero 
-														renderUI(g, bg, miniMap, backpack,miniMapButton, heroInDungeon);
+														renderUI(g, bg, miniMap, backpack,miniMapButton, heroInDungeon, exitButton);
 														switch(state) {
 														case FLOOR ->{}
 														/*

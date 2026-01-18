@@ -10,7 +10,7 @@ import java.util.Objects;
  * Stores and loads the score in file halloffame.txt  
  */
 public final class HallOfFameStorage {
-	private static final Path PATH_FILE = Path.of("halloffame.txt");
+	private static final Path PATH_FILE = Path.of(System.getProperty("user.dir"),"halloffame.txt");
 	private static final String SEPARATOR = ";";
 	
 	
