@@ -11,7 +11,6 @@ import game.model.item.Weapon;
 public  class SpriteKeyFinder {
 	
 	public static String spriteKey(Item item) {
-		IO.println(item.toString());
 		return switch(item) {
 		case Weapon w -> switch(w.name()) {
 																				case "Wooden Sword" ->"woodenSword";

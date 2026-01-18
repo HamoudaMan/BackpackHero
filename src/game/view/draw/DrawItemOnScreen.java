@@ -36,7 +36,6 @@ public class DrawItemOnScreen {
     var sprite = ImageLoader.getLoadedImage(spriteKey);
     g.drawImage(sprite, mouseX , mouseY, cellWidth * itemOnScreen.item().shape()[0].length, cellHeight * itemOnScreen.item().shape().length, null);
     g.drawRect(mouseX, mouseY, cellWidth * itemOnScreen.item().shape()[0].length, cellHeight * itemOnScreen.item().shape().length);
-    System.out.println(mouseX + " " + mouseY + " " + cellWidth * itemOnScreen.item().shape()[0].length + " " + cellHeight * itemOnScreen.item().shape().length);
     //    g.drawImage(sprite, mouseX , mouseY, 100, 300, null);
     
   }

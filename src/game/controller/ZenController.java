@@ -3,6 +3,7 @@ package game.controller;
 
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
@@ -10,6 +11,7 @@ import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
 
 import game.controller.state.ZenGameState;
+import game.model.backpack.BackPack;
 import game.model.dungeon.DCoord;
 import game.model.dungeon.Dungeon;
 import game.model.dungeon.Floor;
@@ -23,11 +25,29 @@ import game.model.hallOfFame.HallOfFameStorage;
 import game.model.hallOfFame.ScoreCalculator;
 import game.model.hero.Hero;
 import game.model.item.Item;
+import game.model.item.ItemOnScreen;
 import game.model.item.Weapon;
+import game.model.representation.Coord;
+import game.model.representation.StateRotation;
 import game.view.Window;
-
-import game.view.draw.*;
-
+import game.view.draw.DrawBackGround;
+import game.view.draw.DrawBackPack;
+import game.view.draw.DrawCombatBoutons;
+import game.view.draw.DrawEnemyRoom;
+import game.view.draw.DrawExitDoor;
+import game.view.draw.DrawFinishButton;
+import game.view.draw.DrawGameOver;
+import game.view.draw.DrawGroundItem;
+import game.view.draw.DrawHealerRoom;
+import game.view.draw.DrawHero;
+import game.view.draw.DrawItemDescription;
+import game.view.draw.DrawItemOnScreen;
+import game.view.draw.DrawMenu;
+import game.view.draw.DrawMerchantRoom;
+import game.view.draw.DrawMiniMap;
+import game.view.draw.DrawMiniMapButton;
+import game.view.draw.DrawTreasureRoom;
+import game.view.draw.GroundItemHitBox;
 import game.view.loader.ImageLoader;
 import game.view.stats.DrawItemInfo;
 
@@ -49,7 +69,13 @@ public class ZenController {
 	private final DungeonState dungeonState = new DungeonState();
 	private  Item hoveredItem = null;
 	private GroundItemHitBox hoveredGroundItem;
+	private ArrayList<ItemOnScreen> listItemOnScreen = new ArrayList<>();
 	private int mouseX, mouseY;
+	
+	private ItemOnScreen draggedItem = null;//the item taht we drag 
+  private int draggedItemIndex = -1;
+  private int dragOffSetX = 0;// where we clcik on the item 
+  private int dragOffSetY = 0;// where we clcik on the item 
 	
 	private final HallOfFameStorage hallOfFameStorage = new HallOfFameStorage();
 	private HallOfFame  hallOfFame;
@@ -137,6 +163,13 @@ public class ZenController {
 			
 			var exitRoom = new DrawExitDoor();
 			
+			var drawItemOnScreen = new DrawItemOnScreen();
+			boolean[][] shape = {{true}, {true},{true}};
+      var weapon = new Weapon("Wooden Sword", 1, 0, 5, shape); 
+      var OneitemOnSreen = new ItemOnScreen(weapon, new Coord(0, 0));
+      listItemOnScreen.add(OneitemOnSreen);
+      var backpackData = new BackPack(7, 5, 2, 1, 4, 3);
+			
 		  //List<EnemyI> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
 			
 			//var mouseX = -1;
@@ -165,16 +198,69 @@ public class ZenController {
 							 IO.println("Floor retrieved: " + floor);
 							 posHero = floor.postionHero();
 							 IO.println("Hero position: " + posHero);
-							 state = ZenGameState.FLOOR;
+//							 state = ZenGameState.FLOOR;
+							 state = ZenGameState.CHOOSEITEM;
 							 System.out.println("Dungeon OK");
-				        System.out.println("Floor = " + floor);
-				        System.out.println("Hero start = " + posHero);
-				        //continue;
+				       System.out.println("Floor = " + floor);
+				       System.out.println("Hero start = " + posHero);
+				       //continue;
 						 }
 						 break;
 						 
 					 }
-				
+					
+					 if(state == ZenGameState.CHOOSEITEM) {
+             if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+               var index = drawItemOnScreen.findItemAt(mouseX, mouseY, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
+               if(index != -1) {
+                 //found an item
+                 draggedItemIndex = index;
+                 draggedItem = listItemOnScreen.get(index);
+                 dragOffSetX = mouseX - draggedItem.coord().x();
+                 dragOffSetY = mouseY - draggedItem.coord().y();
+                 //remove the itme from the list when dragging 
+                 listItemOnScreen.remove(index);
+                 IO.println("Start du dragging of item at index " + index);
+                 
+               }
+               break;
+             }
+             if(p.action() == PointerEvent.Action.POINTER_UP && draggedItem != null) {
+               // Drop de l'item
+               int newX = mouseX - dragOffSetX;
+               int newY = mouseY - dragOffSetY;
+               if(newX < 0) {
+                 newX = 0;
+               }
+               if(newY < 0) {
+                 newY = 0;
+               }
+               //create new item with the new postion
+               ItemOnScreen droppedItem = new ItemOnScreen(draggedItem.item(), new Coord(newX, newY));
+               
+               listItemOnScreen.add(droppedItem);
+               
+               var res = backpackData.CheckAndAddInBackpack(
+                   draggedItem.item(),
+                   StateRotation.Base,
+                   droppedItem.coord(),
+                   backpack.getXOffset(screenWidth),
+                   backpack.getYOffset(screenHeight),
+                   backpack.getZoneWidth(screenWidth),
+                   backpack.getZoneHeight(screenHeight),
+                   backpack.getCellWidth(backpackData, screenWidth),
+                   backpack.getCellHeight(backpackData, screenHeight)
+               );
+               System.out.println("RES = " + res);
+               System.out.println("Dropped item at (" + newX + ", " + newY + ")");
+               
+               // Reset  drag state
+               draggedItem = null;
+               draggedItemIndex = -1;
+               dragOffSetX = 0;
+               dragOffSetY = 0;
+             }
+           }
 					 
            if(state == ZenGameState.MENU) {
           	 IO.println("Still in menu, breaking");
@@ -437,6 +523,20 @@ public class ZenController {
 													//heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
 													switch(state) {
 														case FLOOR ->{}
+														case CHOOSEITEM -> {
+	                            // draw all item except the on beeing dragged 
+	                              drawItemOnScreen.render(g, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
+	                              if(draggedItem != null) {
+                                  int drawX = mouseX - dragOffSetX;
+                                  int drawY = mouseY - dragOffSetY;
+                                  //to not have the exception when the coord is negative 
+                                  drawX = Math.max(0, drawX);
+                                  drawY = Math.max(0,drawY);
+                                  
+                                  ItemOnScreen tempItem = new ItemOnScreen(draggedItem.item(), new Coord(drawX, drawY));
+                                  drawItemOnScreen.renderOneItem(g, drawX, drawY, screenWidth, screenHeight, tempItem, hero.backPack(), backpack);
+                                }
+														}
 														case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
 														case TREASUREROOM -> {
 																									TreasureState ts = dungeonState.treasureState(posHero);
