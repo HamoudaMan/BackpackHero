@@ -177,7 +177,6 @@ public class ZenController {
 						 }
 						 break;
 					 }
-					 //////////////////////////
 					 if(state == ZenGameState.CHOOSEITEM) {
 						 if(p.action() == PointerEvent.Action.POINTER_DOWN) {
 							 var index = drawItemOnScreen.findItemAt(mouseX, mouseY, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
@@ -247,30 +246,6 @@ public class ZenController {
 					   if(miniMapButton.isClicked(mouseX, mouseY)) {
 					     showMiniMap = !showMiniMap;
 					     break;
-					   }
-					   
-					   if(state == ZenGameState.TREASUREROOM) {
-					     TreasureState ts = dungeonState.treasureState(posHero);
-					     if(hoveredGroundItem !=null) {
-					       hoveredItem = hoveredGroundItem.item();
-					       break;
-					     }
-					     if(treasureRoom.isClicked(mouseX, mouseY)) {//tresure is clicked
-					       if(!ts.isOpened()) {
-					         //loot = generateTreasureLoot();
-					         List<Item> loot = List.of(
-					            new Weapon("Wooden Sword", 1, 0, 7, new boolean[][] {{true, true}})
-					           // new MagicWand(),
-					            //new WoodenSword()
-					         ); 
-					         ts.open(loot);
-					         showMiniMap = false;
-					       }
-					       break;
-					     }
-					     hoveredItem = null;
-					     hoveredGroundItem = null;
-							
 					   }
 					   if(state == ZenGameState.HEALERROOM) {
 					     HealerState hs = dungeonState.healerState(posHero);
