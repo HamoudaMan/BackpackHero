@@ -73,6 +73,13 @@ public class Enemy {
 			throw new IllegalArgumentException("damage must be positive");
 		}
 		var effectiveDamage = Math.max(0, damage - protection);
+		if( protection - damage >=0) {
+			protection = protection - damage;
+			effectiveDamage = 0;
+		}else {
+			effectiveDamage = damage - protection;
+			protection = 0;
+		}
 		currentHealth = Math.max(0, currentHealth-effectiveDamage);
 		
 	}

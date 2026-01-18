@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import game.model.backpack.BackPack;
 import game.view.loader.ImageLoader;
+import game.view.loader.SpriteKeyFinder;
 
 
 
@@ -79,15 +80,14 @@ public class DrawBackPack {
     var zoneWidth = calculateZoneWidth(screenWidth);
     var zoneHeight = calculateZoneHeight(screenHeight);
     
-    g.drawImage(backPack, zoneX, zoneY, zoneWidth, zoneHeight, null);//afficher l'image 
+    g.drawImage(backPack, zoneX, zoneY, zoneWidth, zoneHeight, null); 
     
-    //calcul des cases de la grille;
     var cellWidth =  calculateCellWidth(backpack, screenWidth);
     var cellHeight = calculateCellHeight(backpack, screenHeight);
     
     var unlocked = backpack.getUnlocked();
     
-    //dessin de la grile row*col
+    //ddraw the grid
     for(var row = 0; row < backpack.getMaxY(); row++) {
       for(var col = 0; col < backpack.getMaxX(); col++) {
         var x = zoneX + col * cellWidth;
@@ -100,6 +100,25 @@ public class DrawBackPack {
         }
       }
     } 
-    //aficher les items 
+    //draw items 
+    for(var r = 0; r < backpack.getMaxY(); r++) {
+    	for(var c = 0; c < backpack.getMaxX(); c++) {
+    		var item = backpack.getStuff()[r][c];
+    		if(item == null) {
+    			continue;
+    		}
+    		var spriteKey = SpriteKeyFinder.spriteKey(item.item());
+    		var sprite = ImageLoader.getLoadedImage(spriteKey);
+    		var x = zoneX + c*cellWidth;
+    		var y = zoneY + c*cellHeight;
+    		var space = 4;
+    		var drawX = x +space;
+    		var drawY = y +space;
+    		var drawH = cellHeight -2*space;
+    		var drawW = cellWidth -2*space;
+    		
+    		g.drawImage(sprite, drawX, drawY, drawW, drawH, null);
+    	}
+    }
   }
 }

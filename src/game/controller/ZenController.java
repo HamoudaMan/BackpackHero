@@ -10,6 +10,7 @@ import java.util.Queue;
 
 import com.github.forax.zen.KeyboardEvent;
 import com.github.forax.zen.PointerEvent;
+import com.github.forax.zen.PointerEvent.Action;
 
 import game.controller.state.ZenGameState;
 import game.model.backpack.BackPack;
@@ -26,6 +27,7 @@ import game.model.hallOfFame.HallOfFameStorage;
 import game.model.hallOfFame.ScoreCalculator;
 import game.model.hero.Hero;
 import game.model.item.Item;
+import game.model.item.ItemInstance;
 import game.model.item.ItemOnScreen;
 import game.model.item.Weapon;
 import game.model.representation.Coord;
@@ -82,6 +84,9 @@ public class ZenController {
 	
 	private final HallOfFameStorage hallOfFameStorage = new HallOfFameStorage();
 	private HallOfFame  hallOfFame;
+	
+	private ItemInstance draggedBackPackItem = null;
+	private Coord draggedItemOriginalCoord = null;
 	
 	private void handleExit() {
 		if(!floor.allEnemiesCleared(dungeonState)) {
@@ -147,6 +152,7 @@ public class ZenController {
 					eState.finishItemsSelection()	;
 					hoveredItem = null;
 					hoveredGroundItem = null;
+					//listItemOnScreen.clear();//
 					state = ZenGameState.FLOOR;
 			}
 		}
@@ -311,6 +317,132 @@ public class ZenController {
 		}
 	}
 	/**
+	 * handles drag and drop in EnemyLoot state 
+	 * @param p
+	 * @param drawItemOnScreen
+	 * @param backpack
+	 * @param backpackData
+	 */
+	private void handleDragEnemyLoot(PointerEvent p, DrawItemOnScreen drawItemOnScreen, DrawBackPack backpack, BackPack backpackData) {
+		 IO.println("handleDragEnemyLoot called - State: " + state);
+		if(state == ZenGameState.ENEMYLOOT) {
+			IO.println("In ENEMYLOOT state, action: " + p.action());
+       if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+      	 IO.println("POINTER_DOWN in ENEMYLOOT, listItemOnScreen size: " + listItemOnScreen.size());  
+         var index = drawItemOnScreen.findItemAt(mouseX, mouseY, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
+         if(index != -1) {
+        	
+           //found an item
+           draggedItemIndex = index;
+           draggedItem = listItemOnScreen.get(index);
+           dragOffSetX = mouseX - draggedItem.coord().x();
+           dragOffSetY = mouseY - draggedItem.coord().y();
+           //remove the itme from the list when dragging 
+           listItemOnScreen.remove(index);
+           IO.println("Start du dragging of item at index " + index);
+           
+         }
+        
+       }
+       
+       if(p.action() == PointerEvent.Action.POINTER_UP && draggedItem != null) {
+         // Drop de l'item
+         int dropX = Math.max(0, mouseX - dragOffSetX);
+         int dropY = Math.max(0, mouseY - dragOffSetY);
+       
+         //create new item with the new postion
+         ItemOnScreen droppedItem = new ItemOnScreen(draggedItem.item(), new Coord(dropX, dropY));
+         
+         listItemOnScreen.add(droppedItem);
+         
+         var res = hero.backPack().CheckAndAddInBackpack(
+             draggedItem.item(),
+             StateRotation.Base,
+             droppedItem.coord(),
+             backpack.getXOffset(screenWidth),
+             backpack.getYOffset(screenHeight),
+             backpack.getZoneWidth(screenWidth),
+             backpack.getZoneHeight(screenHeight),
+             backpack.getCellWidth(backpackData, screenWidth),
+             backpack.getCellHeight(backpackData, screenHeight)
+         );
+         System.out.println("RES = " + res);
+         if(res == 0) {
+        	 IO.println("item addded to backpack");
+         }else {
+        	 listItemOnScreen.add(droppedItem);
+        	 IO.println("fail to add item on back pack , return to ground ");
+         }
+         System.out.println("Dropped item at (" + dropX + ", " + dropY + ")");
+     
+         
+         // Reset  drag state
+         draggedItem = null;
+        // draggedItemIndex = -1;
+        // dragOffSetX = 0;
+         //dragOffSetY = 0;
+       }
+      
+     }
+	}
+	
+	/**
+	 * find back pack cell 
+	 * @param drawBackPack
+	 * @return
+	 */
+	private Coord findBackPackCell(DrawBackPack drawBackPack) {
+		BackPack backpack = hero.backPack();
+		var offX = drawBackPack.getXOffset(screenWidth);
+		var offY = drawBackPack.getYOffset(screenHeight);
+		var cellW = drawBackPack.getCellWidth(backpack, screenWidth);
+		var cellH = drawBackPack.getCellHeight(backpack, screenHeight);
+		
+		for(var r = 0; r< backpack.getMaxX(); r++) {
+			for(var c = 0; c< backpack.getMaxY(); c++) {
+				var x = offX + c*cellW;
+				var y = offY + c*cellH;
+				if(mouseX >= x && mouseX < x+ cellW && mouseY >= y && mouseY < y+cellH) {
+					return new Coord(c, r);
+				}
+			}
+		}
+		return null;
+	}
+	/**
+	 * a method to handle the drag and drop of the backpack 
+	 * @param p
+	 * @param drawBackPack
+	 */
+	private void handleBackPackDrag(PointerEvent p, DrawBackPack drawBackPack) {
+		BackPack backpack = hero.backPack();
+		if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+			Coord cell = findBackPackCell(drawBackPack);
+			if(cell != null) {
+				ItemInstance item = backpack.getStuff()[cell.y()][cell.x()];
+				if(item != null) {
+					draggedBackPackItem = item;
+					draggedItemOriginalCoord = item.coord().get(0);
+					backpack.removeInstanceFromBackpack(cell);
+				}
+			}
+		}
+		if(p.action() == Action.POINTER_UP && draggedBackPackItem != null) {
+			Coord drop = findBackPackCell(drawBackPack);
+			boolean ok = false;
+			//try to move 
+			if(drop!=null&& backpack.placeableItem(draggedBackPackItem.item(), drop, draggedBackPackItem.rotation())) {
+				ok = true;
+			}
+			//not ok put the item at it's original place 
+			if(!ok) {
+				backpack.addItemInstanceToBackpack(backpack.createItemIntance(draggedBackPackItem.item(),draggedItemOriginalCoord , draggedBackPackItem.rotation()));
+			}
+			draggedBackPackItem = null;
+			draggedItemOriginalCoord = null;
+		}
+	}
+	/**
 	 * updates the current hovered item 
 	 * @param groundItems
 	 */
@@ -343,7 +475,8 @@ public class ZenController {
 	private void handlePointerEvent(PointerEvent p,DrawMenu menu, DrawGameOver gameOverScreen, CombatController combatController,
 														DrawGroundItem groundItems, DrawFinishButton finishButton,DrawTreasureRoom treasureRoom,
 														DrawHealerRoom healerRoom, HealerController healerController, DrawExitDoor exitRoom,
-														MiniMapController miniMapController, DrawMiniMapButton miniMapButton) {
+														MiniMapController miniMapController, DrawMiniMapButton miniMapButton ,
+														DrawItemOnScreen drawItemOnScreen, DrawBackPack backpack) {
 		mouseX = p.location().x();
 		mouseY = p.location().y();
 		
@@ -357,6 +490,9 @@ public class ZenController {
     	handlePointerGameOver(p, gameOverScreen);
       return;
 		}
+    if(!showMiniMap) {
+    	handleBackPackDrag(p, backpack);
+    }
    				
 		if( state == ZenGameState.ENEMYROOM ) {
 			handlePointerEnemyRoom(p, combatController );
@@ -365,6 +501,7 @@ public class ZenController {
 						
  		if(state == ZenGameState.ENEMYLOOT) {
 			handlePointerEnemyLoot(p,groundItems, finishButton);
+			handleDragEnemyLoot(p, drawItemOnScreen, backpack, hero.backPack());
 			return;
 		}
  		//no return beacause here we can directrly click on minimap if we want to leave
@@ -476,23 +613,56 @@ public class ZenController {
 	
 	/**
 	 * a methode to render the EnemyLoot
+	 * empty enemyRoom 
+	 * loot on the ground 
 	 * @param g
 	 * @param enemiesRoom
 	 * @param groundItems
 	 * @param itemDescription
 	 * @param finishButton
 	 */
-	private void renderEnemyLoot(Graphics2D g, DrawEnemyRoom enemiesRoom,DrawGroundItem groundItems, DrawItemDescription itemDescription, DrawFinishButton finishButton) {
+	private void renderEnemyLoot(Graphics2D g, DrawEnemyRoom enemiesRoom,DrawGroundItem groundItems, DrawItemDescription itemDescription,DrawItemOnScreen drawItemOnScreen, DrawBackPack drawBackpack, DrawFinishButton finishButton) {
 		var eState = dungeonState.enemyState(posHero);
+		
+		//var eState = dungeonState.enemyState(posHero);
+		if(listItemOnScreen.isEmpty() && !eState.items().isEmpty()) {
+		  IO.println("Converting " + eState.items().size() + " items to ItemOnScreen");
+      List<Item>loot = eState.items();
+      var startX = screenWidth/2 -(loot.size()*150)/2;
+      var startY = screenHeight/2 +100;
+      for (var i = 0; i< loot.size(); i++) {
+      	Item item = loot.get(i);
+      	var x = startX + i *150;
+      	var y =  startY;
+      	
+      	ItemOnScreen itemOnScreen = new ItemOnScreen(item, new Coord(x, y));
+      	listItemOnScreen.add(itemOnScreen);
+      }
+      }
+		
 		//render the enemy room empty 
 		enemiesRoom.render(g, List.of(), screenWidth, screenHeight);
 		//render ground items
-		groundItems.render(g, screenWidth, screenHeight, eState.items());
+
 		if(hoveredItem !=null && hoveredGroundItem !=null) {
-		itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
-		hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
-		//hoveredGroundItem = null;
-	}
+			itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
+			hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+			//hoveredGroundItem = null;
+		}
+		
+		// draw all item except the on beeing dragged 
+    drawItemOnScreen.render(g, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), drawBackpack);
+    if(draggedItem != null) {//item beeing dragged 
+      int drawX = mouseX - dragOffSetX;
+      int drawY = mouseY - dragOffSetY;
+      //to not have the exception when the coord is negative 
+      drawX = Math.max(0, drawX);
+      drawY = Math.max(0,drawY);
+      
+      ItemOnScreen tempItem = new ItemOnScreen(draggedItem.item(), new Coord(drawX, drawY));
+      drawItemOnScreen.renderOneItem(g, drawX, drawY, screenWidth, screenHeight, draggedItem, hero.backPack(), drawBackpack);
+    }
+    //finish looting button 
 		finishButton.render(g, screenWidth, screenHeight);
 }
 	
@@ -544,7 +714,7 @@ public class ZenController {
       var weapon = new Weapon("Wooden Sword", 1, 0, 5, shape); 
       //var OneitemOnSreen = new ItemOnScreen(weapon, new Coord(0, 0));
      // listItemOnScreen.add(OneitemOnSreen);
-      var backpackData = new BackPack(7, 5, 2, 1, 4, 3);
+      //var backpackData = new BackPack(7, 5, 2, 1, 4, 3);
 			
 
 			
@@ -558,7 +728,7 @@ public class ZenController {
 					 //mouseY = p.location().y();
 					IO.println("Event: " + p.action() + " | State: " + state); 
 					 //handling all pointer events : 
-					handlePointerEvent(p,menu, gameOverScreen, combatController,groundItems, finishButton,treasureRoom, healerRoom, healerController,  exitRoom, miniMapController,  miniMapButton);
+					handlePointerEvent(p,menu, gameOverScreen, combatController,groundItems, finishButton,treasureRoom, healerRoom, healerController,  exitRoom, miniMapController,  miniMapButton,drawItemOnScreen,  backpack);
 					if(state == ZenGameState.MENU|| state == ZenGameState.GAMEOVER) {
 						continue;//do nothing and continue to the next frame 
 				
@@ -707,7 +877,7 @@ public class ZenController {
 														case MERCHANTROOM -> {  /*merchanRoom.render(g, screenWidth, screenHeight)*/;}
 														case TREASUREROOM -> renderTreasurRoom(g,treasureRoom, groundItems, itemDescription) ;
 														case ENEMYROOM -> renderEnemyRoom( g,enemiesRoom,  combatBoutons);
-													   case ENEMYLOOT -> renderEnemyLoot( g,  enemiesRoom, groundItems,  itemDescription, finishButton) ;
+													   case ENEMYLOOT -> renderEnemyLoot( g,  enemiesRoom, groundItems,  itemDescription,drawItemOnScreen, backpack,finishButton) ;
 														case HEALERROOM -> renderHealerRoom(g,  healerRoom);
 														case EXITROOM -> {exitRoom.render(g, screenWidth, screenHeight);}
 														case MENU -> {} 
