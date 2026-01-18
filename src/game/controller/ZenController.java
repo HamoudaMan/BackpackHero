@@ -2,6 +2,7 @@ package game.controller;
 
 
 
+import java.awt.Graphics2D;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -307,8 +308,6 @@ public class ZenController {
 				handleExit();//state == FLOOR in handleExit()
 			
 			}
-				
-		
 		}
 	}
 	/**
@@ -388,7 +387,10 @@ public class ZenController {
 	
 		}
 	}
-	
+	/**
+	 * a methode to save the score of the game that has been played , 
+	 * will be called inside the game loop after herod death
+	 */
 	private void saveGameScore() {
 		var stats = new GameStats(hero.stats().maxHealth(), hero.lvl(), hero.enemiesDefeated(), 0,floor.level());
 		var calculator = new ScoreCalculator();
@@ -401,6 +403,98 @@ public class ZenController {
 		}
 	}
 	
+	
+	/////////RENDER METHODS
+	/**
+	 * a metheod to render all UI 
+	 * @param g
+	 * @param bg
+	 * @param miniMap
+	 * @param backpack
+	 * @param miniMapButton
+	 * @param heroInDungeon
+	 */
+	private void renderUI(Graphics2D g, DrawBackGround bg, DrawMiniMap miniMap,DrawBackPack backpack,DrawMiniMapButton miniMapButton,DrawHero heroInDungeon) {
+		bg.render(g, screenWidth, screenHeight, floor.level());
+		if(showMiniMap)
+			miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
+		else {
+			backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
+		}
+		miniMapButton.render(g, screenWidth);
+		heroInDungeon.render(g,hero, screenWidth, screenHeight);
+	}
+	
+
+	/**
+	 * a metheod to render the treasure room 
+	 * @param g
+	 * @param treasureRoom
+	 * @param groundItems
+	 * @param itemDescription
+	 */
+	private void renderTreasurRoom(Graphics2D g, DrawTreasureRoom treasureRoom, DrawGroundItem groundItems, DrawItemDescription itemDescription) {
+		TreasureState ts = dungeonState.treasureState(posHero);
+		treasureRoom.render(g, screenWidth, screenHeight, ts);
+		if(ts.isOpened()) {
+			groundItems.render(g, screenWidth, screenHeight, ts.loot());
+		}
+		if(hoveredItem !=null && hoveredGroundItem !=null) {
+			itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
+		
+		}
+	}
+	/**
+	 * a methode to render the enemyRoom
+	 * @param g
+	 * @param enemiesRoom
+	 * @param combatButtons
+	 */
+	private void renderEnemyRoom(Graphics2D g, DrawEnemyRoom enemiesRoom, DrawCombatBoutons combatButtons) {
+		showMiniMap = false;
+		var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
+		if(enemies.isEmpty()) {// pour ne pas reactiver le combat sur une salle ennemi deja traversée
+			state = ZenGameState.FLOOR;
+		}
+		enemiesRoom.render(g, enemies, screenWidth, screenHeight); 
+		combatButtons.render(g, screenWidth, screenHeight, 7, 5);
+    if(hero.energy().energy() == 0) {
+    	
+      enemiesRoom.renderLowEnergy(g); 
+    }
+	}
+	
+	private void renderHealerRoom(Graphics2D g, DrawHealerRoom healerRoom) {
+		HealerState hs = dungeonState.healerState(posHero);
+		if(!hs.isUsed()) {
+			healerRoom.render(g, screenWidth, screenHeight);
+		}else if(hs.isUsed()){
+			healerRoom.renderUsed(g, screenWidth, screenHeight);
+		}
+		
+	}
+	
+	/**
+	 * a methode to render the EnemyLoot
+	 * @param g
+	 * @param enemiesRoom
+	 * @param groundItems
+	 * @param itemDescription
+	 * @param finishButton
+	 */
+	private void renderEnemyLoot(Graphics2D g, DrawEnemyRoom enemiesRoom,DrawGroundItem groundItems, DrawItemDescription itemDescription, DrawFinishButton finishButton) {
+		var eState = dungeonState.enemyState(posHero);
+		//render the enemy room empty 
+		enemiesRoom.render(g, List.of(), screenWidth, screenHeight);
+		//render ground items
+		groundItems.render(g, screenWidth, screenHeight, eState.items());
+		if(hoveredItem !=null && hoveredGroundItem !=null) {
+		itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
+		hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+		//hoveredGroundItem = null;
+	}
+		finishButton.render(g, screenWidth, screenHeight);
+}
 	
 	public void start() {
 		System.out.println("loading in progress .. ");
@@ -535,31 +629,18 @@ public class ZenController {
 				
 				
 				}
-		    if(state == ZenGameState.MENU) {
-	        context.renderFrame(g-> {
-	            menu.render(g, screenWidth, screenHeight, hallOfFame);
-	        });
-	        continue; 
-		    }
-		    
-		    if(state == ZenGameState.GAMEOVER) {
-	        context.renderFrame(g-> {
-	            gameOverScreen.render(g, screenWidth, screenHeight);
-	        });
-	        continue; 
-		    }
+	
+				//update game : for the EnemyTurn, the detection of changing Rooms and  the hero movment and animation 
 				if( state == ZenGameState.ENEMYROOM ) {
-					//showMiniMap = false;
-					//state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
+					
 					combatController.manageEnemyTurn(floor, posHero,	 hero);
 					if(hero.stats().isDead()) {
 						IO.println("Hero dead during ennemy turnn");
 						saveGameScore();
 						state = ZenGameState.GAMEOVER;
 					}
-					//break;//on  bouge pas le hero et on va au prochain renderFrame 
+					
 				}
-
 
 				//animation moving hero from cell to cell
 				boolean arrived  = false;
@@ -592,25 +673,21 @@ public class ZenController {
 			  
 			  //for ENEMYLOOT and TREASUREROOM
 			  updateHoverItem(groundItems);
+			  
 				context.renderFrame(g-> { 
-													/*if(state == ZenGameState.MENU) {
-															menu.render(g, screenWidth, screenHeight);
-															return;
-													}*/
-														bg.render(g, screenWidth, screenHeight, floor.level());
-																	
-																//itemInfoBox.render(g, screenWidth, screenHeight);
-													if(showMiniMap)
-														miniMap.render(g, floor, this.posHero, screenWidth, screenHeight);
-													else {
-														backpack.render(g, hero.backPack(), screenWidth, screenHeight) ;
-													}
-													miniMapButton.render(g, screenWidth);
-													heroInDungeon.render(g,hero, screenWidth, screenHeight);
-													
-													
-													//heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
-													switch(state) {
+													   if(state == ZenGameState.MENU) {
+												        menu.render(g, screenWidth, screenHeight, hallOfFame);
+												        return;
+													   }
+													   if(state == ZenGameState.GAMEOVER) {
+												        gameOverScreen.render(g, screenWidth, screenHeight);
+												        return;
+												     
+													    }
+												         
+													   //render background , backback, hero 
+														renderUI(g, bg, miniMap, backpack,miniMapButton, heroInDungeon);
+														switch(state) {
 														case FLOOR ->{}
 														/*
 														case CHOOSEITEM -> {
@@ -627,55 +704,13 @@ public class ZenController {
                                   drawItemOnScreen.renderOneItem(g, drawX, drawY, screenWidth, screenHeight, tempItem, hero.backPack(), backpack);
                                 }
 														}*/
-														case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
-														case TREASUREROOM -> {
-																									TreasureState ts = dungeonState.treasureState(posHero);
-																									treasureRoom.render(g, screenWidth, screenHeight, ts);
-																									if(ts.isOpened()) {
-																										groundItems.render(g, screenWidth, screenHeight, ts.loot());
-																									}
-																									if(hoveredItem !=null && hoveredGroundItem !=null) {
-																										itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
-																										hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
-																										//hoveredGroundItem = null;
-																									}
-																									}
-														case ENEMYROOM -> {showMiniMap = false;
-																								var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
-																								if(enemies.isEmpty()) {// pour ne pas reactiver le combat sur une salle ennemi deja traversée
-																									state = ZenGameState.FLOOR;
-																								}
-																								enemiesRoom.render(g, enemies, screenWidth, screenHeight); 
-																								combatBoutons.render(g, screenWidth, screenHeight, 7, 5);
-																		            if(hero.energy().energy() == 0) {
-																		            	
-																	                enemiesRoom.renderLowEnergy(g); 
-																	            }
-
-																								
-																							}
-													   case ENEMYLOOT ->{
-				  	 										var eState = dungeonState.enemyState(posHero);
-				  	 										//render the enemy room empty 
-				  	 										enemiesRoom.render(g, List.of(), screenWidth, screenHeight);
-				  	 										//render ground items
-				  	 										groundItems.render(g, screenWidth, screenHeight, eState.items());
-				  	 										if(hoveredItem !=null && hoveredGroundItem !=null) {
-																	itemDescription.render(g, hoveredGroundItem.x(), hoveredGroundItem.y(), hoveredItem,screenWidth, screenHeight);
-																	hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
-																	//hoveredGroundItem = null;
-																}
-				  	 										finishButton.render(g, screenWidth, screenHeight);
-				   											}
-														case HEALERROOM -> {HealerState hs = dungeonState.healerState(posHero);
-																								if(!hs.isUsed()) {
-																									healerRoom.render(g, screenWidth, screenHeight);
-																								}else if(hs.isUsed()){
-																									healerRoom.renderUsed(g, screenWidth, screenHeight);
-																								}
-																								;}
+														case MERCHANTROOM -> {  /*merchanRoom.render(g, screenWidth, screenHeight)*/;}
+														case TREASUREROOM -> renderTreasurRoom(g,treasureRoom, groundItems, itemDescription) ;
+														case ENEMYROOM -> renderEnemyRoom( g,enemiesRoom,  combatBoutons);
+													   case ENEMYLOOT -> renderEnemyLoot( g,  enemiesRoom, groundItems,  itemDescription, finishButton) ;
+														case HEALERROOM -> renderHealerRoom(g,  healerRoom);
 														case EXITROOM -> {exitRoom.render(g, screenWidth, screenHeight);}
-														case MENU -> {/*menu.render(g, screenWidth, screenHeight);return;*/} 
+														case MENU -> {} 
 														case GAMEOVER ->{}
 														
 									}
