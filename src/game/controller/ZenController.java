@@ -229,120 +229,107 @@ public class ZenController {
 							 dragOffSetX = 0;
 							 dragOffSetY = 0;
 						 }
-						 
-						 break;
-					 	
 					 }
-					 ////////////////////////
 					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
-						 TreasureState ts = dungeonState.treasureState(posHero);
-						 if(state == ZenGameState.TREASUREROOM) {
-							 if(ts.isOpened()) {
-								 hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY,screenWidth,screenHeight,ts.loot());
-								 hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
-							 }else {
-								 hoveredItem = null;
-									hoveredGroundItem = null;
-							 }
-						 }
-							
-									
+					   TreasureState ts = dungeonState.treasureState(posHero);
+					   if(state == ZenGameState.TREASUREROOM) {
+					     if(ts.isOpened()) {
+					       hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY,screenWidth,screenHeight,ts.loot());
+					       hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+					     } else {
+					       hoveredItem = null;
+					       hoveredGroundItem = null;
+					     }
+					   }		
 					 }
-					if(p.action() == PointerEvent.Action.POINTER_DOWN) {//un click
-						
-						if(miniMapButton.isClicked(mouseX, mouseY)) {
-							showMiniMap = !showMiniMap;
-							break;
-						}
-						
-						if(state == ZenGameState.TREASUREROOM) {
-							TreasureState ts = dungeonState.treasureState(posHero);
-							if(hoveredGroundItem !=null) {
-								hoveredItem = hoveredGroundItem.item();
-								break;
-							}
-							if(treasureRoom.isClicked(mouseX, mouseY)) {//tresure is clicked
-								if(!ts.isOpened()) {
-									//loot = generateTreasureLoot();
-					        List<Item> loot = List.of(
+					 if(p.action() == PointerEvent.Action.POINTER_DOWN) {//un click
+					   
+					   if(miniMapButton.isClicked(mouseX, mouseY)) {
+					     showMiniMap = !showMiniMap;
+					     break;
+					   }
+					   
+					   if(state == ZenGameState.TREASUREROOM) {
+					     TreasureState ts = dungeonState.treasureState(posHero);
+					     if(hoveredGroundItem !=null) {
+					       hoveredItem = hoveredGroundItem.item();
+					       break;
+					     }
+					     if(treasureRoom.isClicked(mouseX, mouseY)) {//tresure is clicked
+					       if(!ts.isOpened()) {
+					         //loot = generateTreasureLoot();
+					         List<Item> loot = List.of(
 					            new Weapon("Wooden Sword", 1, 0, 7, new boolean[][] {{true, true}})
 					           // new MagicWand(),
 					            //new WoodenSword()
-					        );
-					        
-									ts.open(loot);
-									showMiniMap = false;
-								}
-								break;
-							}
-							hoveredItem = null;
-							hoveredGroundItem = null;
-							//break;
-									
-						}
-						if(state == ZenGameState.HEALERROOM) {
-							HealerState hs = dungeonState.healerState(posHero);
-							if(!hs.isUsed()) {
-								if(healerRoom.fullHealClicked(mouseX, mouseY)) {
-									healerController.healFull(hero, hs);
-					
-								}
-								else if(healerRoom.smallHealClicked(mouseX, mouseY)) {
-									healerController.healSmall(hero, hs);
+					         ); 
+					         ts.open(loot);
+					         showMiniMap = false;
+					       }
+					       break;
+					     }
+					     hoveredItem = null;
+					     hoveredGroundItem = null;
 							
-								}
-								else if(healerRoom.exitClicked(mouseX, mouseY)) {
-									state = ZenGameState.FLOOR;
+					   }
+					   if(state == ZenGameState.HEALERROOM) {
+					     HealerState hs = dungeonState.healerState(posHero);
+					     if(!hs.isUsed()) {
+					       if(healerRoom.fullHealClicked(mouseX, mouseY)) {
+					         healerController.healFull(hero, hs);
+					
+					       }
+					       else if(healerRoom.smallHealClicked(mouseX, mouseY)) {
+					         healerController.healSmall(hero, hs);
+							
+					       }
+					       else if(healerRoom.exitClicked(mouseX, mouseY)) {
+					         state = ZenGameState.FLOOR;
+					       }
+					     }else {
+					       if(healerRoom.exitClicked(mouseX, mouseY)) {
+					         state = ZenGameState.FLOOR;
+					       }
+					     }
+					     break;
+					   }
+					   if( state == ZenGameState.EXITROOM  ) {
+					     if(exitRoom.isClicked(mouseX, mouseY, screenWidth, screenHeight)) {
+					       IO.println("Exit is clicked ");
+					       handleExit();
+					       state = ZenGameState.FLOOR;
+					     }
 								
-								}
-							}else {
-								if(healerRoom.exitClicked(mouseX, mouseY)) {
-									state = ZenGameState.FLOOR;
-									
-								}
-							}
-							break;
-						}
-						if( state == ZenGameState.EXITROOM  ) {
-							if(exitRoom.isClicked(mouseX, mouseY, screenWidth, screenHeight)) {
-								IO.println("Exit is clicked ");
-								handleExit();
-								state = ZenGameState.FLOOR;
-							}
-								
-							break;
-						}
-						//si on est dans un combat 
-						if( state == ZenGameState.ENEMYROOM ) {
-							//showMiniMap = false;
-							state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
-							//combatController.manageEnemyTurn(floor, posHero,	 hero);
-							break;//on  bouge pas le hero et on va au prochain renderFrame 
-						}
-						
-						//sinnon on bouge le hero sur la minimap
-						target = miniMapController.convertClick(mouseX, mouseY);
-						if(miniMapController.canMove(floor, posHero, target,dungeonState)) {
-							var path = floor.findPath(posHero, target,dungeonState);
-							if(path.size()>1) {
-								path.remove(0);//remove the current postion
-								movementQueue.clear();//clear the queue
-								movementQueue.addAll(path);//prepare the next movements 
-							}
-						}
-						//this.posHero = miniMapController.tryMove(floor, posHero,target);//le hero bouge , il change de salle 
+					     break;
+					   }
+					   //si on est dans un combat 
+					   if( state == ZenGameState.ENEMYROOM ) {
+					     //showMiniMap = false;
+					     state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
+					     //combatController.manageEnemyTurn(floor, posHero,	 hero);
+					     break;//on  bouge pas le hero et on va au prochain renderFrame 
+					   }
+					   //sinnon on bouge le hero sur la minimap
+					   target = miniMapController.convertClick(mouseX, mouseY);
+					   if(miniMapController.canMove(floor, posHero, target,dungeonState)) {
+					     var path = floor.findPath(posHero, target,dungeonState);
+					     if(path.size()>1) {
+					       path.remove(0);//remove the current postion
+					       movementQueue.clear();//clear the queue
+					       movementQueue.addAll(path);//prepare the next movements 
+					     }
+					   }
+					   //this.posHero = miniMapController.tryMove(floor, posHero,target);//le hero bouge , il change de salle 
+					   //on check le type de la salle Pour savoir quoi render par la suite 
+					   Room room = floor.getRoomInfo(posHero.row(),posHero.col());
+					   if(room == null) {
+					     break; //it's Wall so we do nothing 
+					   }
 
-						
-						//on check le type de la salle Pour savoir quoi render par la suite 
-						Room room = floor.getRoomInfo(posHero.row(),posHero.col());
-						if(room == null) {
-							break; //it's Wall so we do nothing 
-						}
-
-					}
-				}
-				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
-				case null ->{}
+					 }
+				  }
+				  case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
+				  case null ->{}
 				}
 				if( state == ZenGameState.ENEMYROOM ) {
 					//showMiniMap = false;
