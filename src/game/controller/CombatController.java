@@ -28,7 +28,17 @@ public class CombatController {
 		this.enemyTurnExecuted = false;
 	}
 
-	
+	/**
+	 * a method to manage a combat 
+	 * @param mouseX
+	 * @param mouseY
+	 * @param floor
+	 * @param posHero
+	 * @param hero
+	 * @param currentState
+	 * @param state
+	 * @return the state after the combat 
+	 */
 	public ZenGameState manageCombat(int mouseX, int mouseY, Floor floor, DCoord posHero, Hero hero, ZenGameState currentState, DungeonState state) {
 		if(currentState != ZenGameState.ENEMYROOM) {
 			return currentState;//on verifie si c'est bien une enemyroom
@@ -148,10 +158,17 @@ public class CombatController {
 		}
 		return currentState;
 	}
-	
+	/**
+	 * a method to manage enemy turn
+	 * @param floor
+	 * @param posHero
+	 * @param hero
+	 * @return the state after the turn 
+	 */
   public ZenGameState manageEnemyTurn(Floor floor, DCoord posHero, Hero hero) {
     //enemy plays 
     if(phase == CombatPhase.ENEMYTURN && !enemyTurnExecuted) {
+    	
         var enemies = floor.getRoomInfo(posHero.row(), posHero.col()).enemiesList();
         
         if(!enemies.isEmpty()) {
@@ -164,11 +181,11 @@ public class CombatController {
             		}
                 Enemy enemy = enemies.get(i);
                 IO.println("Enemy " + (i+1) + " attacks");
+                enemy.resetProtection();
                 enemy.playTurn(hero, enemies);
             }
             
-            IO.println("Hero stats after enemy turn -> HP=" + hero.stats().health() + 
-                      " Protection=" + hero.stats().protection());
+            //IO.println("Hero stats after enemy turn -> Hp=" + hero.stats().health() + " Protection=" + hero.stats().protection());
             
           
             if(hero.stats().isDead()) {
@@ -183,13 +200,9 @@ public class CombatController {
             enemyTurnExecuted = true;
             
             //prepare next turn 
-            hero.stats().resetProtection(); // La protection est consommée
-            hero.energy().resetEnergy();     // Le héros récupère ses 3 points d'énergie
+            hero.stats().resetProtection(); // protection is rest
+            hero.energy().resetEnergy();     //energy is reset 
             
-            IO.println("NEW HERO TURN ");
-            IO.println("Hero ready -> HP=" + hero.stats().health() + 
-                      " Protection=" + hero.stats().protection() + 
-                      " Energy=" + hero.energy().energy());
             
             //back to hero turn 
             phase = CombatPhase.HEROTURN;

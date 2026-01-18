@@ -53,6 +53,8 @@ import game.view.stats.DrawItemInfo;
 
 
 public class ZenController {
+	private int screenWidth;
+	private int screenHeight;
 	private Dungeon dungeon;
 	private Floor floor;
 	private Hero hero ;
@@ -95,6 +97,296 @@ public class ZenController {
 		posHero = floor.postionHero();
 		state = ZenGameState.FLOOR;
 		showMiniMap = false;
+		
+	}
+	
+	private void handlePointerMenu(PointerEvent p, DrawMenu menu) {
+		 if( p.action() == PointerEvent.Action.POINTER_DOWN && menu.isClicked(mouseX, mouseY)) {
+			
+			 IO.println("Menu check: isClicked = " + menu.isClicked(mouseX, mouseY));
+				hero = new Hero("JOTARO KUJO");
+			 IO.println("CREATING DUNGEON...");
+			 dungeon = new Dungeon(100);
+			 IO.println("Dungeon created: " + dungeon);
+			 floor = dungeon.getCurrentFloor();				 
+			 IO.println("Floor retrieved: " + floor);
+			 posHero = floor.postionHero();
+			 IO.println("Hero position: " + posHero);
+			 dungeonState.reset();
+			 movementQueue.clear();
+			 lastActivatedRoom = null;
+			 showMiniMap = false;
+			 
+			 
+				 //state = ZenGameState.CHOOSEITEM;
+				 state = ZenGameState.FLOOR;
+				 System.out.println("Dungeon OK");
+	       System.out.println("Floor = " + floor);
+	       System.out.println("Hero start = " + posHero);
+		 }     //continue;
+			 
+	}
+	/**
+	 * a private methode to handle the pointer event when in EnmyLoot State
+	 * @param p
+	 * @param groundItems
+	 * @param finishBtn
+	 */
+	private void handlePointerEnemyLoot(PointerEvent p, DrawGroundItem groundItems, DrawFinishButton finishBtn) {
+		var eState = dungeonState.enemyState(posHero);
+		switch(p.action()) {
+			case POINTER_MOVE ->{
+				hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY, screenWidth, screenHeight, eState.items());
+				//IO.println("hitbox = " + hoveredGroundItem);
+				 hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+			}
+			case POINTER_DOWN -> {
+				if(finishBtn.isClicked(mouseX, mouseY, screenWidth, screenHeight)) {
+					IO.println("Fininsh items enemy selection");
+					eState.finishItemsSelection()	;
+					hoveredItem = null;
+					hoveredGroundItem = null;
+					state = ZenGameState.FLOOR;
+			}
+		}
+			default ->{}
+		}
+	}
+	/**
+	 * a private method to handle the pointer on GameOver 
+	 * @param p pointer
+	 * @param gameOverScreen 
+	 */
+	private void handlePointerGameOver(PointerEvent p, DrawGameOver gameOverScreen) {
+		if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+			 if(gameOverScreen.retryIsClicked(mouseX, mouseY)) {
+				 IO.println("retry is clicked ...");
+				 
+				 hero = new Hero("Jotaro");
+        dungeon = new Dungeon(3);
+        floor = dungeon.getCurrentFloor();
+        posHero = floor.postionHero();
+        dungeonState.reset(); 
+       
+        showMiniMap = false;
+        movementQueue.clear();
+        lastActivatedRoom = null;
+        
+        state = ZenGameState.FLOOR;
+        return;//return so we don't go in the next if 
+     
+			 }
+			 else if (gameOverScreen.mainMenuBtnIsClicked(mouseX, mouseY)) {
+					 IO.println("main menu clicked ...");
+					 hero = null;
+					 dungeon = null;
+					 floor = null;
+					 posHero = null;
+					 
+					 movementQueue.clear();
+					 lastActivatedRoom = null;
+					 showMiniMap = false;
+          
+					 state = ZenGameState.MENU;
+				 }
+			 }
+	}
+	/**
+	 * handler pointerEvent inside the treasurRoom
+	 * @param p PointerEvent
+	 * @param treasureRoom 
+	 */
+	private void handlePointerTreasureRoom(PointerEvent p, DrawTreasureRoom treasureRoom) {
+		if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+			TreasureState ts = dungeonState.treasureState(posHero);
+			
+			//click on an item on the ground 
+				if(hoveredGroundItem !=null) {
+					hoveredItem = hoveredGroundItem.item();
+					return;
+				}
+				//click on the treasure box
+				if(treasureRoom.isClicked(mouseX, mouseY)) {//tresure is clicked
+					if(!ts.isOpened()) {
+		        List<Item> loot = List.of(
+		            new Weapon("Wooden Sword", 1, 0, 7, new boolean[][] {{true, true}})
+		           // new MagicWand(),
+		            //new WoodenSword()
+		        );
+		        
+						ts.open(loot);
+						showMiniMap = false;
+						return;
+					}
+				
+				}
+	
+			}
+	}
+	/**
+	 * Handle pointer when the player is in FLOOR state 
+	 * @param p pointer event
+	 * @param miniMapBtn
+	 * @param miniMapController
+	 */
+	private void handlePointerFloor(PointerEvent p, DrawMiniMapButton miniMapBtn, MiniMapController miniMapController) {
+		if(p.action() == PointerEvent.Action.POINTER_DOWN ) {
+			//show minimap
+			if(miniMapBtn.isClicked(mouseX, mouseY)) {
+				showMiniMap = !showMiniMap;
+				return;
+			}
+			//move using miniMap
+			DCoord target = miniMapController.convertClick(mouseX, mouseY);
+			if(miniMapController.canMove(floor, posHero, target,dungeonState)) {
+				var path = floor.findPath(posHero, target,dungeonState);//a list of DCoord
+				if(path.size()>1) {
+					path.remove(0);//remove the current postion
+					movementQueue.clear();//clear the queue
+					movementQueue.addAll(path);//prepare the next movements 
+				}
+			}
+			
+		}
+	}
+	/**
+	 * Handle pointer when the player is in EnemyRoom state 
+	 * @param p pointer event
+	 * @param combatController
+	 */
+	private void handlePointerEnemyRoom(PointerEvent p, CombatController combatController  ) {
+		if(p.action() == PointerEvent.Action.POINTER_DOWN ) {
+			state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
+			if(hero.stats().isDead() ) {
+				IO.println("switch to gameover screen");
+				saveGameScore();//saing score when hero is dead 
+				state = ZenGameState.GAMEOVER;
+			}
+		}
+	}
+	
+	/**
+	 * Handle pointer when the player is in HealerRoom state 
+	 * @param p pointer event
+	 * @param combatController
+	 */
+	private void handlePointerHealerRoom(PointerEvent p,DrawHealerRoom healerRoom, HealerController healerController  ) {
+		if(p.action() == PointerEvent.Action.POINTER_DOWN ) {
+			HealerState hs = dungeonState.healerState(posHero);
+		//if the healer is not used : 
+			if(!hs.isUsed()) {
+				if(healerRoom.fullHealClicked(mouseX, mouseY)) {
+					healerController.healFull(hero, hs);
+					return;// we return so there's  only one action possible 
+					
+	
+				}
+				if(healerRoom.smallHealClicked(mouseX, mouseY)) {
+					healerController.healSmall(hero, hs);
+					return;
+			
+				}
+
+			}
+			if(healerRoom.exitClicked(mouseX, mouseY)) {
+					state = ZenGameState.FLOOR;
+					
+				}
+		}
+	}
+	
+	/**
+	 * Handle pointer when the player is in ExitRoom state 
+	 * @param p pointerEvent
+	 * @param exitRoom
+	 */
+	private void handlePointerExitRoom(PointerEvent p, DrawExitDoor exitRoom) {
+		if(p.action() == PointerEvent.Action.POINTER_DOWN) {
+			if(exitRoom.isClicked(mouseX, mouseY, screenWidth, screenHeight)) {
+				IO.println("Exit is clicked ");
+				handleExit();//state == FLOOR in handleExit()
+			
+			}
+				
+		
+		}
+	}
+	/**
+	 * updates the current hovered item 
+	 * @param groundItems
+	 */
+	private void updateHoverItem(DrawGroundItem groundItems) {
+		
+		hoveredGroundItem = null;
+		hoveredItem = null;
+		switch(state) {
+			case TREASUREROOM ->{
+						TreasureState ts = dungeonState.treasureState(posHero);
+						if(ts.isOpened()) {
+						 hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY,screenWidth,screenHeight,ts.loot());
+						 hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+					 }
+			}
+			case ENEMYLOOT -> {
+					var eState = dungeonState.enemyState(posHero);
+					hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY, screenWidth, screenHeight, eState.items());
+					//IO.println("hitbox = " + hoveredGroundItem);
+					hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
+			}
+			default ->{}
+		}
+	}
+	
+	/**
+	 * a private methode to handle all pointer Event
+	 * @param p
+	 */
+	private void handlePointerEvent(PointerEvent p,DrawMenu menu, DrawGameOver gameOverScreen, CombatController combatController,
+														DrawGroundItem groundItems, DrawFinishButton finishButton,DrawTreasureRoom treasureRoom,
+														DrawHealerRoom healerRoom, HealerController healerController, DrawExitDoor exitRoom,
+														MiniMapController miniMapController, DrawMiniMapButton miniMapButton) {
+		mouseX = p.location().x();
+		mouseY = p.location().y();
+		
+		if(state == ZenGameState.MENU ) {
+			 handlePointerMenu(p, menu);
+			 return;
+			 
+		 }
+           
+    if(state == ZenGameState.GAMEOVER ) {
+    	handlePointerGameOver(p, gameOverScreen);
+      return;
+		}
+   				
+		if( state == ZenGameState.ENEMYROOM ) {
+			handlePointerEnemyRoom(p, combatController );
+			return;
+		}
+						
+ 		if(state == ZenGameState.ENEMYLOOT) {
+			handlePointerEnemyLoot(p,groundItems, finishButton);
+			return;
+		}
+ 		//no return beacause here we can directrly click on minimap if we want to leave
+ 		if(state == ZenGameState.TREASUREROOM) {
+			handlePointerTreasureRoom(p, treasureRoom);
+			//return;
+		}
+ 		if(state == ZenGameState.HEALERROOM) {
+ 			handlePointerHealerRoom(p, healerRoom, healerController);
+ 			return;
+ 		}
+    if(state == ZenGameState.EXITROOM) {
+    	handlePointerExitRoom(p, exitRoom);
+      return;
+    }
+           
+		//to be able to move in the floor 
+		if(state == ZenGameState.FLOOR || state == ZenGameState.TREASUREROOM) {
+			handlePointerFloor(p, miniMapButton, miniMapController);
+	
+		}
 	}
 	
 	private void saveGameScore() {
@@ -118,20 +410,10 @@ public class ZenController {
 		System.out.println("Hall of fame loaded.. "+ hallOfFame.results().size());
 		var window = new Window();
 		window.open(context -> {
-			var screenWidth = context.getScreenInfo().width();
-			var screenHeight = context.getScreenInfo().height();
+			this.screenWidth = context.getScreenInfo().width();
+			this.screenHeight = context.getScreenInfo().height();
+
 			
-			//floor = dungeon.getCurrentFloor();
-
-
-			//Hero hero = new Hero("JOTARO KUJO");
-			//System.out.println("Dungeon OK");
-			//System.out.println("Floor = " + floor);
-			//System.out.println("Hero start = " + floor.postionHero());
-			//hero.addToBackPack(new WoodenSword());
-			//var floor = new Floor(1);
-			//var floor = FloorGenerator.generate();
-			//this.posHero = floor.postionHero();//pos initiae du hero 
 			DCoord target = null;
 			
 			var menu = new DrawMenu();
@@ -166,50 +448,30 @@ public class ZenController {
 			var drawItemOnScreen = new DrawItemOnScreen();
 			boolean[][] shape = {{true}, {true},{true}};
       var weapon = new Weapon("Wooden Sword", 1, 0, 5, shape); 
-      var OneitemOnSreen = new ItemOnScreen(weapon, new Coord(0, 0));
-      listItemOnScreen.add(OneitemOnSreen);
+      //var OneitemOnSreen = new ItemOnScreen(weapon, new Coord(0, 0));
+     // listItemOnScreen.add(OneitemOnSreen);
       var backpackData = new BackPack(7, 5, 2, 1, 4, 3);
 			
-		  //List<EnemyI> enn = List.of(new RatWolf(), new SmallRatWolf(), new RatWolf());//juste pour debug et test
-			
-			//var mouseX = -1;
-			//var mouseY = -1;
-			
-			//boucle de jeu 
-			//hero.addGold(120);//juste pour test 
+
 			
 			this.hero = new Hero("JOTARO KUJO");
 			while(true) {
 				var event = context.pollEvent();
 				switch(event) {//soint pointerEvent(souris) ou keyboardEvent(clavier) ou null rien 
 				case PointerEvent p ->{
-					 mouseX = p.location().x();
-					 mouseY = p.location().y();
-					 IO.println("Event: " + p.action() + " | State: " + state); 
-					 if(state == ZenGameState.MENU && p.action() == PointerEvent.Action.POINTER_DOWN) {
-						 IO.println("Menu check: isClicked = " + menu.isClicked(mouseX, mouseY));
+				//mouseX and Y are already in handlePointerEvent methode 
+					 //mouseX = p.location().x();
+					 //mouseY = p.location().y();
+					IO.println("Event: " + p.action() + " | State: " + state); 
+					 //handling all pointer events : 
+					handlePointerEvent(p,menu, gameOverScreen, combatController,groundItems, finishButton,treasureRoom, healerRoom, healerController,  exitRoom, miniMapController,  miniMapButton);
+					if(state == ZenGameState.MENU|| state == ZenGameState.GAMEOVER) {
+						continue;//do nothing and continue to the next frame 
+				
+					}
 
-						 if(menu.isClicked(mouseX, mouseY)) {
-							 hero = new Hero("JOTARO KUJO");
-							 IO.println("CREATING DUNGEON...");
-							 dungeon = new Dungeon(100);
-							 IO.println("Dungeon created: " + dungeon);
-							 floor = dungeon.getCurrentFloor();
-							 IO.println("Floor retrieved: " + floor);
-							 posHero = floor.postionHero();
-							 IO.println("Hero position: " + posHero);
-//							 state = ZenGameState.FLOOR;
-							 state = ZenGameState.CHOOSEITEM;
-							 System.out.println("Dungeon OK");
-				       System.out.println("Floor = " + floor);
-				       System.out.println("Hero start = " + posHero);
-				       //continue;
-						 }
-						 break;
-						 
-					 }
-					
-					 if(state == ZenGameState.CHOOSEITEM) {
+					/*
+					 if(state == ZenGameState.ENEMYLOOT) {
              if(p.action() == PointerEvent.Action.POINTER_DOWN) {
                var index = drawItemOnScreen.findItemAt(mouseX, mouseY, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
                if(index != -1) {
@@ -225,6 +487,7 @@ public class ZenController {
                }
                break;
              }
+             
              if(p.action() == PointerEvent.Action.POINTER_UP && draggedItem != null) {
                // Drop de l'item
                int newX = mouseX - dragOffSetX;
@@ -260,180 +523,17 @@ public class ZenController {
                dragOffSetX = 0;
                dragOffSetY = 0;
              }
+            
            }
-					 
-           if(state == ZenGameState.MENU) {
-          	 IO.println("Still in menu, breaking");
-             break;
-           }
-           
-           if(state == ZenGameState.GAMEOVER && p.action() == PointerEvent.Action.POINTER_DOWN) {
-						 if(gameOverScreen.retryIsClicked(mouseX, mouseY)) {
-							 IO.println("retry is clicked ...");
-							 
-							 hero = new Hero("Jotaro");
-               dungeon = new Dungeon(3);
-               floor = dungeon.getCurrentFloor();
-               posHero = floor.postionHero();
-               dungeonState.reset(); 
-               state = ZenGameState.FLOOR;
-               showMiniMap = false;
-               movementQueue.clear();
-               lastActivatedRoom = null;
-               
-               break;
-						 }
-						 if(state == ZenGameState.GAMEOVER && p.action() == PointerEvent.Action.POINTER_DOWN) {
-							 if(gameOverScreen.mainMenuBtnIsClicked(mouseX, mouseY)) {
-								 IO.println("main menu clicked ...");
-								// hero = null;
-								 state = ZenGameState.MENU;
-								 dungeon = null;
-								 floor = null;
-								 posHero = null;
-								 movementQueue.clear();
-								 lastActivatedRoom = null;
-	               
-	               break;
-							 }
-						 }
-						 break;
-					 }
-           if(state == ZenGameState.GAMEOVER) {
-          	 break;
-           }
-           
-           
-          
-					 if(p.action() == PointerEvent.Action.POINTER_MOVE) {
-						 TreasureState ts = dungeonState.treasureState(posHero);
-						 if(state == ZenGameState.TREASUREROOM) {
+					 */
+
 					
 
-							 if(ts.isOpened()) {
-								 hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY,screenWidth,screenHeight,ts.loot());
-								 hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
-							 }else {
-								 hoveredItem = null;
-									hoveredGroundItem = null;
-							 }
-						 }
-							
-									
-					 }
-					if(p.action() == PointerEvent.Action.POINTER_DOWN) {//un click
-						 
-						
-						if(miniMapButton.isClicked(mouseX, mouseY)) {
-							showMiniMap = !showMiniMap;
-							break;
-						}
-						
-						if(state == ZenGameState.TREASUREROOM) {
-							TreasureState ts = dungeonState.treasureState(posHero);
-							if(hoveredGroundItem !=null) {
-								hoveredItem = hoveredGroundItem.item();
-								break;
-							}
-							if(treasureRoom.isClicked(mouseX, mouseY)) {//tresure is clicked
-								if(!ts.isOpened()) {
-									//loot = generateTreasureLoot();
-					        List<Item> loot = List.of(
-					            new Weapon("Wooden Sword", 1, 0, 7, new boolean[][] {{true, true}})
-					           // new MagicWand(),
-					            //new WoodenSword()
-					        );
-					        
-									ts.open(loot);
-									showMiniMap = false;
-								}
-								break;
-							}
-							hoveredItem = null;
-							hoveredGroundItem = null;
-							//break;
-									
-						}
-						if(state == ZenGameState.HEALERROOM) {
-							HealerState hs = dungeonState.healerState(posHero);
-							if(!hs.isUsed()) {
-								if(healerRoom.fullHealClicked(mouseX, mouseY)) {
-									healerController.healFull(hero, hs);
-					
-								}
-								else if(healerRoom.smallHealClicked(mouseX, mouseY)) {
-									healerController.healSmall(hero, hs);
-							
-								}
-								else if(healerRoom.exitClicked(mouseX, mouseY)) {
-									state = ZenGameState.FLOOR;
-								
-								}
-							}else {
-								if(healerRoom.exitClicked(mouseX, mouseY)) {
-									state = ZenGameState.FLOOR;
-									
-								}
-							}
-							break;
-						}
-						if( state == ZenGameState.EXITROOM  ) {
-							if(exitRoom.isClicked(mouseX, mouseY, screenWidth, screenHeight)) {
-								IO.println("Exit is clicked ");
-								handleExit();
-								state = ZenGameState.FLOOR;
-							}
-								
-							break;
-						}
-						//si on est dans un combat 
-						if( state == ZenGameState.ENEMYROOM ) {
-							//showMiniMap = false;
-							state = combatController.manageCombat(mouseX, mouseY, floor, posHero, hero, state, dungeonState);
-							if(hero.stats().isDead() ) {
-								IO.println("switch to gameover screen");
-								saveGameScore();
-								state = ZenGameState.GAMEOVER;
-							}
-							//combatController.manageEnemyTurn(floor, posHero,	 hero);
-							break;//on  bouge pas le hero et on va au prochain renderFrame 
-						}
-						/////////////////////////////////
-						if(state == ZenGameState.ENEMYLOOT) {
-							var eState = dungeonState.enemyState(posHero);
-							if(finishButton.isClicked(mouseX, mouseY, screenWidth, screenHeight)) {
-								IO.println("Fininsh items enemy selection");
-								eState.finishItemsSelection()	;
-								hoveredItem = null;
-								hoveredGroundItem = null;
-								state = ZenGameState.FLOOR;
-							}
-							break;
-						}
-						/////////////////////////////
-						//sinnon on bouge le hero sur la minimap
-						target = miniMapController.convertClick(mouseX, mouseY);
-						if(miniMapController.canMove(floor, posHero, target,dungeonState)) {
-							var path = floor.findPath(posHero, target,dungeonState);
-							if(path.size()>1) {
-								path.remove(0);//remove the current postion
-								movementQueue.clear();//clear the queue
-								movementQueue.addAll(path);//prepare the next movements 
-							}
-						}
-						//this.posHero = miniMapController.tryMove(floor, posHero,target);//le hero bouge , il change de salle 
-
-						
-						//on check le type de la salle Pour savoir quoi render par la suite 
-						Room room = floor.getRoomInfo(posHero.row(),posHero.col());
-						if(room == null) {
-							break; //it's Wall so we do nothing 
-						}
-
-					}
 				}
 				case KeyboardEvent e ->{context.dispose(); System.exit(0);}// si on clique sur une touche on quitte le jeu
 				case null ->{}
+				
+				
 				}
 		    if(state == ZenGameState.MENU) {
 	        context.renderFrame(g-> {
@@ -484,25 +584,14 @@ public class ZenController {
 							case TREASURE -> state = ZenGameState.TREASUREROOM;
 							case MERCHANT -> state = ZenGameState.MERCHANTROOM;
 							case HEALER -> state = ZenGameState.HEALERROOM;
-							case EXIT -> {state = ZenGameState.EXITROOM;}
+							case EXIT -> state = ZenGameState.EXITROOM;
 							default -> state = ZenGameState.FLOOR;//on se balade dans la map
 			  		}
 			  	}
 			  }
-
-				if(state == ZenGameState.TREASUREROOM) {
-					TreasureState ts = dungeonState.treasureState(posHero);
-					if(ts.isOpened()) {
-						hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY, screenWidth, screenHeight, ts.loot());
-					}
-				}
-				if(state == ZenGameState.ENEMYLOOT) {
-					var eState = dungeonState.enemyState(posHero);
-					hoveredGroundItem = groundItems.findItemAt(mouseX, mouseY, screenWidth, screenHeight, eState.items());
-					IO.println("hitbox = " + hoveredGroundItem);
-					 hoveredItem = (hoveredGroundItem != null)?hoveredGroundItem.item():null;
-				}
-				//Ce qui sera render a chaque fois : 
+			  
+			  //for ENEMYLOOT and TREASUREROOM
+			  updateHoverItem(groundItems);
 				context.renderFrame(g-> { 
 													/*if(state == ZenGameState.MENU) {
 															menu.render(g, screenWidth, screenHeight);
@@ -523,6 +612,7 @@ public class ZenController {
 													//heroInDungeon.renderHeroStats(g, hero, screenWidth, screenHeight);
 													switch(state) {
 														case FLOOR ->{}
+														/*
 														case CHOOSEITEM -> {
 	                            // draw all item except the on beeing dragged 
 	                              drawItemOnScreen.render(g, screenWidth, screenHeight, listItemOnScreen, hero.backPack(), backpack);
@@ -536,7 +626,7 @@ public class ZenController {
                                   ItemOnScreen tempItem = new ItemOnScreen(draggedItem.item(), new Coord(drawX, drawY));
                                   drawItemOnScreen.renderOneItem(g, drawX, drawY, screenWidth, screenHeight, tempItem, hero.backPack(), backpack);
                                 }
-														}
+														}*/
 														case MERCHANTROOM -> { /* merchanRoom.render(g, screenWidth, screenHeight);*/;}
 														case TREASUREROOM -> {
 																									TreasureState ts = dungeonState.treasureState(posHero);

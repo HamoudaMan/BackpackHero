@@ -34,7 +34,6 @@ public class Enemy {
 	
 	public void playTurn(Hero hero, List<Enemy> enemies) {
 		Action action = type.nextAction(turn++);
-		 System.out.println("[ENEMY TURN] action = " + action);
 		switch(action) {
 			case ATTACK -> attack(hero);
 			case BLOCK -> protection += stats.block();
@@ -43,12 +42,19 @@ public class Enemy {
 			case SUMMON -> summon(enemies);
 			default -> {}
 		}
+
 	}
 	//2 possible cases so we keep another playTurn for comptibility
 	public void playTurn(Hero hero ) {
 		playTurn(hero, new ArrayList<>());
 	}
 
+	/**
+	 * a methode were the beeQeen summon lilbee, 
+	 * if enough place in the screen the summons 
+	 * the new summoned ennemy is added to the enemies list 
+	 * @param enemies
+	 */
 	private void summon(List<Enemy> enemies) {
 		if(enemies.size()>=3) {
 			IO.println("not enough space to summon all ");
@@ -68,7 +74,7 @@ public class Enemy {
 		}
 		var effectiveDamage = Math.max(0, damage - protection);
 		currentHealth = Math.max(0, currentHealth-effectiveDamage);
-		protection = 0;
+		
 	}
 	
 	public Action nextAction() {
@@ -87,6 +93,9 @@ public class Enemy {
 		};
 	}
 
+	public void resetProtection() {
+		protection = 0;
+	}
 	public int protection() {
 		return protection;
 	}
